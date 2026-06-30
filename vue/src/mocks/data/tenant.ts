@@ -44,10 +44,12 @@ export function mockCreateTenant(data: { name: string; adminEmailAddress: string
   return newTenant
 }
 
-export function mockUpdateTenant(id: string, data: { name: string }): TenantDto | undefined {
+export function mockUpdateTenant(id: string, data: { name?: string; isActive?: boolean }): TenantDto | undefined {
   const idx = tenants.findIndex(t => t.id === id)
   if (idx === -1) return undefined
-  tenants[idx] = { ...tenants[idx], name: data.name }
+  if (data.name !== undefined) tenants[idx].name = data.name
+  if (data.isActive !== undefined) tenants[idx].isActive = data.isActive
+  tenants[idx].lastModificationTime = new Date().toISOString()
   return tenants[idx]
 }
 

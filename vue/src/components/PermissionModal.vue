@@ -643,7 +643,7 @@ async function handleOpen() {
 
 function handleCancel() {
   dialogVisible.value = false
-  // Do NOT fire callbacks on cancel — only on save
+  emit('close')
 }
 
 async function handleBeforeClose(done: () => void) {

@@ -373,6 +373,7 @@ async function handleOpen() {
 
 function handleCancel() {
   dialogVisible.value = false
+  emit('close')
 }
 
 async function handleBeforeClose(done: () => void) {

@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import AbpModal from '@/components/AbpModal.vue'
 import AbpDynamicForm from '@/components/AbpDynamicForm.vue'
 import { showSuccess, showError } from '@/components/AbpToast'
@@ -41,7 +41,7 @@ const formData = ref<Record<string, unknown>>({
 
 const roleOptions = ref<{ key: string; label: string }[]>([])
 
-const fields: AbpFormItem[] = [
+const createFields: AbpFormItem[] = [
   { name: 'userName', type: 'text', label: '用户名', required: true },
   { name: 'name', type: 'text', label: '姓名' },
   { name: 'surname', type: 'text', label: '姓氏' },
@@ -50,6 +50,18 @@ const fields: AbpFormItem[] = [
   { name: 'password', type: 'password', label: '密码', required: true },
   { name: 'isActive', type: 'switch', label: '启用' },
 ]
+
+const editFields: AbpFormItem[] = [
+  { name: 'userName', type: 'text', label: '用户名', required: true },
+  { name: 'name', type: 'text', label: '姓名' },
+  { name: 'surname', type: 'text', label: '姓氏' },
+  { name: 'email', type: 'email', label: '邮箱', required: true },
+  { name: 'phoneNumber', type: 'text', label: '手机号' },
+  { name: 'password', type: 'password', label: '密码', placeholder: '留空则不修改密码' },
+  { name: 'isActive', type: 'switch', label: '启用' },
+]
+
+const fields = computed(() => props.userId ? editFields : createFields)
 
 // 编辑模式加载用户数据
 watch(() => props.visible, async (v) => {

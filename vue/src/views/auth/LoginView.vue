@@ -34,8 +34,8 @@ import { useAuth } from '@/composables/useAuth'
 import { useAppConfigStore } from '@/stores/app-config'
 import { useAuthStore } from '@/stores/auth'
 import { showError } from '@/components/AbpToast'
-import httpClient from '@/api/http'
-import type { UserLoginInfo, AbpLoginResult } from '@/types/account'
+import { login as abpLogin } from '@/api/account'
+import type { UserLoginInfo } from '@/types/account'
 
 const router = useRouter()
 const route = useRoute()
@@ -60,7 +60,7 @@ async function handleLogin() {
   loading.value = true
   try {
     // 调用 ABP /api/account/login 端点
-    await httpClient.post<AbpLoginResult>('/api/account/login', form)
+    await abpLogin(form)
     // 登录成功 → OIDC 流程
     await login()
   } catch (e: unknown) {

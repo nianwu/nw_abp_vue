@@ -26,12 +26,15 @@ const routes: RouteRecordRaw[] = [
   { path: '/tenant-management/tenants', name: 'Tenants', meta: { layout: 'application', requiredPolicy: 'AbpTenantManagement.Tenants', title: '租户管理', icon: OfficeBuilding }, component: () => import('@/views/tenant/TenantsView.vue') },
   // Settings (ApplicationLayout)
   { path: '/setting-management', name: 'Settings', meta: { layout: 'application', requiredPolicy: 'AbpAccount.SettingManagement', title: '设置管理', icon: Setting }, component: () => import('@/views/settings/SettingsView.vue') },
+  // Docs — 独立页面，无菜单、无需权限
+  { path: '/docs/resource-permissions', name: 'ResourcePermissionDoc', meta: { layout: 'empty', title: '资源权限说明', public: true }, component: () => import('@/views/docs/ResourcePermissionDoc.vue') },
+  { path: '/docs/resource-key', name: 'ResourceKeyDoc', meta: { layout: 'empty', title: '资源密钥说明', public: true }, component: () => import('@/views/docs/ResourceKeyDoc.vue') },
   // Error pages
   { path: '/error/403', name: 'Error403', meta: { layout: 'empty' }, component: () => import('@/components/AbpErrorPage.vue'), props: { code: 403 } },
   { path: '/error/404', name: 'Error404', meta: { layout: 'empty' }, component: () => import('@/components/AbpErrorPage.vue'), props: { code: 404 } },
   { path: '/error/500', name: 'Error500', meta: { layout: 'empty' }, component: () => import('@/components/AbpErrorPage.vue'), props: { code: 500 } },
-  // Catch-all
-  { path: '/:pathMatch(.*)*', redirect: '/error/404' },
+  // Catch-all — 原地显示 404，不改变地址栏
+  { path: '/:pathMatch(.*)*', name: 'NotFound', meta: { layout: 'empty' }, component: () => import('@/components/AbpErrorPage.vue'), props: { code: 404 } },
 ]
 
 const router = createRouter({

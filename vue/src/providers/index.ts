@@ -40,9 +40,11 @@ function createProviders(): { providers: AppProviders; i18n: any } {
       config: localConfigProvider,
       auth: localAuthProvider,
       setupInfrastructure: async () => {
-        const { registerMockInterceptor } = await import('@/mocks/interceptors/mock-http')
+        const { seedDemoData } = await import('@/stores/local/seeds/demo')
+        const { registerLocalHttpInterceptor } = await import('@/stores/local/http-interceptor')
         const { default: httpClient } = await import('@/api/http')
-        registerMockInterceptor(httpClient)
+        seedDemoData()
+        registerLocalHttpInterceptor(httpClient)
       },
     },
     i18n: localI18n,

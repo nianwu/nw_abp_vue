@@ -1,0 +1,87 @@
+/**
+ * 默认 ApplicationConfigurationDto — local provider 适用
+ *
+ * 所有页面需要的权限策略全设为 true，确保 local 模式下所有页面可访问。
+ *
+ * ⚠️ 安全红线：remote provider 不以此作为降级数据。
+ * 若远程配置获取失败应当直接报错，防止越权。
+ */
+import type { ApplicationConfigurationDto } from '@/types/abp'
+import { TenantUserSharingStrategy } from '@/types/abp'
+
+export const defaultAppConfig: ApplicationConfigurationDto = {
+  auth: {
+    grantedPolicies: {
+      'AbpIdentity.Users': true,
+      'AbpIdentity.Roles': true,
+      'AbpTenantManagement.Tenants': true,
+      'AbpAccount.SettingManagement': true,
+      'AbpAccount.AccountManagement': true,
+      'AbpIdentity.Users.Create': true,
+      'AbpIdentity.Users.Update': true,
+      'AbpIdentity.Users.Delete': true,
+      'AbpIdentity.Roles.Create': true,
+      'AbpIdentity.Roles.Update': true,
+      'AbpIdentity.Roles.Delete': true,
+      'AbpTenantManagement.Tenants.Create': true,
+      'AbpTenantManagement.Tenants.Update': true,
+      'AbpTenantManagement.Tenants.Delete': true,
+      'SettingManagement.Emailing': true,
+      'SettingManagement.Timezone': true,
+      'FeatureManagement.ManageHostFeatures': true,
+      'PermissionManagement.ManageHostFeatures': true,
+    },
+  },
+  currentTenant: { id: undefined, name: undefined, isAvailable: true },
+  currentUser: {
+    isAuthenticated: true,
+    id: 'mock-user-001',
+    userName: 'admin',
+    name: 'Admin',
+    surName: 'User',
+    email: 'admin@abp.io',
+    emailVerified: true,
+    phoneNumber: '13800138000',
+    phoneNumberVerified: false,
+    roles: ['admin'],
+  },
+  clock: { kind: 'Local' },
+  features: { values: {} },
+  globalFeatures: { enabledFeatures: [] },
+  localization: {
+    currentCulture: {
+      name: 'zh-Hans',
+      cultureName: 'zh-Hans',
+      displayName: '中文(简体)',
+      englishName: 'Chinese (Simplified)',
+      nativeName: '中文(简体)',
+      twoLetterIsoLanguageName: 'zh',
+      threeLetterIsoLanguageName: 'zho',
+      dateTimeFormat: {
+        dateSeparator: '/',
+        shortDatePattern: 'yyyy/M/d',
+        shortTimePattern: 'HH:mm',
+      },
+      isRightToLeft: false,
+    },
+    defaultResourceName: 'TodoApp',
+    languages: [
+      { cultureName: 'zh-Hans', uiCultureName: 'zh-Hans', displayName: '中文(简体)', twoLetterISOLanguageName: 'zh' },
+      { cultureName: 'en', uiCultureName: 'en', displayName: 'English', twoLetterISOLanguageName: 'en' },
+    ],
+    languagesMap: {},
+    languageFilesMap: {},
+    resources: {},
+    useRouteBasedCulture: false,
+    values: {},
+  },
+  multiTenancy: { isEnabled: true, userSharingStrategy: TenantUserSharingStrategy.PerTenant },
+  objectExtensions: { modules: {}, enums: {} },
+  setting: { values: {} },
+  timing: {
+    timeZone: {
+      windows: { timeZoneId: 'China Standard Time' },
+      iana: { timeZoneName: 'Asia/Shanghai' },
+    },
+  },
+}

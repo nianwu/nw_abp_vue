@@ -27,7 +27,7 @@ export async function loadLocaleMessages(lang) {
 /** 切换语言并重新加载资源 */
 export async function switchLanguage(lang) {
     await loadLocaleMessages(lang);
-    i18n.global.locale.value = lang;
+    i18n.global.locale = lang;
     useSessionStore().setLanguage(lang);
 }
 export default i18n;

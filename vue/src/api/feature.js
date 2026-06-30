@@ -7,9 +7,9 @@ import { httpClient } from '@/api/http';
 /**
  * ABP Feature Management API 基础路径
  *
- * httpClient 的 baseURL 已包含 `/api` 前缀，此处不再重复。
+ * 须包含 `/api` 前缀以确保 mock 拦截器正确匹配。
  */
-const BASE = '/feature-management/features';
+const BASE = '/api/feature-management/features';
 /**
  * 获取功能列表
  *

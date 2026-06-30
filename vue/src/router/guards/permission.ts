@@ -11,7 +11,7 @@ export function registerPermissionGuard(router: Router): void {
 
     const { hasPermission } = usePermission()
     if (!hasPermission(policy)) {
-      return next({ path: '/error/403' })
+      return next({ path: '/error/403', query: { from: to.fullPath } })
     }
     next()
   })

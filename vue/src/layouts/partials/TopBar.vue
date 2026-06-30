@@ -9,13 +9,22 @@
     <div class="flex items-center gap-4">
       <TenantBox />
       <LangSwitch />
+      <el-button
+        v-if="isLocal"
+        size="small"
+        type="danger"
+        plain
+        @click="handleReset">
+        <el-icon><Delete /></el-icon>
+        重置本地数据
+      </el-button>
       <UserMenu />
     </div>
   </el-header>
 </template>
 
 <script setup lang="ts">
-import { Expand } from '@element-plus/icons-vue'
+import { Expand, Delete } from '@element-plus/icons-vue'
 import { APP_NAME } from '@/config/env'
 import TenantBox from './TenantBox.vue'
 import LangSwitch from './LangSwitch.vue'
@@ -24,6 +33,15 @@ import UserMenu from './UserMenu.vue'
 defineEmits<{ 'toggle-sidebar': [] }>()
 
 const appName = APP_NAME
+const isLocal = import.meta.env.VITE_PROVIDER_MODE === 'local'
+
+async function handleReset() {
+  const { resetAll } = await import('@/stores/local/storage')
+  const { seedDemoData } = await import('@/stores/local/seeds/demo')
+  resetAll()
+  seedDemoData()
+  window.location.reload()
+}
 </script>
 
 <style scoped>

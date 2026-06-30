@@ -28,6 +28,7 @@
                 show-checkbox
                 node-key="id"
                 default-expand-all
+                check-strictly
                 @check="incrementRevision"
               >
                 <template #default="{ data }">
@@ -52,7 +53,13 @@
         </el-tab-pane>
 
         <!-- Resource Permissions Tab -->
-        <el-tab-pane label="资源权限" name="resources">
+        <el-tab-pane name="resources">
+          <template #label>
+            <span>资源权限</span>
+            <el-tooltip content="查看资源权限说明" placement="top">
+              <el-icon class="tab-help-icon" @click.stop="openResourceDoc"><QuestionFilled /></el-icon>
+            </el-tooltip>
+          </template>
           <div class="resource-permissions-panel">
             <!-- LIST VIEW -->
             <template v-if="resourceView === 'list'">
@@ -61,8 +68,8 @@
               </div>
 
               <el-form class="rp-search-form" inline>
-                <el-form-item label="资源类型">
-                  <el-select v-model="rpSearch.resourceName" placeholder="选择" @change="onRpResourceTypeChange">
+                <el-form-item label="资源类型" class="rp-resource-type-item">
+                  <el-select v-model="rpSearch.resourceName" placeholder="选择" class="!w-full" @change="onRpResourceTypeChange">
                     <el-option
                       v-for="p in resourceProviders"
                       :key="p.name"
@@ -71,7 +78,13 @@
                     />
                   </el-select>
                 </el-form-item>
-                <el-form-item label="资源密钥">
+                <el-form-item>
+                  <template #label>
+                    资源密钥
+                    <el-tooltip content="查看资源密钥说明" placement="top">
+                      <el-icon class="label-help-icon" style="height: 100%" @click.stop="openResourceKeyDoc"><QuestionFilled /></el-icon>
+                    </el-tooltip>
+                  </template>
                   <el-input v-model="rpSearch.resourceKey" placeholder="输入资源密钥" style="width:200px" />
                 </el-form-item>
                 <el-form-item>
@@ -106,8 +119,8 @@
             <template v-if="resourceView === 'add'">
               <h4 class="rp-section-title">添加资源权限</h4>
               <el-form label-width="100px" class="rp-form">
-                <el-form-item label="资源类型">
-                  <el-select v-model="rpAdd.resourceName" placeholder="选择资源类型" @change="onRpAddTypeChange">
+                <el-form-item label="资源类型" class="rp-resource-type-item">
+                  <el-select v-model="rpAdd.resourceName" placeholder="选择资源类型" class="!w-full" @change="onRpAddTypeChange">
                     <el-option
                       v-for="p in resourceProviders"
                       :key="p.name"
@@ -129,6 +142,11 @@
                       :value="k.providerKey"
                     />
                   </el-select>
+                  <el-tooltip content="查看资源密钥说明" placement="top">
+                    <el-button size="small" text type="info" @click="openResourceKeyDoc">
+                      <el-icon><QuestionFilled /></el-icon>
+                    </el-button>
+                  </el-tooltip>
                 </el-form-item>
                 <el-form-item label="权限级别" v-if="rpAddLevels.length">
                   <el-checkbox-group v-model="rpAdd.permissions">
@@ -187,7 +205,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, nextTick } from 'vue'
+import { QuestionFilled } from '@element-plus/icons-vue'
 import * as permissionsApi from '@/api/permission'
 import type {
   PermissionGroupDto,
@@ -213,6 +232,14 @@ const emit = defineEmits<{
   close: []
   saveSuccess: []
 }>()
+
+function openResourceDoc() {
+  window.open('/docs/resource-permissions', '_blank')
+}
+
+function openResourceKeyDoc() {
+  window.open('/docs/resource-key', '_blank')
+}
 
 // ============================================================
 // State
@@ -443,6 +470,18 @@ async function loadPermissions() {
 
     if (result.groups && result.groups.length > 0) {
       activeGroupName.value = result.groups[0].name || ''
+    }
+
+    // 等待 el-tree 渲染完成后，设置已授权的勾选状态
+    await nextTick()
+    for (const group of result.groups || []) {
+      const tree = treeRefMap.value[group.name!]
+      if (tree && typeof tree.setCheckedKeys === 'function') {
+        const grantedKeys = (group.permissions || [])
+          .filter(p => p.isGranted && p.isEditable)
+          .map(p => p.name!)
+        tree.setCheckedKeys(grantedKeys)
+      }
     }
   } catch (e) {
     console.error('Failed to load permissions', e)
@@ -757,6 +796,22 @@ defineExpose({
 
 .rp-form {
   max-width: 600px;
+}
+
+.rp-resource-type-item {
+  width: 100%;
+}
+
+.rp-resource-type-item :deep(.el-form-item__content) {
+  flex: 1;
+}
+
+.tab-help-icon,
+.label-help-icon {
+  margin-left: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--el-text-color-secondary);
 }
 
 .resource-permissions-panel {

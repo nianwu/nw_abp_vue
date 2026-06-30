@@ -53,6 +53,7 @@ const menuGroups = computed<MenuGroup[]>(() => {
     if (!r.name || !r.path || r.path.includes(':')) return false
     const policy = r.meta.requiredPolicy as string | undefined
     if (policy && !hasPermission(policy)) return false
+    if (r.meta.public === true) return false
     return r.path !== '/' && r.path !== '/oidc-callback' && !r.path.startsWith('/account') && !r.path.startsWith('/error')
   })
 

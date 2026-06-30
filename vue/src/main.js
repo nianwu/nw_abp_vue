@@ -11,6 +11,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import ElementPlus from 'element-plus';
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs';
 import 'element-plus/dist/index.css';
 import App from './App.vue';
 import router from './router';
@@ -36,7 +37,7 @@ async function bootstrap() {
     // 5. 基础设施 — local 模式注册 HTTP 拦截器，remote 模式为 no-op
     await providers.setupInfrastructure();
     // 6. Element Plus + Router
-    app.use(ElementPlus);
+    app.use(ElementPlus, { locale: zhCn });
     app.use(router);
     // 7. 全局指令
     app.directive('permission', vPermission);

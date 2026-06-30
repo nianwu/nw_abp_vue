@@ -2,7 +2,8 @@
   <div class="flex flex-col items-center justify-center h-full">
     <div class="text-6xl font-bold text-gray-300 mb-4">{{ code }}</div>
     <h2 class="text-xl text-gray-600 mb-2">{{ title }}</h2>
-    <p class="text-gray-400 mb-6">{{ description }}</p>
+    <p class="text-gray-400 mb-2">{{ description }}</p>
+    <p v-if="from" class="text-gray-300 text-sm mb-4 font-mono">来源：{{ from }}</p>
     <el-button v-if="code === 404" type="primary" @click="$router.push('/')">返回首页</el-button>
     <el-button v-if="code === 403" type="primary" @click="$router.back()">返回上一页</el-button>
     <el-button v-if="code === 500" type="primary" @click="$router.push('/')">返回首页</el-button>
@@ -11,8 +12,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 
 const props = defineProps<{ code: 403 | 404 | 500 }>()
+
+const route = useRoute()
+const from = computed(() => (route.query.from as string) || '')
 
 const info = {
   403: { title: '无权限访问', description: '您没有访问此页面的权限' },

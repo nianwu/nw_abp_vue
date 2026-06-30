@@ -1,0 +1,125 @@
+/**
+ * 默认本地化资源 — local provider 使用，也可作为 remote provider 的服务降级数据
+ *
+ * 仅包含页面级常用 key，菜单/组件文案通过 i18n fallback 回退到 key 本身。
+ */
+import type { ApplicationLocalizationDto } from '@/types/abp'
+
+export const defaultLocalization: ApplicationLocalizationDto = {
+  currentCulture: {
+    name: 'zh-Hans',
+    cultureName: 'zh-Hans',
+    displayName: '中文(简体)',
+    englishName: 'Chinese (Simplified)',
+    nativeName: '中文(简体)',
+    twoLetterIsoLanguageName: 'zh',
+    threeLetterIsoLanguageName: 'zho',
+    dateTimeFormat: {
+      dateSeparator: '/',
+      shortDatePattern: 'yyyy/M/d',
+      shortTimePattern: 'HH:mm',
+    },
+    isRightToLeft: false,
+  },
+  resources: {
+    TodoApp: {
+      texts: {
+        // 菜单
+        Home: '首页',
+        Identity: '身份管理',
+        Users: '用户',
+        Roles: '角色',
+        TenantManagement: '租户管理',
+        Tenants: '租户',
+        SettingManagement: '设置',
+        Settings: '设置',
+
+        // 通用操作
+        Create: '新建',
+        Edit: '编辑',
+        Delete: '删除',
+        Save: '保存',
+        Cancel: '取消',
+        Search: '搜索',
+        Actions: '操作',
+        Confirm: '确认',
+        Back: '返回',
+
+        // 用户管理
+        UserName: '用户名',
+        Name: '姓名',
+        Surname: '姓氏',
+        Email: '邮箱',
+        PhoneNumber: '手机号',
+        IsActive: '激活',
+        Password: '密码',
+        EmailAddress: '邮箱地址',
+        RoleName: '角色名',
+        IsDefault: '默认',
+        IsPublic: '公开',
+        IsStatic: '静态',
+        CreationTime: '创建时间',
+        LastModificationTime: '最后修改时间',
+
+        // 角色
+        'Permission:Identity': '身份权限',
+
+        // 租户
+        TenantName: '租户名',
+        AdminEmailAddress: '管理员邮箱',
+        AdminPassword: '管理员密码',
+        EditionName: '版本',
+        ConnectionStrings: '连接字符串',
+
+        // 设置
+        EmailSettings: '邮件设置',
+        Timezone: '时区',
+        SmtpHost: 'SMTP 主机',
+        SmtpPort: 'SMTP 端口',
+        SmtpUserName: 'SMTP 用户名',
+        SmtpPassword: 'SMTP 密码',
+        DefaultFromAddress: '默认发件地址',
+        DefaultFromDisplayName: '默认发件人显示名',
+        SendTestEmail: '发送测试邮件',
+
+        // 通用
+        'AreYouSure': '确定要执行此操作吗？',
+        'YouWillNotBeAbleToRevertThis': '操作后无法恢复。',
+        'SuccessfullyDeleted': '删除成功',
+        'SuccessfullySaved': '保存成功',
+        'SuccessfullyCreated': '创建成功',
+        'NoData': '暂无数据',
+        'NoResults': '未找到匹配结果',
+        'NoOptions': '无可用选项',
+        'Loading': '加载中...',
+
+        // 权限
+        'Permission:Identity.Users': '用户管理权限',
+        'Permission:Identity.Roles': '角色管理权限',
+        'Permission:TenantManagement.Tenants': '租户管理权限',
+        'Permission:SettingManagement': '设置管理权限',
+
+        // 登录
+        'Login': '登录',
+        'Logout': '登出',
+        'RememberMe': '记住登录状态',
+        'ForgotPassword': '忘记密码？',
+        'Register': '注册新账户',
+        'NotAuthorizedMessage': '您没有访问此页面的权限。',
+        'PageNotFoundMessage': '您访问的页面不存在。',
+        'ServerErrorMessage': '服务器发生内部错误，请稍后重试。',
+        'GoBack': '返回上一页',
+        'GoHome': '返回首页',
+        'NoPermission': '无权限',
+        'PageNotFound': '页面不存在',
+        'ServerError': '服务器错误',
+
+        // 动态表单验证
+        'ThisFieldIsRequired': '此项为必填',
+        'InvalidEmailFormat': '邮箱格式不正确',
+        'PasswordMismatch': '两次输入的密码不一致',
+        'MinLength': '最小长度为 {min} 个字符',
+      },
+    },
+  },
+}

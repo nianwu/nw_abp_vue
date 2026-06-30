@@ -14,6 +14,13 @@
 nw_abp_vue/
 ├── demo/          # Angular 前端（从 abp_demo 复制）
 ├── docs/          # 项目文档（从 abp_demo/docs 迁移）
+├── .nw/           # 项目工作文件
+│   └── claude/    # AI 辅助开发规划与执行记录
+│       ├── p001/  # 规划一：Vue端实施规划
+│       ├── p002/  # 规划二：Vue端开发任务
+│       │   └── logs/  # 执行日志
+│       ├── skills/     # 自定义技能定义
+│       └── workflows/  # 工作流脚本
 └── CLAUDE.md      # 项目说明
 ```
 

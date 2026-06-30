@@ -1,45 +1,54 @@
 <template>
-  <div>
+  <div class="max-w-5xl">
     <h2 class="text-xl font-semibold mb-6">个人资料</h2>
 
-    <el-card shadow="never" class="mb-6">
-      <template #header>
-        <span class="font-medium">基本信息</span>
-      </template>
-      <AbpDynamicForm
-        :fields="profileFields"
-        :model-value="profileForm"
-        @update:model-value="profileForm = $event"
-      />
-      <div class="mt-4">
-        <el-button type="primary" :loading="savingProfile" @click="handleUpdateProfile">保存修改</el-button>
-      </div>
-    </el-card>
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+      <el-card shadow="never">
+        <template #header>
+          <div class="flex items-center gap-2">
+            <el-icon><User /></el-icon>
+            <span class="font-medium">基本信息</span>
+          </div>
+        </template>
+        <AbpDynamicForm
+          :fields="profileFields"
+          :model-value="profileForm"
+          @update:model-value="profileForm = $event"
+        />
+        <div class="mt-4">
+          <el-button type="primary" :loading="savingProfile" @click="handleUpdateProfile">保存修改</el-button>
+        </div>
+      </el-card>
 
-    <el-card shadow="never">
-      <template #header>
-        <span class="font-medium">修改密码</span>
-      </template>
-      <el-form ref="passwordFormRef" :model="passwordForm" :rules="passwordRules" label-position="top" @submit.prevent>
-        <el-form-item label="当前密码" prop="currentPassword" required>
-          <el-input v-model="passwordForm.currentPassword" type="password" show-password placeholder="请输入当前密码" />
-        </el-form-item>
-        <el-form-item label="新密码" prop="newPassword" required>
-          <el-input v-model="passwordForm.newPassword" type="password" show-password placeholder="请输入新密码" />
-        </el-form-item>
-        <el-form-item label="确认新密码" prop="confirmPassword" required>
-          <el-input v-model="passwordForm.confirmPassword" type="password" show-password placeholder="请再次输入新密码" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" :loading="savingPassword" @click="handleChangePassword">修改密码</el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
+      <el-card shadow="never">
+        <template #header>
+          <div class="flex items-center gap-2">
+            <el-icon><Lock /></el-icon>
+            <span class="font-medium">修改密码</span>
+          </div>
+        </template>
+        <el-form ref="passwordFormRef" :model="passwordForm" :rules="passwordRules" label-position="top" @submit.prevent>
+          <el-form-item label="当前密码" prop="currentPassword" required>
+            <el-input v-model="passwordForm.currentPassword" type="password" show-password placeholder="请输入当前密码" />
+          </el-form-item>
+          <el-form-item label="新密码" prop="newPassword" required>
+            <el-input v-model="passwordForm.newPassword" type="password" show-password placeholder="请输入新密码" />
+          </el-form-item>
+          <el-form-item label="确认新密码" prop="confirmPassword" required>
+            <el-input v-model="passwordForm.confirmPassword" type="password" show-password placeholder="请再次输入新密码" />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" :loading="savingPassword" @click="handleChangePassword">修改密码</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
+import { User, Lock } from '@element-plus/icons-vue'
 import { getProfile, updateProfile, changePassword } from '@/api/account'
 import { showSuccess, showError } from '@/components/AbpToast'
 import AbpDynamicForm from '@/components/AbpDynamicForm.vue'

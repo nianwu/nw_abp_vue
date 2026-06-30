@@ -1,10 +1,13 @@
 <template>
   <div>
-    <h2 class="text-xl font-bold text-gray-700 mb-6">概览</h2>
+    <h2 class="flex items-center gap-2 text-xl font-bold text-gray-700 mb-6">
+      <el-icon><DataAnalysis /></el-icon>
+      概览
+    </h2>
 
     <!-- 统计卡片 -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <el-card shadow="hover" class="stat-card">
+      <el-card v-if="hasPermission('AbpIdentity.Users')" shadow="hover" class="stat-card">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
             <el-icon :size="24" color="#409EFF"><User /></el-icon>
@@ -15,7 +18,7 @@
           </div>
         </div>
       </el-card>
-      <el-card shadow="hover" class="stat-card">
+      <el-card v-if="hasPermission('AbpIdentity.Roles')" shadow="hover" class="stat-card">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
             <el-icon :size="24" color="#67C23A"><Avatar /></el-icon>
@@ -26,7 +29,7 @@
           </div>
         </div>
       </el-card>
-      <el-card shadow="hover" class="stat-card">
+      <el-card v-if="hasPermission('AbpTenantManagement.Tenants')" shadow="hover" class="stat-card">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center">
             <el-icon :size="24" color="#E6A23C"><OfficeBuilding /></el-icon>
@@ -37,7 +40,7 @@
           </div>
         </div>
       </el-card>
-      <el-card shadow="hover" class="stat-card">
+      <el-card v-if="hasPermission('AbpAccount.SettingManagement')" shadow="hover" class="stat-card">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center">
             <el-icon :size="24" color="#9b59b6"><Setting /></el-icon>
@@ -51,13 +54,16 @@
     </div>
 
     <!-- 快捷入口 -->
-    <el-card shadow="never" class="mb-6">
+    <el-card v-if="filteredQuickLinks.length > 0" shadow="never" class="mb-6">
       <template #header>
-        <span class="font-medium">快捷入口</span>
+        <div class="flex items-center gap-2">
+          <el-icon><Link /></el-icon>
+          <span class="font-medium">快捷入口</span>
+        </div>
       </template>
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <el-button
-          v-for="link in quickLinks"
+          v-for="link in filteredQuickLinks"
           :key="link.path"
           :icon="link.icon"
           class="quick-link-btn"
@@ -71,7 +77,10 @@
     <!-- 系统信息 -->
     <el-card shadow="never">
       <template #header>
-        <span class="font-medium">系统信息</span>
+        <div class="flex items-center gap-2">
+          <el-icon><InfoFilled /></el-icon>
+          <span class="font-medium">系统信息</span>
+        </div>
       </template>
       <el-descriptions :column="2" border size="small">
         <el-descriptions-item label="应用名称">{{ appName }}</el-descriptions-item>
@@ -84,10 +93,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { User, Avatar, OfficeBuilding, Setting } from '@element-plus/icons-vue'
+import { reactive, computed } from 'vue'
+import { User, Avatar, OfficeBuilding, Setting, DataAnalysis, Link, InfoFilled } from '@element-plus/icons-vue'
+import { usePermission } from '@/composables/usePermission'
 import { APP_NAME } from '@/config/env'
 
+const { hasPermission } = usePermission()
 const appName = APP_NAME
 
 const stats = reactive({
@@ -98,11 +109,13 @@ const stats = reactive({
 })
 
 const quickLinks = [
-  { path: '/identity/users', label: '用户管理', icon: User },
-  { path: '/identity/roles', label: '角色管理', icon: Avatar },
-  { path: '/tenant-management/tenants', label: '租户管理', icon: OfficeBuilding },
-  { path: '/setting-management', label: '系统设置', icon: Setting },
+  { path: '/identity/users', label: '用户管理', icon: User, policy: 'AbpIdentity.Users' },
+  { path: '/identity/roles', label: '角色管理', icon: Avatar, policy: 'AbpIdentity.Roles' },
+  { path: '/tenant-management/tenants', label: '租户管理', icon: OfficeBuilding, policy: 'AbpTenantManagement.Tenants' },
+  { path: '/setting-management', label: '系统设置', icon: Setting, policy: 'AbpAccount.SettingManagement' },
 ]
+
+const filteredQuickLinks = computed(() => quickLinks.filter((l) => hasPermission(l.policy)))
 </script>
 
 <style scoped>

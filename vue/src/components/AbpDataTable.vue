@@ -42,6 +42,18 @@
                 </div>
               </div>
             </el-checkbox-group>
+            <!-- 操作列：不可隐藏，仅在手动调整列宽后显示 -->
+            <div v-if="$slots.actions && columnWidths['__actions__']" class="col-setting-item">
+              <div class="flex items-center justify-between">
+                <span class="text-sm">操作</span>
+                <div class="flex items-center gap-1">
+                  <span class="text-xs text-gray-400">{{ columnWidths['__actions__'] }}</span>
+                  <el-button size="small" text type="primary" title="重置列宽" @click="resetColWidth('__actions__')">
+                    <el-icon :size="12"><Refresh /></el-icon>
+                  </el-button>
+                </div>
+              </div>
+            </div>
             <el-divider />
             <el-button size="small" plain title="清除所有手动调整的列宽，恢复默认" @click="clearColWidths">重置所有列宽</el-button>
           </div>
@@ -83,7 +95,7 @@
             </template>
           </el-table-column>
         </template>
-        <el-table-column v-if="$slots.actions" label="操作" :width="actionsWidth" fixed="right" align="center" class-name="actions-column">
+        <el-table-column v-if="$slots.actions" label="操作" :width="actionsColWidth" fixed="right" align="center" class-name="actions-column">
           <template #default="scope">
             <slot name="actions" :row="scope.row" :$index="scope.$index" />
           </template>
@@ -116,7 +128,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { Search, Operation, Delete } from '@element-plus/icons-vue'
+import { Search, Operation, Delete, Refresh } from '@element-plus/icons-vue'
 import { format, formatDistanceStrict, differenceInDays } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import HTTPClient from '@/api/http'
@@ -246,6 +258,11 @@ function loadColWidths() {
       if (saved) columnWidths.value[col.prop] = saved
     } catch { /* */ }
   }
+  // 操作列宽
+  try {
+    const saved = localStorage.getItem(COLWIDTH_KEY + props.storageKey + ':__actions__')
+    if (saved) columnWidths.value['__actions__'] = saved
+  } catch { /* */ }
 }
 loadColWidths()
 
@@ -268,6 +285,7 @@ function clearColWidths() {
   for (const col of props.columns) {
     try { localStorage.removeItem(COLWIDTH_KEY + props.storageKey + ':' + col.prop) } catch { /* */ }
   }
+  try { localStorage.removeItem(COLWIDTH_KEY + props.storageKey + ':__actions__') } catch { /* */ }
   columnWidths.value = {}
 }
 
@@ -275,9 +293,12 @@ function colResizedWidth(col: ColumnDef): string | undefined {
   return columnWidths.value[col.prop] || col.width || undefined
 }
 
+const actionsColWidth = computed(() => columnWidths.value['__actions__'] || props.actionsWidth)
+
 // Element Plus 原生列宽拖拽事件
-function onHeaderDragEnd(newWidth: number, _oldWidth: number, column: { property: string }) {
-  saveColWidth(column.property, newWidth + 'px')
+function onHeaderDragEnd(newWidth: number, _oldWidth: number, column: { property?: string }) {
+  const key = column.property || '__actions__'
+  saveColWidth(key, newWidth + 'px')
 }
 
 const currentPage = ref(1)

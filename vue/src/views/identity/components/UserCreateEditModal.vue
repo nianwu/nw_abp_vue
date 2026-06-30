@@ -8,7 +8,7 @@
   >
     <el-tabs v-model="activeTab">
       <el-tab-pane label="基本信息" name="info">
-        <AbpDynamicForm v-model="formData" :fields="fields" :field-errors="fieldErrors" />
+        <AbpDynamicForm ref="formRef" v-model="formData" :fields="fields" :field-errors="fieldErrors" />
       </el-tab-pane>
       <el-tab-pane label="角色分配" name="roles" v-if="!userId">
         <el-transfer v-model="selectedRoles" :data="roleOptions" :titles="['可用角色', '已分配']" />
@@ -30,6 +30,7 @@ import type { AbpFormItem } from '@/types/abp'
 const props = defineProps<{ visible: boolean; userId: string | null }>()
 const emit = defineEmits<{ 'update:visible': [boolean]; saved: [] }>()
 
+const formRef = ref<InstanceType<typeof AbpDynamicForm>>()
 const activeTab = ref('info')
 const submitting = ref(false)
 const fieldErrors = ref<Record<string, string[]>>({})
@@ -83,6 +84,8 @@ watch(() => props.visible, async (v) => {
 })
 
 async function handleSubmit() {
+  const valid = await formRef.value?.validate()
+  if (!valid) return
   submitting.value = true
   try {
     if (props.userId) {

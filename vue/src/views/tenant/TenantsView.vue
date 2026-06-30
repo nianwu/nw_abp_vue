@@ -14,6 +14,7 @@
       <template #cell-isActive="{ row }">
         <el-switch
           :model-value="!!(row as any).isActive"
+          :loading="togglingTenantId === (row as any).id"
           @change="(v) => handleToggleActive(row as any, !!v)"
         />
       </template>
@@ -56,6 +57,7 @@ const modalVisible = ref(false)
 const connectionStringVisible = ref(false)
 const editingTenantId = ref<string | null>(null)
 const selectedTenantId = ref<string | null>(null)
+const togglingTenantId = ref<string | null>(null)
 
 const columns = [
   { prop: 'name', label: '名称', minWidth: '140' },
@@ -86,16 +88,21 @@ function openConnectionStrings(row: TenantDto) {
 }
 
 async function handleToggleActive(row: TenantDto, active: boolean) {
+  const previous = row.isActive
+  togglingTenantId.value = row.id!
   try {
     await tenantApi.updateTenant(row.id!, {
       name: row.name || '',
       isActive: active,
       concurrencyStamp: row.concurrencyStamp,
     })
+    row.isActive = active
     showSuccess(active ? '已启用' : '已禁用')
-    tableRef.value?.refresh()
   } catch {
+    row.isActive = previous
     showError('操作失败')
+  } finally {
+    togglingTenantId.value = null
   }
 }
 

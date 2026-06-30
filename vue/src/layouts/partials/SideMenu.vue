@@ -5,10 +5,14 @@
     class="flex-1 w-full"
     router
   >
+    <el-menu-item index="/">
+      <el-icon><HomeFilled /></el-icon>
+      <span>首页</span>
+    </el-menu-item>
     <template v-for="group in menuGroups" :key="group.title">
       <el-menu-item-group :title="group.title">
         <el-menu-item v-for="item in group.items" :key="item.path" :index="item.path">
-          <el-icon v-if="item.meta?.icon"><component :is="item.meta.icon" /></el-icon>
+          <el-icon v-if="iconFor(item.path)"><component :is="iconFor(item.path)" /></el-icon>
           <span>{{ item.meta?.title || item.name }}</span>
         </el-menu-item>
       </el-menu-item-group>
@@ -19,7 +23,19 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { HomeFilled, User, Avatar, OfficeBuilding, Setting } from '@element-plus/icons-vue'
 import { usePermission } from '@/composables/usePermission'
+
+const ICON_MAP: Record<string, any> = {
+  '/identity/users': User,
+  '/identity/roles': Avatar,
+  '/tenant-management/tenants': OfficeBuilding,
+  '/setting-management': Setting,
+}
+
+function iconFor(path: string) {
+  return ICON_MAP[path] || null
+}
 
 defineProps<{ collapsed?: boolean }>()
 

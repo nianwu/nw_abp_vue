@@ -3,6 +3,15 @@ import { mockGetTenants, mockGetTenant, mockCreateTenant, mockUpdateTenant, mock
 import { mockGetPermissions } from '@/mocks/data/permission';
 import { mockGetFeatures } from '@/mocks/data/feature';
 import { mockEmailSettings, mockTimezone, mockTimezones } from '@/mocks/data/settings';
+import { mockLocalization } from '@/mocks/data/localization';
+import { mockAppConfig } from '@/mocks/data/app-config';
+/**
+ * 模拟网络延时 — [0.1, 0.5) 秒之间的随机值
+ */
+function simulateDelay() {
+    return new Promise((resolve) => setTimeout(resolve, 100 + Math.random() * 400))
+}
+
 /**
  * 注册 Mock 响应拦截器。
  * 对匹配 /api/ 前缀的请求，根据 method + URL 返回模拟数据。
@@ -16,13 +25,13 @@ export function registerMockInterceptor(httpClient) {
         const mockResult = matchMock(method?.toUpperCase() || 'GET', url, config.params, config.data);
         if (mockResult !== undefined) {
             config.adapter = function () {
-                return Promise.resolve({
+                return simulateDelay().then(() => ({
                     data: mockResult,
                     status: 200,
                     statusText: 'OK',
                     headers: {},
                     config,
-                });
+                }));
             };
         }
         return config;
@@ -34,8 +43,14 @@ function matchMock(method, url, params, data) {
     const urlWithoutQuery = url.split('?')[0];
     // ========================
     // Application Configuration / Localization
-    // — 在 main.ts 分流中直接设置，不走此处
+    // 正常路径由 main.ts 分流，此处作为 fallback 兜底
     // ========================
+    if (method === 'GET' && urlWithoutQuery === '/api/abp/application-localization') {
+        return mockLocalization;
+    }
+    if (method === 'GET' && urlWithoutQuery === '/api/abp/application-configuration') {
+        return mockAppConfig;
+    }
     // ========================
     // Identity Users
     // ========================
@@ -62,7 +77,7 @@ function matchMock(method, url, params, data) {
         }
         if (method === 'DELETE') {
             mockDeleteUser(id);
-            return undefined;
+            return {};
         }
     }
     const userRolesMatch = urlWithoutQuery.match(/^\/api\/identity\/users\/([^/]+)\/roles$/);
@@ -70,7 +85,7 @@ function matchMock(method, url, params, data) {
         if (method === 'GET')
             return mockGetUserRoles(userRolesMatch[1]);
         if (method === 'PUT')
-            return undefined;
+            return {};
     }
     // ========================
     // Identity Roles
@@ -100,7 +115,7 @@ function matchMock(method, url, params, data) {
         }
         if (method === 'DELETE') {
             mockDeleteRole(id);
-            return undefined;
+            return {};
         }
     }
     // ========================
@@ -128,7 +143,7 @@ function matchMock(method, url, params, data) {
         }
         if (method === 'DELETE') {
             mockDeleteTenant(id);
-            return undefined;
+            return {};
         }
     }
     const connStrMatch = urlWithoutQuery.match(/^\/api\/multi-tenancy\/tenants\/([^/]+)\/default-connection-string$/);
@@ -138,11 +153,11 @@ function matchMock(method, url, params, data) {
             return mockGetDefaultConnectionString(id);
         if (method === 'PUT') {
             mockUpdateDefaultConnectionString(id, params?.defaultConnectionString || '');
-            return undefined;
+            return {};
         }
         if (method === 'DELETE') {
             mockDeleteDefaultConnectionString(id);
-            return undefined;
+            return {};
         }
     }
     // ========================
@@ -152,7 +167,12 @@ function matchMock(method, url, params, data) {
         return mockGetPermissions();
     }
     if (method === 'PUT' && urlWithoutQuery === '/api/permission-management/permissions') {
-        return undefined;
+        return {};
+    }
+    // 资源权限 — 返回空数据
+    if (urlWithoutQuery.startsWith('/api/permission-management/permissions/')) {
+        if (method === 'GET') return { permissions: [], providers: [], groups: [], keys: [] };
+        if (method === 'PUT' || method === 'DELETE') return {};
     }
     // ========================
     // Feature Management
@@ -161,7 +181,7 @@ function matchMock(method, url, params, data) {
         return mockGetFeatures();
     }
     if (method === 'PUT' && urlWithoutQuery === '/api/feature-management/features') {
-        return undefined;
+        return {};
     }
     // ========================
     // Settings
@@ -170,16 +190,16 @@ function matchMock(method, url, params, data) {
         return mockEmailSettings;
     }
     if (method === 'POST' && urlWithoutQuery === '/api/setting-management/emailing') {
-        return undefined;
+        return {};
     }
     if (method === 'POST' && urlWithoutQuery === '/api/setting-management/emailing/send-test-email') {
-        return undefined;
+        return {};
     }
     if (method === 'GET' && urlWithoutQuery === '/api/setting-management/timezone') {
         return mockTimezone;
     }
     if (method === 'POST' && urlWithoutQuery === '/api/setting-management/timezone') {
-        return undefined;
+        return {};
     }
     if (method === 'GET' && urlWithoutQuery === '/api/setting-management/timezone/timezones') {
         return mockTimezones;

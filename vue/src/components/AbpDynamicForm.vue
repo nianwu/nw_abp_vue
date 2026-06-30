@@ -1,7 +1,7 @@
 <template>
-  <el-form ref="formRef" :model="formValues" label-position="top" @submit.prevent>
+  <el-form ref="formRef" :model="formValues" :rules="formRules" label-position="top" @submit.prevent>
     <template v-for="field in fields" :key="field.name">
-      <el-form-item :label="field.label" :required="field.required"
+      <el-form-item :label="field.label" :required="field.required" :prop="field.name"
         :error="fieldErrors?.[field.name]?.[0]" :validate-status="fieldErrors?.[field.name] ? 'error' : undefined">
         <!-- text -->
         <el-input v-if="field.type === 'text'" v-model="(formValues as any)[field.name]"
@@ -35,14 +35,41 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
+import type { FormRules } from 'element-plus'
 import type { AbpFormItem } from '@/types/abp'
 
 const props = defineProps<{ fields: AbpFormItem[]; modelValue: Record<string, unknown>; fieldErrors?: Record<string, string[]> }>()
 
 const emit = defineEmits<{ 'update:modelValue': [v: Record<string, unknown>] }>()
 
+const formRef = ref()
+
 const formValues = reactive<Record<string, unknown>>({})
+
+// 根据 fields 自动生成 Element Plus 校验规则
+const formRules = computed<FormRules>(() => {
+  const rules: FormRules = {}
+  for (const f of props.fields) {
+    const fieldRules: any[] = []
+    if (f.required) {
+      fieldRules.push({ required: true, message: `${f.label}不能为空`, trigger: 'blur' })
+    }
+    if (f.type === 'email') {
+      fieldRules.push({ type: 'email', message: '邮箱格式不正确', trigger: 'blur' })
+    }
+    if (fieldRules.length) rules[f.name] = fieldRules
+  }
+  return rules
+})
+
+// 暴露 validate 方法供父组件调用
+async function validate() {
+  if (!formRef.value) return true
+  return formRef.value.validate().catch(() => false)
+}
+
+defineExpose({ validate })
 
 // 同步外部 modelValue → 内部 formValues
 watch(() => props.modelValue, (v) => {

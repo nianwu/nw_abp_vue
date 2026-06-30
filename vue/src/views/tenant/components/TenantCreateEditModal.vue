@@ -6,7 +6,7 @@
     @confirm="handleSubmit"
     @update:visible="$emit('update:visible', $event)"
   >
-    <AbpDynamicForm v-model="formData" :fields="computedFields" :field-errors="fieldErrors" />
+    <AbpDynamicForm ref="formRef" v-model="formData" :fields="computedFields" :field-errors="fieldErrors" />
   </AbpModal>
 </template>
 
@@ -29,6 +29,7 @@ const emit = defineEmits<{
   saved: []
 }>()
 
+const formRef = ref<InstanceType<typeof AbpDynamicForm>>()
 const submitting = ref(false)
 const fieldErrors = ref<Record<string, string[]>>({})
 
@@ -83,6 +84,8 @@ watch(
 )
 
 async function handleSubmit() {
+  const valid = await formRef.value?.validate()
+  if (!valid) return
   submitting.value = true
   try {
     if (props.tenantId) {

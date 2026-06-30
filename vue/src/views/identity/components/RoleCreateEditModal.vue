@@ -6,7 +6,7 @@
     @confirm="handleSubmit"
     @update:visible="$emit('update:visible', $event)"
   >
-    <AbpDynamicForm v-model="formData" :fields="fields" :field-errors="fieldErrors" />
+    <AbpDynamicForm ref="formRef" v-model="formData" :fields="fields" :field-errors="fieldErrors" />
   </AbpModal>
 </template>
 
@@ -22,6 +22,7 @@ import type { AbpFormItem } from '@/types/abp'
 const props = defineProps<{ visible: boolean; roleId: string | null }>()
 const emit = defineEmits<{ 'update:visible': [boolean]; saved: [] }>()
 
+const formRef = ref<InstanceType<typeof AbpDynamicForm>>()
 const submitting = ref(false)
 const fieldErrors = ref<Record<string, string[]>>({})
 
@@ -52,6 +53,8 @@ watch(() => props.visible, async (v) => {
 })
 
 async function handleSubmit() {
+  const valid = await formRef.value?.validate()
+  if (!valid) return
   submitting.value = true
   try {
     if (props.roleId) {

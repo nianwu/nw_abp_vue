@@ -1,19 +1,31 @@
 <template>
-  <div>
-    <h2 class="text-xl mb-6">设置管理</h2>
-
-    <el-tabs type="border-card">
-      <el-tab-pane label="电子邮件" lazy>
+  <div class="max-w-5xl">
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 items-start">
+      <el-card shadow="never">
+        <template #header>
+          <div class="flex items-center gap-2">
+            <el-icon><Message /></el-icon>
+            <span class="font-medium">电子邮件</span>
+          </div>
+        </template>
         <EmailSettingsTab />
-      </el-tab-pane>
-      <el-tab-pane label="时区" lazy>
+      </el-card>
+
+      <el-card shadow="never">
+        <template #header>
+          <div class="flex items-center gap-2">
+            <el-icon><Clock /></el-icon>
+            <span class="font-medium">时区</span>
+          </div>
+        </template>
         <TimezoneSettingsTab />
-      </el-tab-pane>
-    </el-tabs>
+      </el-card>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Message, Clock } from '@element-plus/icons-vue'
 import EmailSettingsTab from './components/EmailSettingsTab.vue'
 import TimezoneSettingsTab from './components/TimezoneSettingsTab.vue'
 </script>

@@ -1,7 +1,7 @@
 <template>
-  <el-dropdown trigger="click">
+  <el-dropdown trigger="hover">
     <span class="flex items-center gap-2 cursor-pointer text-gray-700">
-      <el-avatar :size="28" icon="UserFilled" />
+      <el-avatar :size="28">{{ userName.charAt(0).toUpperCase() }}</el-avatar>
       <span class="hidden sm:inline">{{ userName }}</span>
     </span>
     <template #dropdown>

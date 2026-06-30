@@ -2,16 +2,13 @@
  * 本地化 composable
  */
 import { useI18n } from 'vue-i18n'
-import { useSessionStore } from '@/stores/session'
-import { switchLanguage } from '@/plugins/i18n'
+import { providers } from '@/providers'
 
 export function useLocalization() {
   const { t, locale } = useI18n()
-  const session = useSessionStore()
 
   async function changeLanguage(lang: string): Promise<void> {
-    await switchLanguage(lang)
-    session.setLanguage(lang)
+    await providers.i18n.switchLanguage(lang)
   }
 
   return { t, locale, changeLanguage }

@@ -35,7 +35,7 @@ export async function loadLocaleMessages(lang: string): Promise<void> {
 /** 切换语言并重新加载资源 */
 export async function switchLanguage(lang: string): Promise<void> {
   await loadLocaleMessages(lang)
-  i18n.global.locale.value = lang
+  ;(i18n.global.locale as any) = lang
   useSessionStore().setLanguage(lang)
 }
 

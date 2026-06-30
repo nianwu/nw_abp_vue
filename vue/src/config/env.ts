@@ -3,7 +3,7 @@
  * 所有环境相关变量从 import.meta.env 读取，Vite 在构建时替换
  */
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
 
 export const OAUTH_AUTHORITY =
   import.meta.env.VITE_OAUTH_AUTHORITY || 'https://localhost:44300'

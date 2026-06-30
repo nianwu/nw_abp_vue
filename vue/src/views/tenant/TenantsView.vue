@@ -1,10 +1,12 @@
 <template>
-  <div class="p-4">
+  <div>
     <AbpDataTable
       ref="tableRef"
       :columns="columns"
       :api="fetchTenants"
       search-placeholder="搜索租户..."
+      actions-width="300"
+      storage-key="tenant-tenants"
     >
       <template #toolbar-actions>
         <el-button type="primary" @click="openCreate">新建租户</el-button>
@@ -16,10 +18,10 @@
         />
       </template>
       <template #actions="{ row }">
-        <el-button size="small" @click="openEdit(row as any)">编辑</el-button>
-        <el-button size="small" @click="openConnectionStrings(row as any)">连接字符串</el-button>
-        <el-button size="small" type="danger" @click="handleDelete(row as any)">删除</el-button>
-        <el-button size="small" @click="handleFeature(row as any)">功能</el-button>
+        <el-button size="small" link type="primary" :icon="Edit" @click="openEdit(row as any)">编辑</el-button>
+        <el-button size="small" link type="success" :icon="Connection" @click="openConnectionStrings(row as any)">连接字符串</el-button>
+        <el-button size="small" link type="danger" :icon="Delete" @click="handleDelete(row as any)">删除</el-button>
+        <el-button size="small" link type="warning" :icon="Setting" @click="handleFeature(row as any)">功能</el-button>
       </template>
     </AbpDataTable>
 
@@ -38,7 +40,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { format } from 'date-fns'
+import { Edit, Connection, Delete, Setting } from '@element-plus/icons-vue'
 import AbpDataTable from '@/components/AbpDataTable.vue'
 import TenantCreateEditModal from './components/TenantCreateEditModal.vue'
 import ConnectionStringPanel from './components/ConnectionStringPanel.vue'
@@ -60,15 +62,9 @@ const columns = [
   { prop: 'adminEmailAddress', label: '管理员邮箱', minWidth: '180' },
   { prop: 'editionName', label: '版本', minWidth: '120' },
   { prop: 'isActive', label: '启用', width: '80', sortable: false },
-  { prop: 'creationTime', label: '创建时间', minWidth: '160', formatter: formatDateTime },
-  { prop: 'lastModificationTime', label: '最后修改时间', minWidth: '160', formatter: formatDateTime },
+  { prop: 'creationTime', label: '创建时间', minWidth: '160', dateRender: true, hideOnMobile: true },
+  { prop: 'lastModificationTime', label: '最后修改时间', minWidth: '160', dateRender: true, hideOnMobile: true },
 ]
-
-function formatDateTime(_row: unknown, _col: unknown, cell: unknown): string {
-  if (!cell) return '-'
-  try { return format(new Date(cell as string), 'yyyy-MM-dd HH:mm:ss') }
-  catch { return String(cell) }
-}
 
 async function fetchTenants(params: PagedRequestDto) {
   return tenantApi.getTenants(params)

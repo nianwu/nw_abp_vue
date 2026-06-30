@@ -8,6 +8,7 @@
     </div>
 
     <template v-else>
+      <p class="text-sm text-gray-500 mb-4">请选择您所在的时区，系统将根据所选时区显示和转换时间。</p>
       <el-form label-position="top">
         <el-form-item label="时区">
           <el-select

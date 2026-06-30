@@ -1,6 +1,6 @@
 <template>
-  <div class="p-4">
-    <h2 class="text-xl mb-4">设置管理</h2>
+  <div>
+    <h2 class="text-xl mb-6">设置管理</h2>
 
     <el-tabs type="border-card">
       <el-tab-pane label="电子邮件" lazy>

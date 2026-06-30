@@ -2,10 +2,7 @@
   <el-menu
     :default-active="activePath"
     :collapse="collapsed"
-    :class="{ 'h-full': true, 'w-16': collapsed, 'w-56': !collapsed }"
-    background-color="#304156"
-    text-color="#bfcbd9"
-    active-text-color="#409eff"
+    class="flex-1 w-full"
     router
   >
     <template v-for="group in menuGroups" :key="group.title">
@@ -43,11 +40,15 @@ const menuGroups = computed<MenuGroup[]>(() => {
     return r.path !== '/' && r.path !== '/oidc-callback' && !r.path.startsWith('/account') && !r.path.startsWith('/error')
   })
 
-  // 按路径前缀分组
   const groups = new Map<string, MenuItem[]>()
   for (const r of routes) {
     const prefix = r.path.split('/')[1] || 'other'
-    const label = { identity: '身份管理', 'tenant-management': '租户管理', 'setting-management': '设置管理' }[prefix] || prefix
+    const prefixLabels: Record<string, string> = {
+      identity: '身份管理',
+      'tenant-management': '租户管理',
+      'setting-management': '设置管理',
+    }
+    const label = prefixLabels[prefix] || `其他 (${prefix})`
     if (!groups.has(label)) groups.set(label, [])
     groups.get(label)!.push({ path: r.path, name: r.name, meta: r.meta })
   }
@@ -55,3 +56,60 @@ const menuGroups = computed<MenuGroup[]>(() => {
   return Array.from(groups.entries()).map(([title, items]) => ({ title, items }))
 })
 </script>
+
+<style scoped>
+/* 移除菜单默认右侧边框 */
+:deep(.el-menu) {
+  border-right: none !important;
+}
+
+/* 菜单项 */
+:deep(.el-menu-item) {
+  --el-menu-item-height: 50px;
+  height: var(--el-menu-item-height);
+  line-height: var(--el-menu-item-height);
+  margin: 2px 8px;
+  border-radius: 6px;
+}
+
+/* 选中态 — 左侧蓝色竖线标识 */
+:deep(.el-menu-item.is-active) {
+  border-left: 3px solid var(--el-color-primary);
+  padding-left: calc(20px - 3px) !important;
+}
+
+/* 分组标题 */
+:deep(.el-menu-item-group__title) {
+  font-size: 12px;
+  padding: 16px 20px 6px;
+}
+
+:deep(.el-menu-item-group:first-child .el-menu-item-group__title) {
+  padding-top: 8px;
+}
+
+/* 折叠态 — 居中图标 */
+:deep(.el-menu--collapse .el-menu-item) {
+  margin: 2px 8px;
+  padding: 0 !important;
+  justify-content: center;
+}
+
+/* 折叠态激活项 — 左侧小圆点替代竖线 */
+:deep(.el-menu--collapse .el-menu-item.is-active) {
+  border-left: none;
+  position: relative;
+}
+
+:deep(.el-menu--collapse .el-menu-item.is-active::before) {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--el-color-primary);
+}
+</style>

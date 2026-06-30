@@ -9,7 +9,7 @@
     destroy-on-close
   >
     <div v-loading="loading" class="permission-modal-body">
-      <AbpEmptyState v-if="!loading && permissionGroups.length === 0" description="无可用权限" />
+      <AbpEmptyState v-if="!loading && permissionGroups.length === 0" />
 
       <el-tabs v-model="activeTab" v-else>
         <!-- Permission Groups Tab -->

@@ -1,7 +1,11 @@
 /**
  * 应用引导 — mount 前完成全部基础设施初始化
  *
- * 顺序: Pinia → i18n → Config → OIDC → Router → Mount
+ * 顺序: Pinia → i18n → Config → Auth → HTTP 拦截器 → Router → Mount
+ *
+ * 所有外部依赖通过 Provider 抽象层接入：
+ *   设置 VITE_PROVIDER_MODE=local   → 独立开发（零外部依赖）
+ *   设置 VITE_PROVIDER_MODE=remote  → 联调后端 + OIDC
  */
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
@@ -10,10 +14,8 @@ import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import App from './App.vue';
 import router from './router';
-import i18n, { loadLocaleMessages } from './plugins/i18n';
+import { i18n, providers } from './providers';
 import { useAppConfigStore } from './stores/app-config';
-import { useSessionStore } from './stores/session';
-import { useAuth } from './composables/useAuth';
 import { vPermission } from './directives/v-permission';
 import './styles/index.scss';
 async function bootstrap() {
@@ -22,22 +24,23 @@ async function bootstrap() {
     const pinia = createPinia();
     pinia.use(piniaPluginPersistedstate);
     app.use(pinia);
-    // 2. i18n
+    // 2. i18n — 加载翻译资源
     app.use(i18n);
-    const session = useSessionStore();
-    await loadLocaleMessages(session.language || 'zh-Hans');
-    // 3. 获取应用配置
+    await providers.i18n.loadMessages('zh-Hans');
+    // 3. 应用配置 — 获取后写入 Pinia store 供全局使用
     const appConfig = useAppConfigStore();
-    await appConfig.fetchConfig();
-    // 4. OIDC 静默恢复
-    const { trySilentLogin } = useAuth();
-    await trySilentLogin();
-    // 5. Element Plus + Router
+    const config = await providers.config.fetchConfig();
+    appConfig.$patch({ config: config });
+    // 4. 认证 — 静默恢复登录态
+    await providers.auth.trySilentLogin();
+    // 5. 基础设施 — local 模式注册 HTTP 拦截器，remote 模式为 no-op
+    await providers.setupInfrastructure();
+    // 6. Element Plus + Router
     app.use(ElementPlus);
     app.use(router);
-    // 6. 全局指令
+    // 7. 全局指令
     app.directive('permission', vPermission);
-    // 7. 挂载
+    // 8. 挂载
     app.mount('#app');
 }
 bootstrap();

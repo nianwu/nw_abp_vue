@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import type { AbpFormItem } from '@/types/abp'
 import { showSuccess, showError } from '@/components/AbpToast'
 import * as settingsApi from '@/api/settings'

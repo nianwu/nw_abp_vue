@@ -79,6 +79,7 @@ export interface IdentityRoleDto {
   isStatic: boolean
   isPublic: boolean
   creationTime: string
+  lastModificationTime?: string | null
   concurrencyStamp: string | null
   extraProperties: Record<string, unknown>
 }

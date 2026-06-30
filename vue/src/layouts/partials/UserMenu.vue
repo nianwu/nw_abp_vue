@@ -1,6 +1,6 @@
 <template>
   <el-dropdown trigger="click">
-    <span class="flex items-center gap-2 cursor-pointer text-white">
+    <span class="flex items-center gap-2 cursor-pointer text-gray-700">
       <el-avatar :size="28" icon="UserFilled" />
       <span class="hidden sm:inline">{{ userName }}</span>
     </span>

@@ -1,10 +1,11 @@
 <template>
-  <div class="p-4">
+  <div>
     <AbpDataTable
       ref="tableRef"
       :columns="columns"
       :api="fetchRoles"
       search-placeholder="搜索角色..."
+      storage-key="identity-roles"
     >
       <template #toolbar-actions>
         <el-button type="primary" @click="openCreate">新建角色</el-button>
@@ -29,14 +30,16 @@
       </template>
 
       <template #actions="{ row }">
-        <el-button size="small" @click="openEdit(row as any)">编辑</el-button>
+        <el-button size="small" link type="primary" :icon="Edit" @click="openEdit(row as any)">编辑</el-button>
         <el-button
           size="small"
+          link
           type="danger"
+          :icon="Delete"
           :disabled="(row as any).isStatic"
           @click="handleDelete(row as any)"
         >删除</el-button>
-        <el-button size="small" type="primary" plain @click="handleOpenPermission(row as any)">权限</el-button>
+        <el-button size="small" link type="warning" :icon="Lock" @click="handleOpenPermission(row as any)">权限</el-button>
       </template>
     </AbpDataTable>
 
@@ -50,7 +53,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { format } from 'date-fns'
+import { Edit, Lock, Delete } from '@element-plus/icons-vue'
 import AbpDataTable from '@/components/AbpDataTable.vue'
 import RoleCreateEditModal from './components/RoleCreateEditModal.vue'
 import { showConfirm } from '@/components/AbpConfirmDialog'
@@ -69,15 +72,9 @@ const columns = [
   { prop: 'isDefault', label: '默认角色', minWidth: '100' },
   { prop: 'isPublic', label: '公开角色', minWidth: '100' },
   { prop: 'isStatic', label: '静态角色', minWidth: '100' },
-  { prop: 'creationTime', label: '创建时间', minWidth: '160', formatter: formatDateTime },
-  { prop: 'lastModificationTime', label: '最后修改时间', minWidth: '160', formatter: formatDateTime },
+  { prop: 'creationTime', label: '创建时间', minWidth: '160', dateRender: true, hideOnMobile: true },
+  { prop: 'lastModificationTime', label: '最后修改时间', minWidth: '160', dateRender: true, hideOnMobile: true },
 ]
-
-function formatDateTime(_row: unknown, _col: unknown, cell: unknown): string {
-  if (!cell) return '-'
-  try { return format(new Date(cell as string), 'yyyy-MM-dd HH:mm:ss') }
-  catch { return String(cell) }
-}
 
 async function fetchRoles(params: PagedRequestDto) {
   return identityRolesApi.getRoles(params)

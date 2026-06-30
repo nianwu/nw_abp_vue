@@ -42,9 +42,12 @@ html, body {
 
 :root {
   --el-color-primary: #409eff;
-  --el-menu-bg-color: #304156;
-  --el-menu-text-color: #bfcbd9;
-  --el-menu-active-color: #409eff;
+
+  /* 布局尺寸 */
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 64px;
+  --topbar-height: 48px;
+  --breadcrumb-height: 36px;
 }
 
 // ============================================
@@ -52,10 +55,10 @@ html, body {
 // ============================================
 
 #nprogress .bar {
-  background: #409eff !important;
+  background: var(--el-color-primary, #409eff) !important;
   height: 3px !important;
 }
 
 #nprogress .peg {
-  box-shadow: 0 0 10px #409eff, 0 0 5px #409eff !important;
+  box-shadow: 0 0 10px var(--el-color-primary, #409eff), 0 0 5px var(--el-color-primary, #409eff) !important;
 }

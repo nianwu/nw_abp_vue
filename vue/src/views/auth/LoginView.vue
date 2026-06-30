@@ -16,7 +16,7 @@
       <el-form-item>
         <el-checkbox v-model="form.rememberMe">记住我</el-checkbox>
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="mb-2">
         <el-button type="primary" class="w-full" :loading="loading" @click="handleLogin">登录</el-button>
       </el-form-item>
     </el-form>
@@ -28,10 +28,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
 import { useAppConfigStore } from '@/stores/app-config'
+import { useAuthStore } from '@/stores/auth'
 import { showError } from '@/components/AbpToast'
 import httpClient from '@/api/http'
 import type { UserLoginInfo, AbpLoginResult } from '@/types/account'
@@ -73,10 +74,11 @@ async function handleLogin() {
 }
 
 onMounted(async () => {
-  // 若已有 token，尝试恢复
+  // 若已有 token，尝试静默恢复
   const returnUrl = (route.query.redirect as string) || '/'
-  const { trySilentLogin } = useAuth()
-  const ok = await trySilentLogin()
-  if (ok) await router.push(returnUrl)
+  const authStore = useAuthStore()
+  if (authStore.isAuthenticated) {
+    await router.push(returnUrl)
+  }
 })
 </script>

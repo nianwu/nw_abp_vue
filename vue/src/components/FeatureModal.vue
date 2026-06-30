@@ -9,7 +9,7 @@
     destroy-on-close
   >
     <div v-loading="loading" class="feature-modal-body">
-      <AbpEmptyState v-if="!loading && featureGroups.length === 0" description="无可用功能" />
+      <AbpEmptyState v-if="!loading && featureGroups.length === 0" />
 
       <el-tabs v-model="activeGroupName" v-else>
         <el-tab-pane

@@ -8,7 +8,7 @@
           :placeholder="field.placeholder" :readonly="field.readonly" />
         <!-- number -->
         <el-input-number v-else-if="field.type === 'number'" v-model="(formValues as any)[field.name]"
-          :placeholder="field.placeholder" :readonly="field.readonly" :controls="true" />
+          :placeholder="field.placeholder" :readonly="field.readonly" :controls="true" class="w-full" />
         <!-- email -->
         <el-input v-else-if="field.type === 'email'" v-model="(formValues as any)[field.name]"
           type="email" :placeholder="field.placeholder" :readonly="field.readonly" />
@@ -42,11 +42,18 @@ const props = defineProps<{ fields: AbpFormItem[]; modelValue: Record<string, un
 
 const emit = defineEmits<{ 'update:modelValue': [v: Record<string, unknown>] }>()
 
-const formValues = reactive<Record<string, unknown>>({ ...props.modelValue })
+const formValues = reactive<Record<string, unknown>>({})
 
+// 同步外部 modelValue → 内部 formValues
 watch(() => props.modelValue, (v) => {
-  Object.keys(v).forEach((k) => { formValues[k] = v[k] })
-})
+  if (!v) return
+  for (const k of Object.keys(formValues)) {
+    if (!(k in v)) delete formValues[k]
+  }
+  for (const k of Object.keys(v)) {
+    formValues[k] = v[k]
+  }
+}, { immediate: true, deep: true })
 
 watch(formValues, (v) => emit('update:modelValue', { ...v }), { deep: true })
 </script>

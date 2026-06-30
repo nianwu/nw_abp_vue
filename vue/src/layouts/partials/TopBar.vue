@@ -1,10 +1,10 @@
 <template>
-  <el-header class="flex items-center justify-between h-12 px-4" style="background-color: #304156">
+  <el-header class="topbar-header flex items-center justify-between h-12 px-4 bg-white">
     <div class="flex items-center gap-3">
-      <el-icon class="text-white cursor-pointer md:hidden" :size="20" @click="$emit('toggle-sidebar')">
+      <el-icon class="cursor-pointer md:hidden text-gray-600" :size="20" @click="$emit('toggle-sidebar')">
         <Expand />
       </el-icon>
-      <span class="text-white font-semibold text-lg">{{ appName }}</span>
+      <span class="font-semibold text-lg text-gray-700">{{ appName }}</span>
     </div>
     <div class="flex items-center gap-4">
       <TenantBox />
@@ -25,3 +25,9 @@ defineEmits<{ 'toggle-sidebar': [] }>()
 
 const appName = APP_NAME
 </script>
+
+<style scoped>
+.topbar-header {
+  border-bottom: 1px solid #e5e7eb;
+}
+</style>

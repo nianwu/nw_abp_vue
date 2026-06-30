@@ -14,7 +14,7 @@
       <el-form-item label="确认密码" prop="confirmPassword" required>
         <el-input v-model="form.confirmPassword" type="password" show-password placeholder="请再次输入密码" />
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="mb-2">
         <el-button type="primary" class="w-full" :loading="loading" @click="handleRegister">注册</el-button>
       </el-form-item>
     </el-form>

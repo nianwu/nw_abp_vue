@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import { User, Avatar, OfficeBuilding, Setting } from '@element-plus/icons-vue'
 import { registerAuthGuard } from './guards/auth'
 import { registerPermissionGuard } from './guards/permission'
 
@@ -19,12 +20,12 @@ const routes: RouteRecordRaw[] = [
   { path: '/account/reset-password', name: 'ResetPassword', meta: { layout: 'account' }, component: () => import('@/views/auth/ResetPasswordView.vue') },
   { path: '/account/manage-profile', name: 'ManageProfile', meta: { layout: 'application', requiredPolicy: 'AbpAccount.AccountManagement' }, component: () => import('@/views/auth/ManageProfileView.vue') },
   // Identity (ApplicationLayout)
-  { path: '/identity/users', name: 'Users', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Users', title: '用户管理' }, component: () => import('@/views/identity/UsersView.vue') },
-  { path: '/identity/roles', name: 'Roles', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Roles', title: '角色管理' }, component: () => import('@/views/identity/RolesView.vue') },
+  { path: '/identity/users', name: 'Users', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Users', title: '用户管理', icon: User }, component: () => import('@/views/identity/UsersView.vue') },
+  { path: '/identity/roles', name: 'Roles', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Roles', title: '角色管理', icon: Avatar }, component: () => import('@/views/identity/RolesView.vue') },
   // Tenant (ApplicationLayout)
-  { path: '/tenant-management/tenants', name: 'Tenants', meta: { layout: 'application', requiredPolicy: 'AbpTenantManagement.Tenants', title: '租户管理' }, component: () => import('@/views/tenant/TenantsView.vue') },
+  { path: '/tenant-management/tenants', name: 'Tenants', meta: { layout: 'application', requiredPolicy: 'AbpTenantManagement.Tenants', title: '租户管理', icon: OfficeBuilding }, component: () => import('@/views/tenant/TenantsView.vue') },
   // Settings (ApplicationLayout)
-  { path: '/setting-management', name: 'Settings', meta: { layout: 'application', requiredPolicy: 'AbpAccount.SettingManagement', title: '设置管理' }, component: () => import('@/views/settings/SettingsView.vue') },
+  { path: '/setting-management', name: 'Settings', meta: { layout: 'application', requiredPolicy: 'AbpAccount.SettingManagement', title: '设置管理', icon: Setting }, component: () => import('@/views/settings/SettingsView.vue') },
   // Error pages
   { path: '/error/403', name: 'Error403', meta: { layout: 'empty' }, component: () => import('@/components/AbpErrorPage.vue'), props: { code: 403 } },
   { path: '/error/404', name: 'Error404', meta: { layout: 'empty' }, component: () => import('@/components/AbpErrorPage.vue'), props: { code: 404 } },

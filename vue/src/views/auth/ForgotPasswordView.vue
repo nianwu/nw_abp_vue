@@ -2,18 +2,26 @@
   <el-card shadow="always">
     <h2 class="text-center text-xl font-semibold mb-2">忘记密码</h2>
     <p class="text-gray-500 text-sm text-center mb-6">输入您的邮箱，我们将发送密码重置链接</p>
-    <el-form ref="formRef" :model="form" :rules="rules" label-position="top" @submit.prevent="handleSubmit">
-      <el-form-item label="邮箱" prop="email" required>
-        <el-input v-model="form.email" type="email" placeholder="请输入注册时使用的邮箱" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" class="w-full" :loading="loading" @click="handleSubmit">发送重置链接</el-button>
-      </el-form-item>
-    </el-form>
-    <div class="text-center text-sm">
-      <span>想起了密码？</span>
-      <router-link to="/account/login" class="text-blue-500">返回登录</router-link>
-    </div>
+    <template v-if="sent">
+      <p class="text-center text-green-600 mb-4">密码重置链接已发送到您的邮箱，请查收邮件。</p>
+      <div class="text-center">
+        <router-link to="/account/login" class="text-blue-500">返回登录</router-link>
+      </div>
+    </template>
+    <template v-else>
+      <el-form ref="formRef" :model="form" :rules="rules" label-position="top" @submit.prevent="handleSubmit">
+        <el-form-item label="邮箱" prop="email" required>
+          <el-input v-model="form.email" type="email" placeholder="请输入注册时使用的邮箱" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" class="w-full" :loading="loading" @click="handleSubmit">发送重置链接</el-button>
+        </el-form-item>
+      </el-form>
+      <div class="text-center text-sm">
+        <span>想起了密码？</span>
+        <router-link to="/account/login" class="text-blue-500">返回登录</router-link>
+      </div>
+    </template>
   </el-card>
 </template>
 

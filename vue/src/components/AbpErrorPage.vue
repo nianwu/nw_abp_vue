@@ -5,6 +5,7 @@
     <p class="text-gray-400 mb-6">{{ description }}</p>
     <el-button v-if="code === 404" type="primary" @click="$router.push('/')">返回首页</el-button>
     <el-button v-if="code === 403" type="primary" @click="$router.back()">返回上一页</el-button>
+    <el-button v-if="code === 500" type="primary" @click="$router.push('/')">返回首页</el-button>
   </div>
 </template>
 
@@ -19,5 +20,6 @@ const info = {
   500: { title: '服务器错误', description: '服务器发生异常，请稍后重试' },
 }
 
-const { title, description } = computed(() => info[props.code]).value
+const title = computed(() => info[props.code].title)
+const description = computed(() => info[props.code].description)
 </script>

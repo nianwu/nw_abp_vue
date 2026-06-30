@@ -1,6 +1,6 @@
 <template>
   <el-dropdown trigger="click" @command="changeLanguage">
-    <el-button link class="text-white">
+    <el-button link class="text-gray-600">
       {{ currentLanguage }} <el-icon><ArrowDown /></el-icon>
     </el-button>
     <template #dropdown>

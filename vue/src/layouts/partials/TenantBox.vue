@@ -1,5 +1,5 @@
 <template>
-  <span v-if="isMultiTenancyEnabled" class="text-white text-sm mr-2">
+  <span v-if="isMultiTenancyEnabled" class="text-gray-600 text-sm mr-2">
     {{ currentTenant }}
   </span>
 </template>

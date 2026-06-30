@@ -13,6 +13,10 @@ export interface TenantDto {
   name?: string | null
   isActive?: boolean
   concurrencyStamp?: string | null
+  adminEmailAddress?: string | null
+  editionName?: string | null
+  creationTime?: string
+  lastModificationTime?: string | null
   extraProperties?: Record<string, unknown>
 }
 

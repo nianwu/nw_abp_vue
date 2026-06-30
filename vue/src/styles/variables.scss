@@ -1,0 +1,12 @@
+// ============================================
+// Element Plus 主题变量覆盖
+// 在 vite.config.ts 中通过 additionalData 注入所有 SCSS
+// ============================================
+
+// 使用 CSS 变量方式覆盖（Sass 变量覆盖需 bulk 引入 Element Plus SCSS 源文件）
+// 此处仅定义项目级 Sass 变量供组件内 @use 引用
+
+$sidebar-width: 260px;
+$sidebar-collapsed-width: 64px;
+$topbar-height: 48px;
+$breadcrumb-height: 36px;

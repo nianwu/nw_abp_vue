@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head><title>Silent Renew</title></head>
+<body>
+<script src="/oidc-client-ts.js"></script>
+<script>
+  new Oidc.UserManager({ response_mode: 'query' }).signinSilentCallback().catch(function() {});
+</script>
+</body>
+</html>

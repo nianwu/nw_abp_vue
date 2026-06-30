@@ -53,48 +53,42 @@ vue/
 ## A2 [P0] API 层 + HTTP + 类型定义（1d）
 
 ### 输入
-- `docs/swagger.json`（57 端点，DTO 定义）
+- 后端已运行（IdentityServer + API，ABP 标准部署）
 - A1 脚手架可运行
 
 ### 产出文件
-```
-vue/src/
-├── types/
-│   ├── abp.ts                       # ApplicationConfiguration / AbpError / RemoteServiceErrorResponse
-│   ├── api.ts                       # PagedResultDto / ListResultDto / LookupDto
-│   ├── identity.ts                  # UserDto / RoleDto / IdentityUserCreateDto / IdentityUserUpdateDto / ...
-│   ├── tenant.ts                    # TenantDto / TenantCreateDto / ...
-│   ├── permission.ts                # PermissionGroupDto / PermissionGrantDto / ...
-│   ├── feature.ts                   # FeatureGroupDto / FeatureDto / ...
-│   └── settings.ts                  # EmailSettingsDto / TimezoneSettingsDto / ...
-├── api/
-│   ├── http.ts                      # Axios 实例 + 5 拦截器
-│   ├── identity-users.ts            # getList / getById / create / update / delete / getRoles / setRoles
-│   ├── identity-roles.ts            # getList / getById / create / update / delete
-│   ├── account.ts                   # login / logout / register / forgotPassword / resetPassword / getProfile / updateProfile
-│   ├── tenant.ts                    # getList / getById / create / update / delete / getConnectionString / setConnectionString
-│   ├── permission.ts                # getPermissionTree / getPermissionGrants / updatePermissionGrants / ...
-│   ├── feature.ts                   # getFeatureTree / getFeatureGrants / updateFeatureGrants
-│   └── settings.ts                  # getEmailSettings / updateEmailSettings / sendTestEmail / getTimezone / updateTimezone / ...
 
+**ABP CLI 生成**（`abp generate-proxy`）：`src/types/`（全部 DTO）+ `src/api/`（全部代理，含 index.ts）
+
+**手工编写**：`src/api/http.ts`（Axios + 5 拦截器）+ `src/config/env.ts`（环境变量）
+
+### 后端启动（独立 dotnet 项目，与 Vue 项目解耦）
+
+```bash
+dotnet run --project "<path>/TodoApp.HttpApi.Host"
 ```
-> 另含 `config/env.ts`：`API_BASE_URL` / `OAUTH_AUTHORITY` / `OAUTH_CLIENT_ID` 等环境变量。
+启动后确认 `https://localhost:44356/api/abp/application-configuration` 返回 200。
 
 ### 实施步骤
-1. 从 `swagger.json` 提取全部 DTO 类型，按模块写入 `types/*.ts`（复用 ABP 命名，字段加 `?` 标记 optional）
-2. 创建 `config/env.ts`（从 `import.meta.env` 读取环境变量）
-3. 创建 `api/http.ts`：Axios 实例 + 5 拦截器（请求 4：Auth/__tenant/Accept-Language/X-Timezone；响应 1：错误解析+401 登出）
-4. 创建 7 个 API 代理文件，每个导出纯函数
+1. 确认后端运行中（见上方命令），`abp generate-proxy` 可连接
+2. 在后端项目目录下执行：
+   ```bash
+   abp generate-proxy -t js -wd "<path>/TodoApp.HttpApi.Host" -u "https://localhost:44356" -o "<path>/vue/src/api"
+   ```
+   生成的类型与 API 代理文件覆盖 `src/types/` 和 `src/api/`
+3. 创建 `config/env.ts`（从 `import.meta.env` 读取环境变量）
+4. 创建 `api/http.ts`：Axios 实例 + 5 拦截器（请求 4：Auth/__tenant/Accept-Language/X-Timezone；响应 1：错误解析+401 登出）
 
 ### 验收
-- [ ] 从 swagger.json 提取的类型与后端返回 JSON 字段对齐
+- [ ] `abp generate-proxy` 执行成功，类型与 API 文件生成完整
 - [ ] `httpClient.get()` 可发起请求（浏览器 Network 面板可见）
 - [ ] 5 拦截器全部注册且执行顺序正确
 - [ ] 401 响应触发登出流程（此时仅验证拦截器注册，登出逻辑在 A4 完善）
 
 ### 注意事项
 - 拦截器读取 store 时注意循环依赖：用 `useXxxStore()` 的懒加载方式，不在模块顶层 import
-- `swagger.json` 中 optional 字段须正确标记，否则后续表单验证会误判必填
+- `abp generate-proxy` 生成的文件勿手工编辑，后续后端更新时重新生成覆盖
+- `api/http.ts` 是唯一手工维护的 HTTP 文件，ABP CLI 生成的代理文件依赖它导出的 `httpClient`
 
 ---
 

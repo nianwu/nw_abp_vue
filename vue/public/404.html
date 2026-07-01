@@ -6,15 +6,21 @@
   <script>
     // GitHub Pages SPA fallback: 404 page captures the route
     // and redirects to index.html where the app restores it.
+    // Works regardless of repo name — base path is derived from 404.html location.
     (function () {
       var route = sessionStorage.getItem('spa-redirect');
       if (!route) {
-        // Strip the /nw_abp_vue prefix to get the pure SPA route
+        // Derive the deployment base from 404.html's own path (e.g. /nw_abp_vue/)
+        var self = location.pathname;                        // /nw_abp_vue/404.html
+        var base = self.replace(/\/[^/]*$/, '/');             // /nw_abp_vue/
         var p = location.pathname.replace(/\/$/, '');
-        route = p.replace(/^\/nw_abp_vue/, '') || '/';
+        // If p equals self (we ARE on the 404 page itself), use root
+        route = (p === self) ? '/' : p.replace(base, '') || '/';
         sessionStorage.setItem('spa-redirect', route);
       }
-      location.replace('/nw_abp_vue/');
+      // Redirect to the deployment root (same directory as 404.html)
+      var basePath = location.pathname.replace(/\/[^/]*$/, '/');
+      location.replace(basePath);
     })();
   </script>
 </head>

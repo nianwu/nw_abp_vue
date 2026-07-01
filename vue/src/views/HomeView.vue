@@ -89,6 +89,11 @@
         <el-descriptions-item label="部署">
           GitHub Pages — 自动构建，push 即更新
         </el-descriptions-item>
+        <el-descriptions-item label="仓库">
+          <el-link type="primary" href="https://github.com/nianwu/nw_abp_vue" target="_blank">
+            github.com/nianwu/nw_abp_vue
+          </el-link>
+        </el-descriptions-item>
         <el-descriptions-item label="运行模式">
           <el-tag type="success" size="small">local</el-tag> 独立模式 — 零外部依赖，无需后端服务
         </el-descriptions-item>

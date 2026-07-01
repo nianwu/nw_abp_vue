@@ -8,6 +8,8 @@
 
 > 部署于 GitHub Pages，自动构建，每次 `master` push 即时更新。
 
+**📦 仓库地址：https://github.com/nianwu/nw_abp_vue**
+
 ## 🏗️ 构建模式
 
 项目支持两种运行模式，通过 `VITE_PROVIDER_MODE` 环境变量切换：

@@ -1,36 +1,38 @@
 <template>
   <el-form ref="formRef" :model="formValues" :rules="formRules" label-position="top" @submit.prevent>
-    <template v-for="field in fields" :key="field.name">
-      <el-form-item :label="field.label" :required="field.required" :prop="field.name"
-        :error="fieldErrors?.[field.name]?.[0]" :validate-status="fieldErrors?.[field.name] ? 'error' : undefined">
-        <!-- text -->
-        <el-input v-if="field.type === 'text'" v-model="(formValues as any)[field.name]"
-          :placeholder="field.placeholder" :readonly="field.readonly" />
-        <!-- number -->
-        <el-input-number v-else-if="field.type === 'number'" v-model="(formValues as any)[field.name]"
-          :placeholder="field.placeholder" :readonly="field.readonly" :controls="true" class="w-full" />
-        <!-- email -->
-        <el-input v-else-if="field.type === 'email'" v-model="(formValues as any)[field.name]"
-          type="email" :placeholder="field.placeholder" :readonly="field.readonly" />
-        <!-- password -->
-        <el-input v-else-if="field.type === 'password'" v-model="(formValues as any)[field.name]"
-          type="password" show-password :placeholder="field.placeholder" />
-        <!-- switch -->
-        <el-switch v-else-if="field.type === 'switch'" v-model="(formValues as any)[field.name]" />
-        <!-- select -->
-        <el-select v-else-if="field.type === 'select'" v-model="(formValues as any)[field.name]"
-          :placeholder="field.placeholder" class="w-full">
-          <el-option v-for="opt in field.options" :key="String(opt.value)"
-            :label="opt.label" :value="opt.value" />
-        </el-select>
-        <!-- date -->
-        <el-date-picker v-else-if="field.type === 'date'" v-model="(formValues as any)[field.name]"
-          type="date" :placeholder="field.placeholder" class="w-full" value-format="YYYY-MM-DD" />
-        <!-- textarea -->
-        <el-input v-else-if="field.type === 'textarea'" v-model="(formValues as any)[field.name]"
-          type="textarea" :rows="3" :placeholder="field.placeholder" />
-      </el-form-item>
-    </template>
+    <div :class="gridClass">
+      <template v-for="field in fields" :key="field.name">
+        <el-form-item :label="field.label" :required="field.required" :prop="field.name"
+          :error="fieldErrors?.[field.name]?.[0]" :validate-status="fieldErrors?.[field.name] ? 'error' : undefined">
+          <!-- text -->
+          <el-input v-if="field.type === 'text'" v-model="(formValues as any)[field.name]"
+            :placeholder="field.placeholder" :readonly="field.readonly" />
+          <!-- number -->
+          <el-input-number v-else-if="field.type === 'number'" v-model="(formValues as any)[field.name]"
+            :placeholder="field.placeholder" :readonly="field.readonly" :controls="true" class="w-full" />
+          <!-- email -->
+          <el-input v-else-if="field.type === 'email'" v-model="(formValues as any)[field.name]"
+            type="email" :placeholder="field.placeholder" :readonly="field.readonly" />
+          <!-- password -->
+          <el-input v-else-if="field.type === 'password'" v-model="(formValues as any)[field.name]"
+            type="password" show-password :placeholder="field.placeholder" />
+          <!-- switch -->
+          <el-switch v-else-if="field.type === 'switch'" v-model="(formValues as any)[field.name]" />
+          <!-- select -->
+          <el-select v-else-if="field.type === 'select'" v-model="(formValues as any)[field.name]"
+            :placeholder="field.placeholder" class="w-full">
+            <el-option v-for="opt in field.options" :key="String(opt.value)"
+              :label="opt.label" :value="opt.value" />
+          </el-select>
+          <!-- date -->
+          <el-date-picker v-else-if="field.type === 'date'" v-model="(formValues as any)[field.name]"
+            type="date" :placeholder="field.placeholder" class="w-full" value-format="YYYY-MM-DD" />
+          <!-- textarea -->
+          <el-input v-else-if="field.type === 'textarea'" v-model="(formValues as any)[field.name]"
+            type="textarea" :rows="3" :placeholder="field.placeholder" />
+        </el-form-item>
+      </template>
+    </div>
   </el-form>
 </template>
 
@@ -39,7 +41,19 @@ import { ref, reactive, computed, watch } from 'vue'
 import type { FormRules } from 'element-plus'
 import type { AbpFormItem } from '@/types/abp'
 
-const props = defineProps<{ fields: AbpFormItem[]; modelValue: Record<string, unknown>; fieldErrors?: Record<string, string[]> }>()
+const props = withDefaults(defineProps<{
+  fields: AbpFormItem[]
+  modelValue: Record<string, unknown>
+  fieldErrors?: Record<string, string[]>
+  /** 列数 — 设置后在 1920px+ 宽度切换为多列网格布局 */
+  cols?: number
+}>(), { cols: 1 })
+
+const gridClass = computed(() => {
+  if (props.cols <= 1) return ''
+  // Tailwind JIT 需要完整类名字符串 — 此处仅支持 2 列
+  return 'grid grid-cols-1 min-[1920px]:grid-cols-2 gap-x-6'
+})
 
 const emit = defineEmits<{ 'update:modelValue': [v: Record<string, unknown>] }>()
 

@@ -3,7 +3,7 @@
     <div v-if="loading" class="py-8 text-center text-gray-400">加载中...</div>
 
     <template v-else>
-      <AbpDynamicForm v-model="formData" :fields="emailFields" />
+      <AbpDynamicForm v-model="formData" :fields="emailFields" :cols="2" />
 
       <div class="mt-6 flex gap-3">
         <el-button type="primary" :loading="saving" @click="handleSave">保存</el-button>

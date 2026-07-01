@@ -11,14 +11,23 @@
         <AbpDynamicForm ref="formRef" v-model="formData" :fields="fields" :field-errors="fieldErrors" />
       </el-tab-pane>
       <el-tab-pane label="角色分配" name="roles">
-        <el-transfer v-model="selectedRoles" :data="roleOptions" :titles="['可用角色', '已分配']" />
+        <el-tree
+          ref="roleTreeRef"
+          :data="roleTreeData"
+          show-checkbox
+          node-key="key"
+          default-expand-all
+          :props="{ label: 'label', children: 'children' }"
+          @check="onRoleCheck"
+        />
       </el-tab-pane>
     </el-tabs>
   </AbpModal>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
+import type { ElTree } from 'element-plus'
 import AbpModal from '@/components/AbpModal.vue'
 import AbpDynamicForm from '@/components/AbpDynamicForm.vue'
 import { showSuccess, showError } from '@/components/AbpToast'
@@ -31,6 +40,7 @@ const props = defineProps<{ visible: boolean; userId: string | null }>()
 const emit = defineEmits<{ 'update:visible': [boolean]; saved: [] }>()
 
 const formRef = ref<InstanceType<typeof AbpDynamicForm>>()
+const roleTreeRef = ref<InstanceType<typeof ElTree>>()
 const activeTab = ref('info')
 const submitting = ref(false)
 const fieldErrors = ref<Record<string, string[]>>({})
@@ -40,7 +50,7 @@ const formData = ref<Record<string, unknown>>({
   userName: '', name: '', surname: '', email: '', phoneNumber: '', password: '', isActive: true, lockoutEnabled: true,
 })
 
-const roleOptions = ref<{ key: string; label: string }[]>([])
+const roleTreeData = ref<{ key: string; label: string }[]>([])
 
 const createFields: AbpFormItem[] = [
   { name: 'userName', type: 'text', label: '用户名', required: true },
@@ -73,7 +83,7 @@ watch(() => props.visible, async (v) => {
   // 加载角色选项（创建和编辑模式都需要）
   try {
     const res = await rolesApi.getAllRoles()
-    roleOptions.value = (res.items || []).map((r) => ({ key: r.name || '', label: r.name || '' }))
+    roleTreeData.value = (res.items || []).map((r) => ({ key: r.name || '', label: r.name || '' }))
   } catch { /* */ }
 
   if (props.userId) {
@@ -89,7 +99,14 @@ watch(() => props.visible, async (v) => {
   } else {
     formData.value = { userName: '', name: '', surname: '', email: '', phoneNumber: '', password: '', isActive: true, lockoutEnabled: true }
   }
+
+  await nextTick()
+  roleTreeRef.value?.setCheckedKeys(selectedRoles.value)
 })
+
+function onRoleCheck(_node: unknown, checked: { checkedKeys: string[] }) {
+  selectedRoles.value = checked.checkedKeys
+}
 
 async function handleSubmit() {
   const valid = await formRef.value?.validate()

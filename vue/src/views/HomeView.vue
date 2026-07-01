@@ -74,19 +74,45 @@
       </div>
     </el-card>
 
+    <!-- 项目说明 -->
+    <el-card shadow="never" class="mb-6">
+      <template #header>
+        <div class="flex items-center gap-2">
+          <el-icon><InfoFilled /></el-icon>
+          <span class="font-medium">关于本项目</span>
+        </div>
+      </template>
+      <el-descriptions :column="2" border size="small">
+        <el-descriptions-item label="目标">
+          以 ABP Angular 默认模板为参考，用 Vue 3 实现其全部必要性功能
+        </el-descriptions-item>
+        <el-descriptions-item label="部署">
+          GitHub Pages — 自动构建，push 即更新
+        </el-descriptions-item>
+        <el-descriptions-item label="运行模式">
+          <el-tag type="success" size="small">local</el-tag> 独立模式 — 零外部依赖，无需后端服务
+        </el-descriptions-item>
+        <el-descriptions-item label="数据存储">
+          <el-tag type="warning" size="small">localStorage</el-tag> 浏览器本地持久化 + 种子数据
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-card>
+
     <!-- 系统信息 -->
     <el-card shadow="never">
       <template #header>
         <div class="flex items-center gap-2">
-          <el-icon><InfoFilled /></el-icon>
-          <span class="font-medium">系统信息</span>
+          <el-icon><Setting /></el-icon>
+          <span class="font-medium">技术栈</span>
         </div>
       </template>
       <el-descriptions :column="2" border size="small">
         <el-descriptions-item label="应用名称">{{ appName }}</el-descriptions-item>
         <el-descriptions-item label="UI 框架">Vue 3 + Element Plus</el-descriptions-item>
-        <el-descriptions-item label="构建工具">Vite 6</el-descriptions-item>
-        <el-descriptions-item label="当前模式">独立开发 (local)</el-descriptions-item>
+        <el-descriptions-item label="状态管理">Pinia + pinia-plugin-persistedstate</el-descriptions-item>
+        <el-descriptions-item label="路由 / 国际化">Vue Router 4 / Vue I18n 11</el-descriptions-item>
+        <el-descriptions-item label="认证方案">OIDC (oidc-client-ts) ⇄ localStorage 模拟</el-descriptions-item>
+        <el-descriptions-item label="语言">TypeScript 5.9 · Vite 6 · SCSS + Tailwind</el-descriptions-item>
       </el-descriptions>
     </el-card>
   </div>

@@ -134,6 +134,19 @@ npx vite build --mode hash      # → hash 路由（VITE_ROUTER_MODE=hash）
 >
 > 切换运行模式：修改 `vue/.env` 中 `VITE_PROVIDER_MODE=remote` 并配置后端地址。
 
+## 🔮 后续规划
+
+以下架构演进方向已识别，待功能实现稳定后逐步推进：
+
+| 规划项 | 说明 |
+|--------|------|
+| **登录模块插件化** | 将 OIDC 认证逻辑抽离为独立插件，支持 `createApp().use(oidcPlugin, config)` 式声明，运行时切换认证方式 |
+| **数据提供层可插拔** | 抽象统一数据接口，remote / standalone 作为可选项引入，便于扩展 mock-provider、graphql-provider 等 |
+| **ABP 逻辑插件包化** | 将 ABP 耦合逻辑收敛为 `@nw/abp-vue` 可选插件包，非 ABP 项目可完全不引入 |
+| **DDD 模式抽象** | 以 Domain / Application / Infrastructure / Presentation 四层重构，核心逻辑与 UI 框架解耦 |
+| **i18n 可选项** | 国际化为可选插件，不引入时默认中文运行，按需加载语言包 |
+| **主题切换** | 亮色/暗色主题切换，基于 Element Plus CSS 变量 + Tailwind 暗色模式，用户偏好持久化 |
+
 ## 📄 开源协议
 
 本项目采用 **GNU General Public License v3 (GPL v3)** — 传染式 copyleft 协议：

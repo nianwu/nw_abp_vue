@@ -14,7 +14,7 @@
         {{ appVersion }}
       </el-descriptions-item>
       <el-descriptions-item label="构建时间">
-        {{ buildTime }}
+        {{ buildTimeDisplay }}
       </el-descriptions-item>
       <el-descriptions-item label="部署">
         GitHub Pages — 自动构建，push 即更新
@@ -44,8 +44,11 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { InfoFilled } from '@element-plus/icons-vue'
+import { formatDateCell } from '@/utils/date-format'
 
 const appVersion = import.meta.env.VITE_APP_VERSION || 'preview-1.0.0'
-const buildTime = __BUILD_TIME__
+
+const buildTimeDisplay = computed(() => formatDateCell(__BUILD_TIME__, 'combined'))
 </script>

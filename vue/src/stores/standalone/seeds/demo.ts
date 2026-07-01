@@ -103,6 +103,11 @@ function makeRole(
 // 用户种子
 // ============================================================
 
+/** 生成相对当前时间的 ISO 字符串 */
+function ago(seconds: number): string {
+  return new Date(Date.now() - seconds * 1000).toISOString()
+}
+
 function seedUsers(): void {
   const demoUsers: IdentityUserDto[] = [
     makeUser({
@@ -133,10 +138,35 @@ function seedUsers(): void {
       phoneNumberConfirmed: true,
       creationTime: '2026-06-01T07:00:00Z',
     }),
+    // 时间渲染测试数据 — 创建时间为相对时间
+    makeUser({
+      id: 'u6', userName: 'time-1s', name: '1秒前', surname: '测试',
+      email: 'time-1s@test.io', creationTime: ago(1),
+    }),
+    makeUser({
+      id: 'u7', userName: 'time-1m', name: '1分钟前', surname: '测试',
+      email: 'time-1m@test.io', creationTime: ago(60),
+    }),
+    makeUser({
+      id: 'u8', userName: 'time-5m', name: '5分钟前', surname: '测试',
+      email: 'time-5m@test.io', creationTime: ago(300),
+    }),
+    makeUser({
+      id: 'u9', userName: 'time-1h', name: '1小时前', surname: '测试',
+      email: 'time-1h@test.io', creationTime: ago(3600),
+    }),
+    makeUser({
+      id: 'u10', userName: 'time-3h', name: '3小时前', surname: '测试',
+      email: 'time-3h@test.io', creationTime: ago(10800),
+    }),
+    makeUser({
+      id: 'u11', userName: 'time-1d', name: '1天前', surname: '测试',
+      email: 'time-1d@test.io', creationTime: ago(86400),
+    }),
   ]
 
   if (seed('users', demoUsers)) {
-    setUserSeq(5)
+    setUserSeq(11)
   }
 }
 

@@ -5,9 +5,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { fileURLToPath, URL } from 'node:url'
 
-const BUILD_TIME = JSON.stringify(
-  new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }),
-)
+const BUILD_TIME = JSON.stringify(new Date().toISOString())
 
 export default defineConfig({
   define: {

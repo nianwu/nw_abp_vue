@@ -129,11 +129,10 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { Search, Operation, Delete, Refresh } from '@element-plus/icons-vue'
-import { format, formatDistanceStrict, differenceInDays } from 'date-fns'
-import { zhCN } from 'date-fns/locale'
 import HTTPClient from '@/api/http'
 import type { PagedResultDto, PagedRequestDto } from '@/types/api'
 import AbpEmptyState from './AbpEmptyState.vue'
+import { formatDateCell, DATE_RENDER_MODES, type DateRenderMode } from '@/utils/date-format'
 
 interface ColumnDef {
   prop: string; label: string; width?: string; minWidth?: string
@@ -141,35 +140,6 @@ interface ColumnDef {
   hideOnMobile?: boolean
   /** 标记为日期列 — 列设置中可切换渲染格式 */
   dateRender?: boolean
-}
-
-type DateRenderMode = 'full' | 'relative' | 'combined'
-
-const DATE_RENDER_MODES: { value: DateRenderMode; label: string; example: string }[] = [
-  { value: 'full', label: '完整日期', example: '2026-06-30 23:37:15' },
-  { value: 'relative', label: '相对时间', example: '3 小时前 / >3天显示完整日期' },
-  { value: 'combined', label: '完整+相对', example: '2026-06-30 23:37 (3小时前)' },
-]
-
-function formatDateCell(cell: unknown, mode: DateRenderMode): string {
-  if (!cell) return '-'
-  let date: Date
-  try {
-    date = new Date(cell as string)
-    if (isNaN(date.getTime())) return String(cell)
-  } catch { return String(cell) }
-
-  const full = format(date, 'yyyy-MM-dd HH:mm:ss')
-  if (mode === 'full') return full
-
-  // 超过 3 天回退完整日期
-  if (differenceInDays(Date.now(), date) > 3) return full
-
-  const relative = formatDistanceStrict(date, Date.now(), { locale: zhCN, addSuffix: true })
-  if (mode === 'relative') return relative
-
-  // combined
-  return `${full} (${relative})`
 }
 
 const props = withDefaults(defineProps<{

@@ -1,7 +1,10 @@
 /**
  * 租户管理 localStorage store — 租户 CRUD + 连接字符串管理
  *
- * 数据存储于 localStorage，键：abp:local:tenants / abp:local:connectionStrings
+ * 数据存储于 localStorage，键：
+ *   tenants              — TenantDto[]
+ *   connectionStrings    — Record<string, string>          (default, tenantId → connStr)
+ *   namedConnStrings     — Record<string, Record<string, string>> (tenantId → { name → value })
  */
 
 import { load, save } from './storage'
@@ -10,6 +13,7 @@ import type { PagedResultDto } from '@/types/api'
 
 const TENANTS_KEY = 'tenants'
 const CONN_STR_KEY = 'connectionStrings'
+const NAMED_CONN_KEY = 'namedConnStrings'
 
 function getTenants(): TenantDto[] {
   return load<TenantDto[]>(TENANTS_KEY) || []
@@ -25,6 +29,14 @@ function getConnectionStrings(): Record<string, string> {
 
 function setConnectionStrings(data: Record<string, string>): void {
   save(CONN_STR_KEY, data)
+}
+
+function getNamedConnectionStrings(): Record<string, Record<string, string>> {
+  return load<Record<string, Record<string, string>>>(NAMED_CONN_KEY) || {}
+}
+
+function setNamedConnectionStrings(data: Record<string, Record<string, string>>): void {
+  save(NAMED_CONN_KEY, data)
 }
 
 // ============================================================
@@ -120,4 +132,32 @@ export function standaloneDeleteDefaultConnectionString(id: string): void {
   const data = getConnectionStrings()
   delete data[id]
   setConnectionStrings(data)
+}
+
+// ============================================================
+// 命名连接字符串（named connection strings）
+// ============================================================
+
+export function standaloneGetNamedConnectionStrings(id: string): Record<string, string> {
+  const all = getNamedConnectionStrings()
+  return all[id] || {}
+}
+
+export function standaloneSetNamedConnectionString(
+  id: string,
+  name: string,
+  value: string,
+): void {
+  const all = getNamedConnectionStrings()
+  if (!all[id]) all[id] = {}
+  all[id][name] = value
+  setNamedConnectionStrings(all)
+}
+
+export function standaloneDeleteNamedConnectionString(id: string, name: string): void {
+  const all = getNamedConnectionStrings()
+  if (all[id]) {
+    delete all[id][name]
+    setNamedConnectionStrings(all)
+  }
 }

@@ -33,6 +33,20 @@ export interface UpdateEmailSettingsDto {
   defaultFromDisplayName: string
 }
 
+// ============================================================
+// Identity 密码复杂度设置
+// 对应 ABP Identity 模块的 Abp.Identity.Password.* 设置项
+// ============================================================
+
+export interface IdentityPasswordSettingsDto {
+  requiredLength: number
+  requiredUniqueChars: number
+  requireNonAlphanumeric: boolean
+  requireLowercase: boolean
+  requireUppercase: boolean
+  requireDigit: boolean
+}
+
 export interface SendTestEmailInput {
   subject: string
   body: string | null

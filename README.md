@@ -96,6 +96,10 @@ npx vite build --mode hash      # → hash 路由（VITE_ROUTER_MODE=hash）
 | [S008-1 设计规范速查](./docs/S008-1-设计规范速查.md) | 操作列样式、命令式弹窗、时间渲染等主观设计约定 |
 | [S008 设计规范全览](./docs/S008-Vue端设计规范与个性化改动.md) | 14 大类完整设计规范与组件使用说明 |
 | [S006 功能需求清单](./docs/S006-Vue端功能需求清单.md) | Vue 端功能需求详细列表 |
+| [S010 多租户管理说明](./docs/S010-ABP多租户管理说明.md) | ABP 多租户概念、数据模型、功能管理、连接字符串说明 |
+| [资源权限说明（在线）](https://nianwu.github.io/nw_abp_vue/#/docs/resource-permissions) | ABP 基于功能 vs 基于 ID 的授权模型 |
+| [资源密钥说明（在线）](https://nianwu.github.io/nw_abp_vue/#/docs/resource-key) | 资源密钥（Resource Key）概念与使用方式 |
+| [多租户说明（在线）](https://nianwu.github.io/nw_abp_vue/#/docs/tenant-management) | 多租户管理在线帮助页 |
 
 ## 开源协议
 

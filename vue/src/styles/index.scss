@@ -50,6 +50,25 @@ html, body {
   --breadcrumb-height: 36px;
 }
 
+// 去除 TopBar 中 el-dropdown hover/focus 时出现的黑色 outline
+.el-dropdown .user-dropdown-trigger,
+.el-dropdown .user-dropdown-trigger:hover,
+.el-dropdown .user-dropdown-trigger:focus,
+.el-dropdown .user-dropdown-trigger:focus-visible,
+.el-tooltip__trigger:has(.user-dropdown-trigger),
+.el-tooltip__trigger:has(.user-dropdown-trigger):focus,
+.el-tooltip__trigger:has(.user-dropdown-trigger):focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+// 修复表格列中 el-button link 类型 focus 时出现异常左右背景色
+.el-button.is-link:focus,
+.el-button.is-link:focus-visible {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
 // ============================================
 // NProgress 样式
 // ============================================

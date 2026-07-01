@@ -5,12 +5,12 @@
  * 使用 storage.seed() 确保仅首次访问时播种，后续访问使用 localStorage 中已有的数据。
  */
 
-import { seed } from '@/stores/standalone/storage'
+import { seed, save } from '@/stores/standalone/storage'
 import { setUserSeq, setRoleSeq, setUserRolesSeed } from '@/stores/standalone/identity-store'
 import { setTenantSeq } from '@/stores/standalone/tenant-store'
 import { standaloneSetPermissions } from '@/stores/standalone/permission-store'
 import { standaloneSetFeatures } from '@/stores/standalone/feature-store'
-import { standaloneSetEmailSettings, standaloneSetTimezones } from '@/stores/standalone/settings-store'
+import { standaloneSetEmailSettings, standaloneSetTimezones, standaloneUpdatePasswordSettings } from '@/stores/standalone/settings-store'
 import type { IdentityUserDto, IdentityRoleDto } from '@/types/identity'
 import type { TenantDto } from '@/types/tenant'
 import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInfoDto } from '@/types/permission'
@@ -29,6 +29,7 @@ export function seedDemoData(): void {
   seedPermissions()
   seedFeatures()
   seedEmailSettings()
+  seedPasswordSettings()
   seedTimezones()
 }
 
@@ -243,6 +244,20 @@ function seedTenants(): void {
   const demoConnStrings: Record<string, string> = {
     t1: 'Server=localhost;Database=AcmeCorp;Trusted_Connection=True',
     t2: 'Server=localhost;Database=BetaLabs;Trusted_Connection=True',
+    t3: 'Server=localhost;Database=GammaInc;Trusted_Connection=True',
+  }
+
+  const demoNamedConnStrings: Record<string, Record<string, string>> = {
+    t1: {
+      Secondary: 'Server=backup;Database=AcmeCorp_Secondary;Trusted_Connection=True',
+      Reporting: 'Server=reporting;Database=AcmeCorp_Reports;Trusted_Connection=True',
+    },
+    t2: {
+      Logging: 'Server=logs;Database=BetaLabs_Logs;Trusted_Connection=True',
+    },
+    t3: {
+      Audit: 'Server=audit;Database=GammaInc_Audit;Trusted_Connection=True',
+    },
   }
 
   if (seed('tenants', demoTenants)) {
@@ -250,6 +265,7 @@ function seedTenants(): void {
   }
 
   seed('connectionStrings', demoConnStrings)
+  seed('namedConnStrings', demoNamedConnStrings)
 }
 
 // ============================================================
@@ -356,6 +372,17 @@ function seedFeatures(): void {
   const selectionType: IStringValueType = {
     name: 'SelectionStringValueType', properties: {}, validator: { name: 'NULL', properties: {} },
   }
+  const passwordComplexityType: IStringValueType = {
+    name: 'SelectionStringValueType',
+    properties: {
+      items: [
+        { name: '简单', value: 'Simple', desc: '仅要求最小长度（≥6 位）' },
+        { name: '标准', value: 'Standard', desc: '需包含数字、大小写字母' },
+        { name: '复杂', value: 'Complex', desc: '需包含数字、大小写字母、特殊字符，且不同字符数 ≥1' },
+      ],
+    },
+    validator: { name: 'NULL', properties: {} },
+  }
 
   const demoFeatures: GetFeatureListResultDto = {
     groups: [
@@ -376,7 +403,7 @@ function seedFeatures(): void {
           {
             name: 'Abp.Identity.PasswordComplexity', displayName: '密码复杂度', parentName: null,
             description: '密码复杂度要求', value: 'Standard', depth: 0,
-            valueType: selectionType, provider: null,
+            valueType: passwordComplexityType, provider: null,
           },
         ] as FeatureDto[],
       },
@@ -394,7 +421,7 @@ function seedFeatures(): void {
     ] as FeatureGroupDto[],
   }
 
-  seed('features', demoFeatures)
+  save('features', demoFeatures)
 }
 
 // ============================================================
@@ -415,6 +442,24 @@ function seedEmailSettings(): void {
   }
 
   seed('emailSettings', demoEmail)
+}
+
+// ============================================================
+// 密码复杂度种子
+// 对应 ABP Identity 模块 Abp.Identity.Password.* 设置项
+// ============================================================
+
+function seedPasswordSettings(): void {
+  const defaults = {
+    requiredLength: 6,
+    requiredUniqueChars: 1,
+    requireNonAlphanumeric: true,
+    requireLowercase: true,
+    requireUppercase: true,
+    requireDigit: true,
+  }
+
+  seed('passwordSettings', defaults)
 }
 
 // ============================================================

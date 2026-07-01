@@ -1,6 +1,6 @@
 <template>
   <el-dropdown trigger="hover">
-    <span class="flex items-center gap-2 cursor-pointer text-gray-700">
+    <span class="user-dropdown-trigger flex items-center gap-2 cursor-pointer text-gray-700">
       <el-avatar :size="28">{{ userName.charAt(0).toUpperCase() }}</el-avatar>
       <span class="hidden sm:inline">{{ userName }}</span>
     </span>
@@ -27,3 +27,13 @@ async function handleLogout() {
   await logout()
 }
 </script>
+
+<style scoped>
+.user-dropdown-trigger,
+.user-dropdown-trigger:hover,
+.user-dropdown-trigger:focus,
+.user-dropdown-trigger:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+</style>

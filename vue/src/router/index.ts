@@ -29,6 +29,7 @@ const routes: RouteRecordRaw[] = [
   // Docs — 独立页面，无菜单、无需权限
   { path: '/docs/resource-permissions', name: 'ResourcePermissionDoc', meta: { layout: 'empty', title: '资源权限说明', public: true }, component: () => import('@/views/docs/ResourcePermissionDoc.vue') },
   { path: '/docs/resource-key', name: 'ResourceKeyDoc', meta: { layout: 'empty', title: '资源密钥说明', public: true }, component: () => import('@/views/docs/ResourceKeyDoc.vue') },
+  { path: '/docs/tenant-management', name: 'TenantManagementDoc', meta: { layout: 'empty', title: '多租户管理说明', public: true }, component: () => import('@/views/docs/TenantManagementDoc.vue') },
   // Error pages
   { path: '/error/403', name: 'Error403', meta: { layout: 'empty' }, component: () => import('@/components/AbpErrorPage.vue'), props: { code: 403 } },
   { path: '/error/404', name: 'Error404', meta: { layout: 'empty' }, component: () => import('@/components/AbpErrorPage.vue'), props: { code: 404 } },

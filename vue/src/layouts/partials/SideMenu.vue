@@ -10,7 +10,11 @@
       <span>首页</span>
     </el-menu-item>
     <template v-for="group in menuGroups" :key="group.title">
-      <el-menu-item-group :title="group.title">
+      <el-menu-item-group>
+        <template #title>
+          <span>{{ group.title }}</span>
+          <el-icon v-if="docUrl(group.title)" class="menu-help-icon" @click.stop="openDoc(group.title)"><QuestionFilled /></el-icon>
+        </template>
         <el-menu-item v-for="item in group.items" :key="item.path" :index="item.path">
           <el-icon v-if="iconFor(item.path)"><component :is="iconFor(item.path)" /></el-icon>
           <span>{{ item.meta?.title || item.name }}</span>
@@ -23,7 +27,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { HomeFilled, User, Avatar, OfficeBuilding, Setting } from '@element-plus/icons-vue'
+import { HomeFilled, User, Avatar, OfficeBuilding, Setting, QuestionFilled } from '@element-plus/icons-vue'
 import { usePermission } from '@/composables/usePermission'
 
 const ICON_MAP: Record<string, any> = {
@@ -35,6 +39,25 @@ const ICON_MAP: Record<string, any> = {
 
 function iconFor(path: string) {
   return ICON_MAP[path] || null
+}
+
+// ============================================================
+// 帮助入口 — 非大众词汇说明页（约定：QuestionFilled → window.open 新标签）
+// ============================================================
+
+const DOC_URLS: Record<string, string> = {
+  '租户管理': '/docs/tenant-management',
+}
+
+function docUrl(title: string): string | undefined {
+  return DOC_URLS[title]
+}
+
+function openDoc(title: string) {
+  const url = DOC_URLS[title]
+  if (url) {
+    window.open(router.resolve(url).href, '_blank')
+  }
 }
 
 defineProps<{ collapsed?: boolean }>()
@@ -99,10 +122,26 @@ const menuGroups = computed<MenuGroup[]>(() => {
 :deep(.el-menu-item-group__title) {
   font-size: 12px;
   padding: 16px 20px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 :deep(.el-menu-item-group:first-child .el-menu-item-group__title) {
   padding-top: 8px;
+}
+
+/* 分组标题旁帮助图标 */
+.menu-help-icon {
+  font-size: 13px;
+  color: var(--el-text-color-placeholder);
+  cursor: pointer;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.menu-help-icon:hover {
+  color: var(--el-color-primary);
 }
 
 /* 折叠态 — 居中图标 */

@@ -18,59 +18,61 @@
           :label="group.displayName || group.name"
           :name="group.name!"
         >
-          <el-tree
-            :ref="(el: any) => setTreeRef(group.name!, el)"
-            :data="buildTreeData(group.features || [])"
-            :props="treeProps"
-            node-key="name"
-            default-expand-all
-            :expand-on-click-node="false"
+          <!-- 扁平表单布局（替代 el-tree）—— 每条功能一行 -->
+          <div
+            v-for="row in buildFlatRows(group.features || [])"
+            :key="row.name"
+            class="feature-row"
+            :class="{ 'feature-row--child': !!row.parentName }"
           >
-            <template #default="{ data }">
-              <div class="feature-node">
-                <span class="feature-label">{{ data.displayName || data.name }}</span>
+            <div class="feature-row__info">
+              <span class="feature-label">{{ row.displayName || row.name }}</span>
+              <span v-if="row.description" class="feature-desc">{{ row.description }}</span>
+            </div>
 
-                <!-- ToggleStringValueType -->
-                <el-switch
-                  v-if="data.valueTypeName === 'ToggleStringValueType'"
-                  :model-value="data.currentValue === 'true'"
-                  :disabled="data._disabled"
-                  @change="(v: boolean) => onToggleChange(data, v)"
-                  style="margin-left: auto;"
-                />
+            <div class="feature-row__control">
+              <!-- Toggle -->
+              <el-switch
+                v-if="row._valueTypeName === 'ToggleStringValueType'"
+                :model-value="row._currentValue === 'true'"
+                :disabled="row._disabled"
+                @change="(v: boolean) => onToggleChange(row, v)"
+              />
 
-                <!-- FreeTextStringValueType -->
-                <el-input
-                  v-else-if="data.valueTypeName === 'FreeTextStringValueType'"
-                  :model-value="data.currentValue"
-                  :disabled="data._disabled"
-                  @change="(v: string) => onTextChange(data, v)"
-                  size="small"
-                  style="margin-left: auto; width: 220px;"
-                />
+              <!-- Free text -->
+              <el-input
+                v-else-if="row._valueTypeName === 'FreeTextStringValueType'"
+                :model-value="row._currentValue"
+                :disabled="row._disabled"
+                @change="(v: string) => onTextChange(row, v)"
+                style="width: 220px;"
+              />
 
-                <!-- SelectionStringValueType -->
-                <el-select
-                  v-else-if="data.valueTypeName === 'SelectionStringValueType'"
-                  :model-value="data.currentValue"
-                  :disabled="data._disabled"
-                  @change="(v: string) => onSelectChange(data, v)"
-                  size="small"
-                  style="margin-left: auto; width: 220px;"
+              <!-- Selection (dropdown) -->
+              <el-select
+                v-else-if="row._valueTypeName === 'SelectionStringValueType'"
+                :model-value="row._currentValue"
+                :disabled="row._disabled"
+                @change="(v: string) => onSelectChange(row, v)"
+                style="width: 220px;"
+              >
+                <el-option
+                  v-for="opt in row._options"
+                  :key="opt.value"
+                  :label="opt.label"
+                  :value="opt.value"
                 >
-                  <el-option
-                    v-for="opt in data._options"
-                    :key="opt.value"
-                    :label="opt.label"
-                    :value="opt.value"
-                  />
-                </el-select>
+                  <div class="select-option">
+                    <span>{{ opt.label }}</span>
+                    <span v-if="opt.desc" class="select-option__desc">{{ opt.desc }}</span>
+                  </div>
+                </el-option>
+              </el-select>
 
-                <!-- Fallback: display raw value -->
-                <el-tag v-else size="small" style="margin-left: auto;">{{ data.currentValue || '-' }}</el-tag>
-              </div>
-            </template>
-          </el-tree>
+              <!-- Fallback -->
+              <el-tag v-else size="small">{{ row._currentValue || '-' }}</el-tag>
+            </div>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -121,14 +123,11 @@ const loading = ref(false)
 const saving = ref(false)
 const activeGroupName = ref('')
 const featureGroups = ref<FeatureGroupDto[]>([])
-const treeRefMap = ref<Record<string, any>>({})
 
 // Track original values for change detection
 const originalValues = ref<Map<string, string>>(new Map())
 // Track current edited values
 const currentValues = ref<Map<string, string>>(new Map())
-// Force re-render counter (for cascade disabled state)
-const renderKey = ref(0)
 
 // ============================================================
 // Saved callbacks
@@ -137,28 +136,21 @@ const renderKey = ref(0)
 const savedCallbacks: Array<() => void> = []
 
 // ============================================================
-// Feature tree node (augmented)
+// Flat row augment — 扁平化功能行（无树形嵌套）
 // ============================================================
 
-interface FeatureTreeNode {
+interface FlatFeatureRow {
   name: string
   displayName?: string | null
-  children?: FeatureTreeNode[]
-  valueTypeName: string
-  currentValue: string
+  description?: string | null
+  parentName?: string | null
+  _valueTypeName: string
+  _currentValue: string
   _disabled: boolean
-  _options?: Array<{ label: string; value: string }>
-  _original?: FeatureDto
+  _options?: Array<{ label: string; value: string; desc?: string }>
 }
 
-const treeProps = {
-  children: 'children',
-  label: 'displayName',
-}
-
-/**
- * Determine value type short name from IStringValueType.name
- */
+/** 解析值类型短名 */
 function resolveValueTypeName(dto: FeatureDto): string {
   const name = dto.valueType?.name || ''
   if (name.includes('Toggle')) return 'ToggleStringValueType'
@@ -167,108 +159,74 @@ function resolveValueTypeName(dto: FeatureDto): string {
   return name
 }
 
-/**
- * Extract selection options from valueType.properties
- */
-function extractOptions(dto: FeatureDto): Array<{ label: string; value: string }> {
+/** 提取下拉选项 */
+function extractOptions(dto: FeatureDto): Array<{ label: string; value: string; desc?: string }> {
   const props2 = dto.valueType?.properties || {}
   const items = (props2 as Record<string, unknown>).items as Array<Record<string, unknown>> | undefined
   if (!items || !Array.isArray(items)) return []
   return items.map((item: Record<string, unknown>) => ({
     label: String(item.name || item.value || item),
     value: String(item.value || item.name || item),
+    desc: item.desc ? String(item.desc) : undefined,
   }))
 }
 
 /**
- * Build tree from flat feature list using parentName relationships
+ * 构建扁平行列表（替代树形结构）
+ *
+ * 按 depth 排序，parent 在前 child 在后。
+ * child 在 parent toggle 关闭时自动 disabled。
  */
-function buildTreeData(features: FeatureDto[]): FeatureTreeNode[] {
+function buildFlatRows(features: FeatureDto[]): FlatFeatureRow[] {
   if (!features || features.length === 0) return []
 
-  const nodeMap = new Map<string, FeatureTreeNode>()
-  const roots: FeatureTreeNode[] = []
-
-  // Sort by depth so parents come before children
   const sorted = [...features].sort((a, b) => a.depth - b.depth)
+  const parentStates = new Map<string, boolean>() // parentName → isOn
 
-  for (const f of sorted) {
-    if (!f.name) continue
+  return sorted
+    .filter((f) => !!f.name)
+    .map((f) => {
+      const currentVal = currentValues.value.get(f.name!) ?? f.value ?? ''
+      const typeName = resolveValueTypeName(f)
 
-    const currentVal = currentValues.value.get(f.name) ?? f.value ?? ''
-    const valueTypeName = resolveValueTypeName(f)
+      // 父级 toggle 关闭时，子节点 disabled
+      const parentDisabled = f.parentName ? !parentStates.get(f.parentName) : false
 
-    const node: FeatureTreeNode = {
-      name: f.name,
-      displayName: f.displayName || f.name,
-      children: [],
-      valueTypeName,
-      currentValue: currentVal,
-      _disabled: false,
-      _options: valueTypeName === 'SelectionStringValueType' ? extractOptions(f) : undefined,
-      _original: f,
-    }
-
-    nodeMap.set(f.name, node)
-
-    if (f.parentName && nodeMap.has(f.parentName)) {
-      nodeMap.get(f.parentName)!.children!.push(node)
-    } else {
-      roots.push(node)
-    }
-  }
-
-  // Clean up empty children arrays and apply cascade disabled
-  function postProcess(nodes: FeatureTreeNode[], parentDisabled: boolean) {
-    for (const n of nodes) {
-      if (n.children && n.children.length === 0) {
-        delete n.children
+      const row: FlatFeatureRow = {
+        name: f.name!,
+        displayName: f.displayName,
+        description: f.description,
+        parentName: f.parentName,
+        _valueTypeName: typeName,
+        _currentValue: currentVal,
+        _disabled: parentDisabled,
+        _options:
+          typeName === 'SelectionStringValueType' ? extractOptions(f) : undefined,
       }
-      // Cascade: parent toggle off → children disabled
-      if (n.valueTypeName === 'ToggleStringValueType') {
-        n._disabled = parentDisabled || n.currentValue !== 'true'
-      } else {
-        n._disabled = parentDisabled
-      }
-      if (n.children) {
-        postProcess(n.children, n._disabled)
-      }
-    }
-  }
-  postProcess(roots, false)
 
-  return roots
-}
+      // 记录本节点 toggle 状态，供后续子节点判断
+      if (typeName === 'ToggleStringValueType') {
+        parentStates.set(f.name!, currentVal === 'true')
+      }
 
-function setTreeRef(name: string, el: unknown) {
-  if (el) {
-    treeRefMap.value[name] = el
-  }
+      return row
+    })
 }
 
 // ============================================================
 // Value change handlers
 // ============================================================
 
-function onToggleChange(node: FeatureTreeNode, value: boolean) {
-  node.currentValue = value ? 'true' : 'false'
-  currentValues.value.set(node.name, node.currentValue)
-  // When toggling off a parent, auto-disable children via re-render
-  triggerRerender()
+function onToggleChange(row: FlatFeatureRow, value: boolean) {
+  currentValues.value.set(row.name, value ? 'true' : 'false')
 }
 
-function onTextChange(node: FeatureTreeNode, value: string) {
-  node.currentValue = value
-  currentValues.value.set(node.name, value)
+function onTextChange(row: FlatFeatureRow, value: string) {
+  currentValues.value.set(row.name, value)
 }
 
-function onSelectChange(node: FeatureTreeNode, value: string) {
-  node.currentValue = value
-  currentValues.value.set(node.name, value)
-}
-
-function triggerRerender() {
-  renderKey.value++
+function onSelectChange(row: FlatFeatureRow, value: string) {
+  currentValues.value.set(row.name, value)
 }
 
 // ============================================================
@@ -276,7 +234,6 @@ function triggerRerender() {
 // ============================================================
 
 const dirtyCount = computed(() => {
-  void renderKey.value // dependency tracking
   let count = 0
   for (const [name, orig] of originalValues.value) {
     const current = currentValues.value.get(name) ?? orig
@@ -299,7 +256,6 @@ async function loadFeatures() {
 
     featureGroups.value = result.groups || []
 
-    // Reset tracking maps
     const newOriginals = new Map<string, string>()
     const newCurrents = new Map<string, string>()
 
@@ -348,9 +304,8 @@ async function handleSave() {
       )
     }
 
-    // Fire saved callbacks
     for (const cb of savedCallbacks) {
-      try { cb() } catch { /* swallow callback errors */ }
+      try { cb() } catch { /* swallow */ }
     }
 
     emit('saveSuccess')
@@ -367,7 +322,6 @@ async function handleSave() {
 // ============================================================
 
 async function handleOpen() {
-  renderKey.value = 0
   await loadFeatures()
 }
 
@@ -395,7 +349,7 @@ async function handleBeforeClose(done: () => void) {
 }
 
 // ============================================================
-// Imperative API exposed to parent
+// Imperative API
 // ============================================================
 
 function open() {
@@ -422,17 +376,43 @@ defineExpose({
   min-height: 300px;
 }
 
-.feature-node {
-  display: inline-flex;
+.feature-row {
+  display: flex;
   align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding-right: 8px;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.feature-row:last-child {
+  border-bottom: none;
+}
+
+.feature-row--child {
+  padding-left: 32px;
+  background: var(--el-fill-color-light);
+}
+
+.feature-row__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
 .feature-label {
   font-size: 13px;
-  white-space: nowrap;
+  font-weight: 500;
+}
+
+.feature-desc {
+  font-size: 12px;
+  color: var(--el-text-color-secondary);
+}
+
+.feature-row__control {
+  flex-shrink: 0;
 }
 
 .change-summary {
@@ -440,5 +420,18 @@ defineExpose({
   border-top: 1px solid var(--el-border-color-light);
   font-size: 13px;
   color: var(--el-color-warning);
+}
+
+/* 下拉选项带说明文字 */
+.select-option {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.4;
+}
+
+.select-option__desc {
+  font-size: 11px;
+  color: var(--el-text-color-placeholder);
 }
 </style>

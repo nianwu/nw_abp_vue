@@ -5,9 +5,10 @@
  */
 
 import { load, save } from './storage'
-import type { EmailSettingsDto } from '@/types/settings'
+import type { EmailSettingsDto, IdentityPasswordSettingsDto } from '@/types/settings'
 
 const EMAIL_KEY = 'emailSettings'
+const PASSWORD_KEY = 'passwordSettings'
 const TIMEZONE_KEY = 'timezone'
 const TIMEZONES_KEY = 'timezones'
 
@@ -45,4 +46,17 @@ export function standaloneGetTimezones(): string[] {
 
 export function standaloneSetTimezones(data: string[]): void {
   save(TIMEZONES_KEY, data)
+}
+
+// ============================================================
+// 密码复杂度设置
+// 对应 ABP Identity 模块 Abp.Identity.Password.* 设置项
+// ============================================================
+
+export function standaloneGetPasswordSettings(): IdentityPasswordSettingsDto | null {
+  return load<IdentityPasswordSettingsDto>(PASSWORD_KEY)
+}
+
+export function standaloneUpdatePasswordSettings(data: IdentityPasswordSettingsDto): void {
+  save(PASSWORD_KEY, data)
 }

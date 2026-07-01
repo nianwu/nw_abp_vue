@@ -13,6 +13,7 @@ import {
 import {
   standaloneGetTenants, standaloneGetTenant, standaloneCreateTenant, standaloneUpdateTenant, standaloneDeleteTenant,
   standaloneGetDefaultConnectionString, standaloneUpdateDefaultConnectionString, standaloneDeleteDefaultConnectionString,
+  standaloneGetNamedConnectionStrings, standaloneSetNamedConnectionString, standaloneDeleteNamedConnectionString,
 } from '@/stores/standalone/tenant-store'
 import { standaloneGetPermissions, standaloneUpdatePermission } from '@/stores/standalone/permission-store'
 import { standaloneGetFeatures, standaloneUpdateFeatureValue } from '@/stores/standalone/feature-store'
@@ -199,13 +200,22 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
     /^\/api\/multi-tenancy\/tenants\/([^/]+)\/connection-strings$/,
   )
   if (namedConnMatch && method === 'GET') {
-    return {}
+    return standaloneGetNamedConnectionStrings(namedConnMatch[1])
   }
   const namedConnDetailMatch = urlWithoutQuery.match(
     /^\/api\/multi-tenancy\/tenants\/([^/]+)\/connection-strings\/(.+)$/,
   )
   if (namedConnDetailMatch) {
-    if (method === 'PUT' || method === 'DELETE') return EMPTY_OK
+    const id = namedConnDetailMatch[1]
+    const name = namedConnDetailMatch[2]
+    if (method === 'PUT') {
+      standaloneSetNamedConnectionString(id, name, typeof data === 'string' ? data : '')
+      return EMPTY_OK
+    }
+    if (method === 'DELETE') {
+      standaloneDeleteNamedConnectionString(id, name)
+      return EMPTY_OK
+    }
   }
   // 租户查找
   const tenantByIdMatch = urlWithoutQuery.match(/^\/api\/abp\/multi-tenancy\/tenants\/by-id\/([^/]+)$/)

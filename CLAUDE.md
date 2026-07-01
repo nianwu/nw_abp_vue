@@ -34,7 +34,7 @@ nw_abp_vue/
 | 平台 | ABP Framework ~10.4 |
 | 语言 | TypeScript ~5.9 |
 | UI 主题 | Lepton X (~5.4) |
-| 认证 | OAuth 2.0 + OpenID Connect (IdentityServer) |
+| 认证 | OAuth 2.0 + OpenID Connect (IdentityServer) 
 | 测试 | Vitest (单元), Protractor (E2E) |
 | 构建 | esbuild (@angular/build) |
 | 包管理 | Yarn |

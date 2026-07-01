@@ -10,6 +10,12 @@
       <el-descriptions-item label="目标">
         以 ABP Angular 默认模板为参考，用 Vue 3 实现其全部必要性功能
       </el-descriptions-item>
+      <el-descriptions-item label="版本">
+        {{ appVersion }}
+      </el-descriptions-item>
+      <el-descriptions-item label="构建时间">
+        {{ buildTime }}
+      </el-descriptions-item>
       <el-descriptions-item label="部署">
         GitHub Pages — 自动构建，push 即更新
       </el-descriptions-item>
@@ -39,4 +45,7 @@
 
 <script setup lang="ts">
 import { InfoFilled } from '@element-plus/icons-vue'
+
+const appVersion = import.meta.env.VITE_APP_VERSION || 'preview-1.0.0'
+const buildTime = __BUILD_TIME__
 </script>

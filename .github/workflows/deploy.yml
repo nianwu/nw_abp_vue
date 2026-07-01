@@ -35,12 +35,17 @@ jobs:
         run: npm ci
         working-directory: vue
 
+      - name: Set build time
+        id: time
+        run: echo "timestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+
       - name: Build (standalone mode, hash router)
         run: npx vite build --base=/nw_abp_vue/
         working-directory: vue
         env:
           VITE_PROVIDER_MODE: standalone
           VITE_ROUTER_MODE: hash
+          VITE_BUILD_TIME: ${{ steps.time.outputs.timestamp }}
           VITE_API_BASE_URL: /api
           VITE_OAUTH_AUTHORITY: https://localhost:44356
           VITE_OAUTH_CLIENT_ID: TodoApp_App

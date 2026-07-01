@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redirecting…</title>
+  <script>
+    // GitHub Pages SPA fallback: 404 page captures the route
+    // and redirects to index.html where the app restores it.
+    (function () {
+      var route = sessionStorage.getItem('spa-redirect');
+      if (!route) {
+        // Strip the /nw_abp_vue prefix to get the pure SPA route
+        var p = location.pathname.replace(/\/$/, '');
+        route = p.replace(/^\/nw_abp_vue/, '') || '/';
+        sessionStorage.setItem('spa-redirect', route);
+      }
+      location.replace('/nw_abp_vue/');
+    })();
+  </script>
+</head>
+<body></body>
+</html>

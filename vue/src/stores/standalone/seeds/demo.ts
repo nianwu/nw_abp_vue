@@ -6,7 +6,7 @@
  */
 
 import { seed } from '@/stores/standalone/storage'
-import { setUserSeq, setRoleSeq } from '@/stores/standalone/identity-store'
+import { setUserSeq, setRoleSeq, setUserRolesSeed } from '@/stores/standalone/identity-store'
 import { setTenantSeq } from '@/stores/standalone/tenant-store'
 import { standaloneSetPermissions } from '@/stores/standalone/permission-store'
 import { standaloneSetFeatures } from '@/stores/standalone/feature-store'
@@ -24,6 +24,7 @@ import type { EmailSettingsDto } from '@/types/settings'
 export function seedDemoData(): void {
   seedUsers()
   seedRoles()
+  seedUserRoles()
   seedTenants()
   seedPermissions()
   seedFeatures()
@@ -189,6 +190,28 @@ function seedRoles(): void {
   if (seed('roles', demoRoles)) {
     setRoleSeq(5)
   }
+}
+
+// ============================================================
+// 用户-角色映射种子
+// ============================================================
+
+function seedUserRoles(): void {
+  if (!seed('userRolesMap', {})) return
+  // 仅在首次播种时写入角色映射
+  setUserRolesSeed({
+    u1: ['admin'],
+    u2: ['user'],
+    u3: ['user'],
+    u4: ['viewer'],
+    u5: ['editor'],
+    u6: ['user'],
+    u7: ['manager'],
+    u8: ['viewer'],
+    u9: ['editor'],
+    u10: ['manager'],
+    u11: ['user'],
+  })
 }
 
 // ============================================================

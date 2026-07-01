@@ -89,7 +89,7 @@
           >
             <template #default="scope">
               <slot :name="`cell-${col.prop}`" :row="scope.row" :$index="scope.$index" :column="col">
-                <template v-if="col.dateRender">{{ formatDateCell(scope.row[col.prop], dateRenderFormats[col.prop] || 'full') }}</template>
+                <DateTimeCell v-if="col.dateRender" :date="scope.row[col.prop]" :mode="dateRenderFormats[col.prop] || 'full'" />
                 <template v-else>{{ col.formatter ? col.formatter(scope.row, scope.column, scope.row[col.prop], scope.$index) : scope.row[col.prop] }}</template>
               </slot>
             </template>
@@ -132,7 +132,8 @@ import { Search, Operation, Delete, Refresh } from '@element-plus/icons-vue'
 import HTTPClient from '@/api/http'
 import type { PagedResultDto, PagedRequestDto } from '@/types/api'
 import AbpEmptyState from './AbpEmptyState.vue'
-import { formatDateCell, DATE_RENDER_MODES, type DateRenderMode } from '@/utils/date-format'
+import DateTimeCell from './DateTimeCell.vue'
+import { DATE_RENDER_MODES, type DateRenderMode } from '@/utils/date-format'
 
 interface ColumnDef {
   prop: string; label: string; width?: string; minWidth?: string

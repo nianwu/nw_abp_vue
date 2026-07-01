@@ -81,6 +81,7 @@ function makeRole(overrides: Partial<IdentityRoleDto> & Pick<IdentityRoleDto, 'i
 
 const USERS_KEY = 'users'
 const ROLES_KEY = 'roles'
+const USER_ROLES_MAP_KEY = 'userRolesMap'
 
 function getUsers(): IdentityUserDto[] {
   return load<IdentityUserDto[]>(USERS_KEY) || []
@@ -96,6 +97,19 @@ function getRoles(): IdentityRoleDto[] {
 
 function setRoles(roles: IdentityRoleDto[]): void {
   save(ROLES_KEY, roles)
+}
+
+/** userId → roleName[] 映射 */
+function getUserRolesMap(): Record<string, string[]> {
+  return load<Record<string, string[]>>(USER_ROLES_MAP_KEY) || {}
+}
+
+function setUserRolesMap(map: Record<string, string[]>): void {
+  save(USER_ROLES_MAP_KEY, map)
+}
+
+export function setUserRolesSeed(map: Record<string, string[]>): void {
+  setUserRolesMap(map)
 }
 
 // ============================================================
@@ -159,6 +173,14 @@ export function standaloneCreateUser(data: {
   })
   users.unshift(newUser)
   setUsers(users)
+
+  // 保存角色映射
+  if (data.roleNames && data.roleNames.length > 0) {
+    const map = getUserRolesMap()
+    map[newUser.id] = data.roleNames
+    setUserRolesMap(map)
+  }
+
   return newUser
 }
 
@@ -195,11 +217,28 @@ export function standaloneDeleteUser(id: string): boolean {
   if (idx === -1) return false
   users.splice(idx, 1)
   setUsers(users)
+  // 同步清理角色映射
+  const map = getUserRolesMap()
+  delete map[id]
+  setUserRolesMap(map)
   return true
 }
 
-export function standaloneGetUserRoles(_id: string): ListResultDto<IdentityRoleDto> {
-  return { items: getRoles().filter((r) => r.name === 'admin') }
+export function standaloneGetUserRoles(id: string): ListResultDto<IdentityRoleDto> {
+  const map = getUserRolesMap()
+  const roleNames = map[id] || []
+  const roles = getRoles()
+  return { items: roles.filter((r) => roleNames.includes(r.name || '')) }
+}
+
+export function standaloneUpdateUserRoles(id: string, roleNames: string[]): void {
+  const map = getUserRolesMap()
+  if (roleNames.length === 0) {
+    delete map[id]
+  } else {
+    map[id] = roleNames
+  }
+  setUserRolesMap(map)
 }
 
 // ============================================================

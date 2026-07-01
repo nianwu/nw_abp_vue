@@ -16,6 +16,7 @@ declare module 'vue' {
     AbpErrorPage: typeof import('./components/AbpErrorPage.vue')['default']
     AbpLoaderBar: typeof import('./components/AbpLoaderBar.vue')['default']
     AbpModal: typeof import('./components/AbpModal.vue')['default']
+    DateTimeCell: typeof import('./components/DateTimeCell.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']

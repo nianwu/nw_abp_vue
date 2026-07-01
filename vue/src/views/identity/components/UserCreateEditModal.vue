@@ -10,7 +10,7 @@
       <el-tab-pane label="基本信息" name="info">
         <AbpDynamicForm ref="formRef" v-model="formData" :fields="fields" :field-errors="fieldErrors" />
       </el-tab-pane>
-      <el-tab-pane label="角色分配" name="roles" v-if="!userId">
+      <el-tab-pane label="角色分配" name="roles">
         <el-transfer v-model="selectedRoles" :data="roleOptions" :titles="['可用角色', '已分配']" />
       </el-tab-pane>
     </el-tabs>
@@ -64,22 +64,30 @@ const editFields: AbpFormItem[] = [
 
 const fields = computed(() => props.userId ? editFields : createFields)
 
-// 编辑模式加载用户数据
 watch(() => props.visible, async (v) => {
   if (!v) return
   fieldErrors.value = {}
+  activeTab.value = 'info'
+  selectedRoles.value = []
+
+  // 加载角色选项（创建和编辑模式都需要）
+  try {
+    const res = await rolesApi.getAllRoles()
+    roleOptions.value = (res.items || []).map((r) => ({ key: r.name || '', label: r.name || '' }))
+  } catch { /* */ }
+
   if (props.userId) {
+    // 编辑模式：加载用户数据 + 已有角色
     try {
-      const user = await usersApi.getUser(props.userId)
+      const [user, roles] = await Promise.all([
+        usersApi.getUser(props.userId),
+        usersApi.getUserRoles(props.userId),
+      ])
       formData.value = { ...user, password: '' }
+      selectedRoles.value = (roles.items || []).map((r) => r.name || '')
     } catch { showError('加载用户信息失败') }
   } else {
     formData.value = { userName: '', name: '', surname: '', email: '', phoneNumber: '', password: '', isActive: true, lockoutEnabled: true }
-    // 加载角色
-    try {
-      const res = await rolesApi.getAllRoles()
-      roleOptions.value = (res.items || []).map((r) => ({ key: r.name || '', label: r.name || '' }))
-    } catch { /**/ }
   }
 })
 
@@ -88,10 +96,16 @@ async function handleSubmit() {
   if (!valid) return
   submitting.value = true
   try {
-    if (props.userId) {
-      await usersApi.updateUser(props.userId, formData.value as unknown as Parameters<typeof usersApi.updateUser>[1])
+    let userId = props.userId
+    if (userId) {
+      await usersApi.updateUser(userId, formData.value as unknown as Parameters<typeof usersApi.updateUser>[1])
     } else {
-      await usersApi.createUser(formData.value as unknown as Parameters<typeof usersApi.createUser>[0])
+      const created = await usersApi.createUser(formData.value as unknown as Parameters<typeof usersApi.createUser>[0])
+      userId = created.id
+    }
+    // 保存角色分配
+    if (userId) {
+      await usersApi.updateUserRoles(userId, { roleNames: selectedRoles.value })
     }
     showSuccess(props.userId ? '更新成功' : '创建成功')
     emit('saved')

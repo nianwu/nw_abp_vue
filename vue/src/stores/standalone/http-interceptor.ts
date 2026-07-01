@@ -7,7 +7,7 @@
 
 import type { AxiosInstance } from 'axios'
 import {
-  standaloneGetUsers, standaloneGetUser, standaloneCreateUser, standaloneUpdateUser, standaloneDeleteUser, standaloneGetUserRoles,
+  standaloneGetUsers, standaloneGetUser, standaloneCreateUser, standaloneUpdateUser, standaloneDeleteUser, standaloneGetUserRoles, standaloneUpdateUserRoles,
   standaloneGetRoles, standaloneGetAllRoles, standaloneGetRole, standaloneCreateRole, standaloneUpdateRole, standaloneDeleteRole,
 } from '@/stores/standalone/identity-store'
 import {
@@ -88,7 +88,7 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
   const userRolesMatch = urlWithoutQuery.match(/^\/api\/identity\/users\/([^/]+)\/roles$/)
   if (userRolesMatch) {
     if (method === 'GET') return standaloneGetUserRoles(userRolesMatch[1])
-    if (method === 'PUT') return EMPTY_OK
+    if (method === 'PUT') { standaloneUpdateUserRoles(userRolesMatch[1], parseBody(data).roleNames || []); return EMPTY_OK }
   }
   // 用户查找
   if (method === 'GET' && urlWithoutQuery === '/api/identity/users/assignable-roles') {

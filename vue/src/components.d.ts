@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AboutProject: typeof import('./components/AboutProject.vue')['default']
     AbpBreadcrumb: typeof import('./components/AbpBreadcrumb.vue')['default']
     AbpDataTable: typeof import('./components/AbpDataTable.vue')['default']
     AbpDynamicForm: typeof import('./components/AbpDynamicForm.vue')['default']

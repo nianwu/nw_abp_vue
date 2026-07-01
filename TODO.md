@@ -49,3 +49,5 @@
 | **DDD 模式抽象** | 以 Domain / Application / Infrastructure / Presentation 四层重构，核心逻辑与 UI 框架解耦 |
 | **i18n 可选项** | 国际化为可选插件，不引入时默认中文运行，按需加载语言包 |
 | **主题切换** | 亮色/暗色主题切换，基于 Element Plus CSS 变量 + Tailwind 暗色模式，用户偏好持久化 |
+| **全球头像支持** | 集成 Gravatar / DiceBear 等头像服务，用户无自定义头像时自动生成全球唯一默认头像 |
+| **超强 Icon 库支持** | 扩展图标选择器，引入 Iconify 等统一图标方案，支持数万图标即时检索与按需加载 |

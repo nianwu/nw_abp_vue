@@ -24,6 +24,12 @@ import {
 // 已匹配路由但无响应体的写操作，返回此标记
 const EMPTY_OK = {}
 
+/** 模拟网络延迟 100~500ms */
+function delay(): Promise<void> {
+  const ms = Math.floor(Math.random() * 401) + 100
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 /**
  * 注册 standalone HTTP 响应拦截器。
  * 对匹配 /api/ 前缀的请求，根据 method + URL 返回 standalone store 数据。
@@ -39,13 +45,13 @@ export function registerStandaloneHttpInterceptor(httpClient: AxiosInstance): nu
 
     if (match !== undefined) {
       config.adapter = function () {
-        return Promise.resolve({
+        return delay().then(() => ({
           data: match === EMPTY_OK ? undefined : match,
           status: match === EMPTY_OK ? 204 : 200,
           statusText: 'OK',
           headers: {},
           config,
-        })
+        }))
       }
     }
 

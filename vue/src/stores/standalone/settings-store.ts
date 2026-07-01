@@ -15,15 +15,15 @@ const TIMEZONES_KEY = 'timezones'
 // 邮件设置
 // ============================================================
 
-export function localGetEmailSettings(): EmailSettingsDto | null {
+export function standaloneGetEmailSettings(): EmailSettingsDto | null {
   return load<EmailSettingsDto>(EMAIL_KEY)
 }
 
-export function localSetEmailSettings(data: EmailSettingsDto): void {
+export function standaloneSetEmailSettings(data: EmailSettingsDto): void {
   save(EMAIL_KEY, data)
 }
 
-export function localUpdateEmailSettings(data: EmailSettingsDto): void {
+export function standaloneUpdateEmailSettings(data: EmailSettingsDto): void {
   save(EMAIL_KEY, data)
 }
 
@@ -31,18 +31,18 @@ export function localUpdateEmailSettings(data: EmailSettingsDto): void {
 // 时区
 // ============================================================
 
-export function localGetTimezone(): string {
+export function standaloneGetTimezone(): string {
   return load<string>(TIMEZONE_KEY) || 'Asia/Shanghai'
 }
 
-export function localSetTimezone(tz: string): void {
+export function standaloneSetTimezone(tz: string): void {
   save(TIMEZONE_KEY, tz)
 }
 
-export function localGetTimezones(): string[] {
+export function standaloneGetTimezones(): string[] {
   return load<string[]>(TIMEZONES_KEY) || []
 }
 
-export function localSetTimezones(data: string[]): void {
+export function standaloneSetTimezones(data: string[]): void {
   save(TIMEZONES_KEY, data)
 }

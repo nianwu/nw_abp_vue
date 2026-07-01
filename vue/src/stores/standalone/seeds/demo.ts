@@ -1,16 +1,16 @@
 /**
  * Demo 种子数据 — 为演示站点注入初始 CRUD 数据
  *
- * 在 app 启动时由 local provider 的 setupInfrastructure 调用。
+ * 在 app 启动时由 standalone provider 的 setupInfrastructure 调用。
  * 使用 storage.seed() 确保仅首次访问时播种，后续访问使用 localStorage 中已有的数据。
  */
 
-import { seed } from '@/stores/local/storage'
-import { setUserSeq, setRoleSeq } from '@/stores/local/identity-store'
-import { setTenantSeq } from '@/stores/local/tenant-store'
-import { localSetPermissions } from '@/stores/local/permission-store'
-import { localSetFeatures } from '@/stores/local/feature-store'
-import { localSetEmailSettings, localSetTimezones } from '@/stores/local/settings-store'
+import { seed } from '@/stores/standalone/storage'
+import { setUserSeq, setRoleSeq } from '@/stores/standalone/identity-store'
+import { setTenantSeq } from '@/stores/standalone/tenant-store'
+import { standaloneSetPermissions } from '@/stores/standalone/permission-store'
+import { standaloneSetFeatures } from '@/stores/standalone/feature-store'
+import { standaloneSetEmailSettings, standaloneSetTimezones } from '@/stores/standalone/settings-store'
 import type { IdentityUserDto, IdentityRoleDto } from '@/types/identity'
 import type { TenantDto } from '@/types/tenant'
 import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInfoDto } from '@/types/permission'

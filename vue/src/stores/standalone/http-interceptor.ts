@@ -1,5 +1,5 @@
 /**
- * Local HTTP 请求拦截器 — 在 Axios 请求发出前按 URL pattern 匹配返回 local store 数据
+ * Standalone HTTP 请求拦截器 — 在 Axios 请求发出前按 URL pattern 匹配返回 standalone store 数据
  *
  * 使用 Axios adapter 替换机制：匹配的请求直接返回模拟响应，不发送网络请求。
  * 未匹配的请求放行走真实网络。
@@ -7,29 +7,29 @@
 
 import type { AxiosInstance } from 'axios'
 import {
-  localGetUsers, localGetUser, localCreateUser, localUpdateUser, localDeleteUser, localGetUserRoles,
-  localGetRoles, localGetAllRoles, localGetRole, localCreateRole, localUpdateRole, localDeleteRole,
-} from '@/stores/local/identity-store'
+  standaloneGetUsers, standaloneGetUser, standaloneCreateUser, standaloneUpdateUser, standaloneDeleteUser, standaloneGetUserRoles,
+  standaloneGetRoles, standaloneGetAllRoles, standaloneGetRole, standaloneCreateRole, standaloneUpdateRole, standaloneDeleteRole,
+} from '@/stores/standalone/identity-store'
 import {
-  localGetTenants, localGetTenant, localCreateTenant, localUpdateTenant, localDeleteTenant,
-  localGetDefaultConnectionString, localUpdateDefaultConnectionString, localDeleteDefaultConnectionString,
-} from '@/stores/local/tenant-store'
-import { localGetPermissions, localUpdatePermission } from '@/stores/local/permission-store'
-import { localGetFeatures, localUpdateFeatureValue } from '@/stores/local/feature-store'
+  standaloneGetTenants, standaloneGetTenant, standaloneCreateTenant, standaloneUpdateTenant, standaloneDeleteTenant,
+  standaloneGetDefaultConnectionString, standaloneUpdateDefaultConnectionString, standaloneDeleteDefaultConnectionString,
+} from '@/stores/standalone/tenant-store'
+import { standaloneGetPermissions, standaloneUpdatePermission } from '@/stores/standalone/permission-store'
+import { standaloneGetFeatures, standaloneUpdateFeatureValue } from '@/stores/standalone/feature-store'
 import {
-  localGetEmailSettings, localUpdateEmailSettings,
-  localGetTimezone, localSetTimezone, localGetTimezones,
-} from '@/stores/local/settings-store'
+  standaloneGetEmailSettings, standaloneUpdateEmailSettings,
+  standaloneGetTimezone, standaloneSetTimezone, standaloneGetTimezones,
+} from '@/stores/standalone/settings-store'
 
 // 已匹配路由但无响应体的写操作，返回此标记
 const EMPTY_OK = {}
 
 /**
- * 注册 local HTTP 响应拦截器。
- * 对匹配 /api/ 前缀的请求，根据 method + URL 返回 local store 数据。
+ * 注册 standalone HTTP 响应拦截器。
+ * 对匹配 /api/ 前缀的请求，根据 method + URL 返回 standalone store 数据。
  * 未匹配的请求放行走真实网络。
  */
-export function registerLocalHttpInterceptor(httpClient: AxiosInstance): number {
+export function registerStandaloneHttpInterceptor(httpClient: AxiosInstance): number {
   const id = httpClient.interceptors.request.use((config) => {
     const { method, url = '' } = config
 
@@ -68,7 +68,7 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
   // Identity Users
   // ========================
   if (method === 'GET' && urlWithoutQuery === '/api/identity/users') {
-    return localGetUsers({
+    return standaloneGetUsers({
       filter: params?.filter,
       sorting: params?.sorting,
       skipCount: params?.skipCount || params?.SkipCount,
@@ -76,117 +76,117 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
     })
   }
   if (method === 'POST' && urlWithoutQuery === '/api/identity/users') {
-    return localCreateUser(parseBody(data))
+    return standaloneCreateUser(parseBody(data))
   }
   const userMatch = urlWithoutQuery.match(/^\/api\/identity\/users\/([^/]+)$/)
   if (userMatch) {
     const id = userMatch[1]
-    if (method === 'GET') return localGetUser(id)
-    if (method === 'PUT') return localUpdateUser(id, parseBody(data))
-    if (method === 'DELETE') { localDeleteUser(id); return EMPTY_OK }
+    if (method === 'GET') return standaloneGetUser(id)
+    if (method === 'PUT') return standaloneUpdateUser(id, parseBody(data))
+    if (method === 'DELETE') { standaloneDeleteUser(id); return EMPTY_OK }
   }
   const userRolesMatch = urlWithoutQuery.match(/^\/api\/identity\/users\/([^/]+)\/roles$/)
   if (userRolesMatch) {
-    if (method === 'GET') return localGetUserRoles(userRolesMatch[1])
+    if (method === 'GET') return standaloneGetUserRoles(userRolesMatch[1])
     if (method === 'PUT') return EMPTY_OK
   }
   // 用户查找
   if (method === 'GET' && urlWithoutQuery === '/api/identity/users/assignable-roles') {
-    return localGetAllRoles()
+    return standaloneGetAllRoles()
   }
   const userByEmailMatch = urlWithoutQuery.match(/^\/api\/identity\/users\/by-email\/(.+)$/)
   if (userByEmailMatch) {
     const email = decodeURIComponent(userByEmailMatch[1])
-    const users = localGetUsers({ filter: email }).items
+    const users = standaloneGetUsers({ filter: email }).items
     return users.length > 0 ? users[0] : null
   }
   const userByUsernameMatch = urlWithoutQuery.match(/^\/api\/identity\/users\/by-username\/(.+)$/)
   if (userByUsernameMatch) {
     const userName = decodeURIComponent(userByUsernameMatch[1])
-    const users = localGetUsers({ filter: userName }).items
+    const users = standaloneGetUsers({ filter: userName }).items
     return users.length > 0 ? users[0] : null
   }
   // 用户查找器（lookup）
   const userLookupSearchMatch = urlWithoutQuery.match(/^\/api\/identity\/users\/lookup\/search$/)
   if (userLookupSearchMatch && method === 'GET') {
-    const items = localGetUsers({ filter: params?.filter }).items.map(u => ({
+    const items = standaloneGetUsers({ filter: params?.filter }).items.map(u => ({
       id: u.id, userName: u.userName, name: u.name, surname: u.surname, email: u.email,
     }))
     return { items, totalCount: items.length }
   }
   const userLookupByIdMatch = urlWithoutQuery.match(/^\/api\/identity\/users\/lookup\/([^/]+)$/)
   if (userLookupByIdMatch) {
-    const u = localGetUser(userLookupByIdMatch[1])
+    const u = standaloneGetUser(userLookupByIdMatch[1])
     if (!u) return null
     return { id: u.id, userName: u.userName, name: u.name, surname: u.surname, email: u.email }
   }
   const userLookupByUsernameMatch = urlWithoutQuery.match(/^\/api\/identity\/users\/lookup\/by-username\/(.+)$/)
   if (userLookupByUsernameMatch) {
     const userName = decodeURIComponent(userLookupByUsernameMatch[1])
-    const users = localGetUsers({ filter: userName }).items
+    const users = standaloneGetUsers({ filter: userName }).items
     if (users.length === 0) return null
     const u = users[0]
     return { id: u.id, userName: u.userName, name: u.name, surname: u.surname, email: u.email }
   }
   if (method === 'GET' && urlWithoutQuery === '/api/identity/users/lookup/count') {
-    return localGetUsers({ filter: params?.filter }).totalCount
+    return standaloneGetUsers({ filter: params?.filter }).totalCount
   }
 
   // ========================
   // Identity Roles
   // ========================
   if (method === 'GET' && urlWithoutQuery === '/api/identity/roles/all') {
-    return localGetAllRoles()
+    return standaloneGetAllRoles()
   }
   if (method === 'GET' && urlWithoutQuery === '/api/identity/roles') {
-    return localGetRoles({
+    return standaloneGetRoles({
       filter: params?.filter,
       skipCount: params?.skipCount || params?.SkipCount,
       maxResultCount: params?.maxResultCount || params?.MaxResultCount,
     })
   }
   if (method === 'POST' && urlWithoutQuery === '/api/identity/roles') {
-    return localCreateRole(parseBody(data))
+    return standaloneCreateRole(parseBody(data))
   }
   const roleMatch = urlWithoutQuery.match(/^\/api\/identity\/roles\/([^/]+)$/)
   if (roleMatch) {
     const id = roleMatch[1]
-    if (method === 'GET') return localGetRole(id)
-    if (method === 'PUT') return localUpdateRole(id, parseBody(data))
-    if (method === 'DELETE') { localDeleteRole(id); return EMPTY_OK }
+    if (method === 'GET') return standaloneGetRole(id)
+    if (method === 'PUT') return standaloneUpdateRole(id, parseBody(data))
+    if (method === 'DELETE') { standaloneDeleteRole(id); return EMPTY_OK }
   }
 
   // ========================
   // Tenant Management
   // ========================
   if (method === 'GET' && urlWithoutQuery === '/api/multi-tenancy/tenants') {
-    return localGetTenants({
+    return standaloneGetTenants({
       filter: params?.filter,
       skipCount: params?.skipCount || params?.SkipCount,
       maxResultCount: params?.maxResultCount || params?.MaxResultCount,
     })
   }
   if (method === 'POST' && urlWithoutQuery === '/api/multi-tenancy/tenants') {
-    return localCreateTenant(parseBody(data))
+    return standaloneCreateTenant(parseBody(data))
   }
   const tenantMatch = urlWithoutQuery.match(/^\/api\/multi-tenancy\/tenants\/([^/]+)$/)
   if (tenantMatch) {
     const id = tenantMatch[1]
-    if (method === 'GET') return localGetTenant(id)
-    if (method === 'PUT') return localUpdateTenant(id, parseBody(data))
-    if (method === 'DELETE') { localDeleteTenant(id); return EMPTY_OK }
+    if (method === 'GET') return standaloneGetTenant(id)
+    if (method === 'PUT') return standaloneUpdateTenant(id, parseBody(data))
+    if (method === 'DELETE') { standaloneDeleteTenant(id); return EMPTY_OK }
   }
   const connStrMatch = urlWithoutQuery.match(
     /^\/api\/multi-tenancy\/tenants\/([^/]+)\/default-connection-string$/,
   )
   if (connStrMatch) {
     const id = connStrMatch[1]
-    if (method === 'GET') return localGetDefaultConnectionString(id)
+    if (method === 'GET') return standaloneGetDefaultConnectionString(id)
     if (method === 'PUT') {
-      localUpdateDefaultConnectionString(id, params?.defaultConnectionString || '')
+      standaloneUpdateDefaultConnectionString(id, params?.defaultConnectionString || '')
       return EMPTY_OK
     }
-    if (method === 'DELETE') { localDeleteDefaultConnectionString(id); return EMPTY_OK }
+    if (method === 'DELETE') { standaloneDeleteDefaultConnectionString(id); return EMPTY_OK }
   }
   // 命名连接字符串
   const namedConnMatch = urlWithoutQuery.match(
@@ -204,14 +204,14 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
   // 租户查找
   const tenantByIdMatch = urlWithoutQuery.match(/^\/api\/abp\/multi-tenancy\/tenants\/by-id\/([^/]+)$/)
   if (tenantByIdMatch && method === 'GET') {
-    const t = localGetTenant(tenantByIdMatch[1])
+    const t = standaloneGetTenant(tenantByIdMatch[1])
     if (!t) return { success: false, tenantId: tenantByIdMatch[1], name: '', isActive: false }
     return { success: true, tenantId: t.id, name: t.name, isActive: t.isActive }
   }
   const tenantByNameMatch = urlWithoutQuery.match(/^\/api\/abp\/multi-tenancy\/tenants\/by-name\/(.+)$/)
   if (tenantByNameMatch && method === 'GET') {
     const name = decodeURIComponent(tenantByNameMatch[1])
-    const tenants = localGetTenants({ filter: name }).items
+    const tenants = standaloneGetTenants({ filter: name }).items
     if (tenants.length === 0) return { success: false, tenantId: '', name, isActive: false }
     const t = tenants[0]
     return { success: true, tenantId: t.id, name: t.name, isActive: t.isActive }
@@ -221,20 +221,20 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
   // Permission Management
   // ========================
   if (method === 'GET' && urlWithoutQuery === '/api/permission-management/permissions') {
-    return localGetPermissions() || { entityDisplayName: '', groups: [] }
+    return standaloneGetPermissions() || { entityDisplayName: '', groups: [] }
   }
   if (method === 'PUT' && urlWithoutQuery === '/api/permission-management/permissions') {
     const body = parseBody(data)
     if (body?.permissions) {
       for (const perm of body.permissions) {
-        localUpdatePermission(perm.name, perm.isGranted)
+        standaloneUpdatePermission(perm.name, perm.isGranted)
       }
     }
     return EMPTY_OK
   }
   // 按分组获取权限
   if (method === 'GET' && urlWithoutQuery === '/api/permission-management/permissions/by-group') {
-    return localGetPermissions() || { entityDisplayName: '', groups: [] }
+    return standaloneGetPermissions() || { entityDisplayName: '', groups: [] }
   }
   // 资源权限列表
   if (method === 'GET' && urlWithoutQuery === '/api/permission-management/permissions/resource') {
@@ -288,13 +288,13 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
     const filter = (params?.filter || '').toLowerCase()
     let keys: { providerKey?: string; providerDisplayName?: string }[] = []
     if (resourceName.includes('User')) {
-      const users = localGetUsers({ filter, maxResultCount: 20 }).items
+      const users = standaloneGetUsers({ filter, maxResultCount: 20 }).items
       keys = users.map(u => ({ providerKey: u.id, providerDisplayName: u.userName || u.id }))
     } else if (resourceName.includes('Role')) {
-      const roles = localGetAllRoles().items.filter(r => !filter || (r.name || '').toLowerCase().includes(filter))
+      const roles = standaloneGetAllRoles().items.filter(r => !filter || (r.name || '').toLowerCase().includes(filter))
       keys = roles.map(r => ({ providerKey: r.id, providerDisplayName: r.name || r.id }))
     } else if (resourceName.includes('Tenant')) {
-      const tenants = localGetTenants({ filter, maxResultCount: 20 }).items
+      const tenants = standaloneGetTenants({ filter, maxResultCount: 20 }).items
       keys = tenants.map(t => ({ providerKey: t.id, providerDisplayName: t.name || t.id }))
     }
     return { keys }
@@ -304,13 +304,13 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
   // Feature Management
   // ========================
   if (method === 'GET' && urlWithoutQuery === '/api/feature-management/features') {
-    return localGetFeatures()
+    return standaloneGetFeatures()
   }
   if (method === 'PUT' && urlWithoutQuery === '/api/feature-management/features') {
     const body = parseBody(data)
     if (body?.features) {
       for (const feat of body.features) {
-        localUpdateFeatureValue(feat.name, feat.value)
+        standaloneUpdateFeatureValue(feat.name, feat.value)
       }
     }
     return EMPTY_OK
@@ -323,17 +323,17 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
   // Settings
   // ========================
   if (method === 'GET' && urlWithoutQuery === '/api/setting-management/emailing') {
-    return localGetEmailSettings()
+    return standaloneGetEmailSettings()
   }
   if (method === 'POST' && urlWithoutQuery === '/api/setting-management/emailing') {
-    localUpdateEmailSettings(parseBody(data))
+    standaloneUpdateEmailSettings(parseBody(data))
     return EMPTY_OK
   }
   if (method === 'POST' && urlWithoutQuery === '/api/setting-management/emailing/send-test-email') {
     return EMPTY_OK
   }
   if (method === 'GET' && urlWithoutQuery === '/api/setting-management/timezone') {
-    return localGetTimezone()
+    return standaloneGetTimezone()
   }
   if (method === 'POST' && urlWithoutQuery === '/api/setting-management/timezone') {
     const tzData = parseBody(data)
@@ -341,7 +341,7 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
     return EMPTY_OK
   }
   if (method === 'GET' && urlWithoutQuery === '/api/setting-management/timezone/timezones') {
-    return localGetTimezones()
+    return standaloneGetTimezones()
   }
 
   // ========================
@@ -377,6 +377,6 @@ function matchStore(method: string, url: string, params: any, data: any): any | 
   // ========================
   // 兜底 — 所有未匹配的 /api/ 请求返回空成功，避免穿透到不可用的 proxy
   // ========================
-  console.warn(`[local-interceptor] unmatched ${method} ${urlWithoutQuery} — returning 204`)
+  console.warn(`[standalone-interceptor] unmatched ${method} ${urlWithoutQuery} — returning 204`)
   return EMPTY_OK
 }

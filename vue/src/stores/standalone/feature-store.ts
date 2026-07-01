@@ -9,15 +9,15 @@ import type { GetFeatureListResultDto } from '@/types/feature'
 
 const KEY = 'features'
 
-export function localGetFeatures(): GetFeatureListResultDto | null {
+export function standaloneGetFeatures(): GetFeatureListResultDto | null {
   return load<GetFeatureListResultDto>(KEY)
 }
 
-export function localSetFeatures(data: GetFeatureListResultDto): void {
+export function standaloneSetFeatures(data: GetFeatureListResultDto): void {
   save(KEY, data)
 }
 
-export function localUpdateFeatureValue(featureName: string, value: string): void {
+export function standaloneUpdateFeatureValue(featureName: string, value: string): void {
   const data = load<GetFeatureListResultDto>(KEY)
   if (!data) return
   for (const group of data.groups) {

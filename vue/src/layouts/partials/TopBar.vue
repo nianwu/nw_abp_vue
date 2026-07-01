@@ -10,7 +10,7 @@
       <TenantBox />
       <LangSwitch />
       <el-button
-        v-if="isLocal"
+        v-if="isStandalone"
         size="small"
         type="danger"
         plain
@@ -33,11 +33,11 @@ import UserMenu from './UserMenu.vue'
 defineEmits<{ 'toggle-sidebar': [] }>()
 
 const appName = APP_NAME
-const isLocal = import.meta.env.VITE_PROVIDER_MODE === 'local'
+const isStandalone = import.meta.env.VITE_PROVIDER_MODE === 'standalone'
 
 async function handleReset() {
-  const { resetAll } = await import('@/stores/local/storage')
-  const { seedDemoData } = await import('@/stores/local/seeds/demo')
+  const { resetAll } = await import('@/stores/standalone/storage')
+  const { seedDemoData } = await import('@/stores/standalone/seeds/demo')
   resetAll()
   seedDemoData()
   window.location.reload()

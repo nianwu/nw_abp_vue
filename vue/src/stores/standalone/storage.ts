@@ -1,17 +1,17 @@
 /**
- * localStorage 持久化工具 — 为 local stores 提供存储抽象
+ * localStorage 持久化工具 — 为 standalone stores 提供存储抽象
  *
- * 所有 key 以 `abp:local:` 为前缀，与 Pinia persistedstate 等隔离。
+ * 所有 key 以 `abp:standalone:` 为前缀，与 Pinia persistedstate 等隔离。
  *
  * API:
  *   load<T>(key)        读取并反序列化
  *   save<T>(key, data)  序列化写入
  *   seed<T>(key, data)  仅当 key 不存在时写入（首次播种）
  *   remove(key)         删除单个 key
- *   resetAll()          清除所有 abp:local: 前缀的 key
+ *   resetAll()          清除所有 abp:standalone: 前缀的 key
  */
 
-const PREFIX = 'abp:local:'
+const PREFIX = 'abp:standalone:'
 
 function prefixed(key: string): string {
   return PREFIX + key

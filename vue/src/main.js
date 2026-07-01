@@ -4,8 +4,8 @@
  * 顺序: Pinia → i18n → Config → Auth → HTTP 拦截器 → Router → Mount
  *
  * 所有外部依赖通过 Provider 抽象层接入：
- *   设置 VITE_PROVIDER_MODE=local   → 独立开发（零外部依赖）
- *   设置 VITE_PROVIDER_MODE=remote  → 联调后端 + OIDC
+ *   设置 VITE_PROVIDER_MODE=standalone → 独立模式（解耦接口依赖，快速开发迭代）
+ *   设置 VITE_PROVIDER_MODE=remote     → 联调模式（后端 API + OIDC）
  */
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
@@ -34,7 +34,7 @@ async function bootstrap() {
     appConfig.$patch({ config: config });
     // 4. 认证 — 静默恢复登录态
     await providers.auth.trySilentLogin();
-    // 5. 基础设施 — local 模式注册 HTTP 拦截器，remote 模式为 no-op
+    // 5. 基础设施 — standalone 模式注册 HTTP 拦截器，remote 模式为 no-op
     await providers.setupInfrastructure();
     // 6. Element Plus + Router
     app.use(ElementPlus, { locale: zhCn });

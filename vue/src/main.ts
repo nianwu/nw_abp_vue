@@ -4,8 +4,8 @@
  * 顺序: Pinia → i18n → Config → Auth → HTTP 拦截器 → Router → Mount
  *
  * 所有外部依赖通过 Provider 抽象层接入：
- *   设置 VITE_PROVIDER_MODE=local   → 独立开发（零外部依赖）
- *   设置 VITE_PROVIDER_MODE=remote  → 联调后端 + OIDC
+ *   设置 VITE_PROVIDER_MODE=standalone → 独立模式（解耦接口依赖，快速开发迭代）
+ *   设置 VITE_PROVIDER_MODE=remote     → 联调模式（后端 API + OIDC）
  */
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

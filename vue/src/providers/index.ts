@@ -1,22 +1,22 @@
 /**
  * Provider 注册中心 — Vite 构建时根据 VITE_PROVIDER_MODE 选择实现
  *
- *   VITE_PROVIDER_MODE=local   → 独立开发（零外部依赖，静态数据 + HTTP 拦截）
- *   VITE_PROVIDER_MODE=remote  → 联调后端 + OIDC
+ *   VITE_PROVIDER_MODE=standalone → 独立模式（解耦接口依赖，localStorage + 种子数据）
+ *   VITE_PROVIDER_MODE=remote     → 联调模式（后端 API + OIDC）
  *
  * 业务代码导入：
  *   import { providers, i18n } from '@/providers'
  */
 import type { AppProviders } from './types'
-import { localI18nProvider, i18n as localI18n } from './local/i18n-provider'
-import { localConfigProvider } from './local/config-provider'
-import { localAuthProvider } from './local/auth-provider'
+import { standaloneI18nProvider, i18n as standaloneI18n } from './standalone/i18n-provider'
+import { standaloneConfigProvider } from './standalone/config-provider'
+import { standaloneAuthProvider } from './standalone/auth-provider'
 import { remoteI18nProvider, i18n as remoteI18n } from './remote/i18n-provider'
 import { remoteConfigProvider } from './remote/config-provider'
 import { remoteAuthProvider } from './remote/auth-provider'
 
-const MODE: 'local' | 'remote' =
-  (import.meta.env.VITE_PROVIDER_MODE as 'local' | 'remote') || 'local'
+const MODE: 'standalone' | 'remote' =
+  (import.meta.env.VITE_PROVIDER_MODE as 'standalone' | 'remote') || 'standalone'
 
 function createProviders(): { providers: AppProviders; i18n: any } {
   if (MODE === 'remote') {
@@ -33,21 +33,21 @@ function createProviders(): { providers: AppProviders; i18n: any } {
     }
   }
 
-  // local 模式
+  // standalone 模式 — 解耦接口依赖，快速开发迭代
   return {
     providers: {
-      i18n: localI18nProvider,
-      config: localConfigProvider,
-      auth: localAuthProvider,
+      i18n: standaloneI18nProvider,
+      config: standaloneConfigProvider,
+      auth: standaloneAuthProvider,
       setupInfrastructure: async () => {
-        const { seedDemoData } = await import('@/stores/local/seeds/demo')
-        const { registerLocalHttpInterceptor } = await import('@/stores/local/http-interceptor')
+        const { seedDemoData } = await import('@/stores/standalone/seeds/demo')
+        const { registerStandaloneHttpInterceptor } = await import('@/stores/standalone/http-interceptor')
         const { default: httpClient } = await import('@/api/http')
         seedDemoData()
-        registerLocalHttpInterceptor(httpClient)
+        registerStandaloneHttpInterceptor(httpClient)
       },
     },
-    i18n: localI18n,
+    i18n: standaloneI18n,
   }
 }
 

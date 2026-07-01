@@ -113,7 +113,7 @@ export function setUserSeq(n: number): void {
   save('userSeq', n)
 }
 
-export function localGetUsers(params?: {
+export function standaloneGetUsers(params?: {
   filter?: string
   sorting?: string
   skipCount?: number
@@ -132,11 +132,11 @@ export function localGetUsers(params?: {
   return { items: filtered, totalCount: total }
 }
 
-export function localGetUser(id: string): IdentityUserDto | undefined {
+export function standaloneGetUser(id: string): IdentityUserDto | undefined {
   return getUsers().find((u) => u.id === id)
 }
 
-export function localCreateUser(data: {
+export function standaloneCreateUser(data: {
   userName: string
   name?: string
   surname?: string
@@ -162,7 +162,7 @@ export function localCreateUser(data: {
   return newUser
 }
 
-export function localUpdateUser(
+export function standaloneUpdateUser(
   id: string,
   data: {
     userName?: string
@@ -189,7 +189,7 @@ export function localUpdateUser(
   return u
 }
 
-export function localDeleteUser(id: string): boolean {
+export function standaloneDeleteUser(id: string): boolean {
   const users = getUsers()
   const idx = users.findIndex((u) => u.id === id)
   if (idx === -1) return false
@@ -198,7 +198,7 @@ export function localDeleteUser(id: string): boolean {
   return true
 }
 
-export function localGetUserRoles(_id: string): ListResultDto<IdentityRoleDto> {
+export function standaloneGetUserRoles(_id: string): ListResultDto<IdentityRoleDto> {
   return { items: getRoles().filter((r) => r.name === 'admin') }
 }
 
@@ -213,7 +213,7 @@ export function setRoleSeq(n: number): void {
   save('roleSeq', n)
 }
 
-export function localGetRoles(params?: {
+export function standaloneGetRoles(params?: {
   filter?: string
   skipCount?: number
   maxResultCount?: number
@@ -226,15 +226,15 @@ export function localGetRoles(params?: {
   return { items: filtered, totalCount: total }
 }
 
-export function localGetAllRoles(): ListResultDto<IdentityRoleDto> {
+export function standaloneGetAllRoles(): ListResultDto<IdentityRoleDto> {
   return { items: [...getRoles()] }
 }
 
-export function localGetRole(id: string): IdentityRoleDto | undefined {
+export function standaloneGetRole(id: string): IdentityRoleDto | undefined {
   return getRoles().find((r) => r.id === id)
 }
 
-export function localCreateRole(data: {
+export function standaloneCreateRole(data: {
   name: string
   isDefault?: boolean
   isPublic?: boolean
@@ -252,7 +252,7 @@ export function localCreateRole(data: {
   return newRole
 }
 
-export function localUpdateRole(
+export function standaloneUpdateRole(
   id: string,
   data: { name?: string; isDefault?: boolean; isPublic?: boolean },
 ): IdentityRoleDto | undefined {
@@ -268,7 +268,7 @@ export function localUpdateRole(
   return r
 }
 
-export function localDeleteRole(id: string): boolean {
+export function standaloneDeleteRole(id: string): boolean {
   const roles = getRoles()
   const idx = roles.findIndex((r) => r.id === id)
   if (idx === -1) return false

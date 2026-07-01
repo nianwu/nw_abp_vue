@@ -1,12 +1,12 @@
 /**
- * LocalI18nProvider — 使用内置默认翻译，不发起 API 请求
+ * StandaloneI18nProvider — 使用内置默认翻译，不发起 API 请求
  */
 import i18n from '@/plugins/i18n'
 import { useSessionStore } from '@/stores/session'
 import { defaultLocalization } from '@/defaults/localization'
 import type { I18nProvider } from '@/providers/types'
 
-export const localI18nProvider: I18nProvider = {
+export const standaloneI18nProvider: I18nProvider = {
   async loadMessages(lang: string) {
     const messages: Record<string, Record<string, string>> = {}
     if (defaultLocalization?.resources) {

@@ -39,7 +39,7 @@ jobs:
         run: npx vite build --base=/nw_abp_vue/
         working-directory: vue
         env:
-          VITE_PROVIDER_MODE: local
+          VITE_PROVIDER_MODE: standalone
           VITE_API_BASE_URL: /api
           VITE_OAUTH_AUTHORITY: https://localhost:44356
           VITE_OAUTH_CLIENT_ID: TodoApp_App

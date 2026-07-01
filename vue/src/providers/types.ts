@@ -2,8 +2,8 @@
  * Provider 接口 — 为启动时阻塞依赖定义抽象合约
  *
  * 每个接口有两套实现：
- *   - remote/  使用真实 API/OIDC（生产/联调）
- *   - local/   使用静态数据（独立开发）
+ *   - remote/     使用真实 API/OIDC（生产/联调）
+ *   - standalone/ 解耦接口依赖，localStorage + 种子数据（快速开发）
  */
 import type { ApplicationConfigurationDto } from '@/types/abp'
 
@@ -46,6 +46,6 @@ export interface AppProviders {
   i18n: I18nProvider
   config: ConfigProvider
   auth: AuthProvider
-  /** 初始化基础设施（local 模式注册 HTTP 拦截器，remote 模式为 no-op） */
+  /** 初始化基础设施（standalone 模式注册 HTTP 拦截器，remote 模式为 no-op） */
   setupInfrastructure(): void | Promise<void>
 }

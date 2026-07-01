@@ -38,7 +38,7 @@ export function setTenantSeq(n: number): void {
   save('tenantSeq', n)
 }
 
-export function localGetTenants(params?: {
+export function standaloneGetTenants(params?: {
   filter?: string
   skipCount?: number
   maxResultCount?: number
@@ -53,11 +53,11 @@ export function localGetTenants(params?: {
   return { items: filtered, totalCount: total }
 }
 
-export function localGetTenant(id: string): TenantDto | undefined {
+export function standaloneGetTenant(id: string): TenantDto | undefined {
   return getTenants().find((t) => t.id === id)
 }
 
-export function localCreateTenant(data: {
+export function standaloneCreateTenant(data: {
   name: string
   adminEmailAddress: string
   adminPassword: string
@@ -79,7 +79,7 @@ export function localCreateTenant(data: {
   return newTenant
 }
 
-export function localUpdateTenant(
+export function standaloneUpdateTenant(
   id: string,
   data: { name?: string; isActive?: boolean },
 ): TenantDto | undefined {
@@ -93,7 +93,7 @@ export function localUpdateTenant(
   return tenants[idx]
 }
 
-export function localDeleteTenant(id: string): boolean {
+export function standaloneDeleteTenant(id: string): boolean {
   const tenants = getTenants()
   const idx = tenants.findIndex((t) => t.id === id)
   if (idx === -1) return false
@@ -106,17 +106,17 @@ export function localDeleteTenant(id: string): boolean {
 // 连接字符串
 // ============================================================
 
-export function localGetDefaultConnectionString(id: string): string {
+export function standaloneGetDefaultConnectionString(id: string): string {
   return getConnectionStrings()[id] || ''
 }
 
-export function localUpdateDefaultConnectionString(id: string, connStr: string): void {
+export function standaloneUpdateDefaultConnectionString(id: string, connStr: string): void {
   const data = getConnectionStrings()
   data[id] = connStr
   setConnectionStrings(data)
 }
 
-export function localDeleteDefaultConnectionString(id: string): void {
+export function standaloneDeleteDefaultConnectionString(id: string): void {
   const data = getConnectionStrings()
   delete data[id]
   setConnectionStrings(data)

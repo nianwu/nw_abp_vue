@@ -6,7 +6,7 @@
     </h2>
 
     <!-- 统计卡片 -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       <el-card v-if="hasPermission('AbpIdentity.Users')" shadow="hover" class="stat-card">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
@@ -95,10 +95,10 @@
           </el-link>
         </el-descriptions-item>
         <el-descriptions-item label="运行模式">
-          <el-tag type="success" size="small">local</el-tag> 独立模式 — 零外部依赖，无需后端服务
+          <el-tag type="success" size="small">standalone</el-tag> 默认模式 — 解耦接口依赖，快速开发迭代；数据以 <el-tag type="warning" size="small">localStorage</el-tag> 浏览器本地持久化 + 种子数据
         </el-descriptions-item>
-        <el-descriptions-item label="数据存储">
-          <el-tag type="warning" size="small">localStorage</el-tag> 浏览器本地持久化 + 种子数据
+        <el-descriptions-item label="开源协议">
+          <el-tag type="danger" size="small">GPL v3</el-tag> 传染式 copyleft — 衍生作品须以相同协议开源
         </el-descriptions-item>
       </el-descriptions>
     </el-card>

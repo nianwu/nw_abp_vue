@@ -9,15 +9,15 @@ import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInf
 
 const KEY = 'permissions'
 
-export function localGetPermissions(): GetPermissionListResultDto | null {
+export function standaloneGetPermissions(): GetPermissionListResultDto | null {
   return load<GetPermissionListResultDto>(KEY)
 }
 
-export function localSetPermissions(data: GetPermissionListResultDto): void {
+export function standaloneSetPermissions(data: GetPermissionListResultDto): void {
   save(KEY, data)
 }
 
-export function localUpdatePermission(permissionName: string, isGranted: boolean): void {
+export function standaloneUpdatePermission(permissionName: string, isGranted: boolean): void {
   const data = load<GetPermissionListResultDto>(KEY)
   if (!data) return
   for (const group of data.groups as PermissionGroupDto[]) {

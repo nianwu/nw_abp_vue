@@ -110,7 +110,7 @@ nw_abp_vue/
 │   │   │   └── standalone/  # localStorage 持久化实现
 │   │   ├── styles/       # 全局样式
 │   │   └── views/        # 页面组件
-│   └── public/           # 静态资源（含 SPA 404 fallback）
+│   └── public/           # 静态资源
 ├── demo/                 # Angular 前端（功能参考）
 ├── docs/                 # 项目文档
 └── .github/workflows/    # CI/CD（自动部署到 GitHub Pages）
@@ -121,9 +121,18 @@ nw_abp_vue/
 ```bash
 cd vue
 npm install
-npm run dev        # 启动开发服务器 → http://localhost:4200
-npm run build      # 构建生产版本 → vue/dist/
+
+# standalone 模式（默认）— 零外部依赖，开箱即用
+npm run dev                     # → http://localhost:4200
+
+# 构建
+npm run build                   # → vue/dist/（默认 history 路由）
+npx vite build --mode hash      # → hash 路由（VITE_ROUTER_MODE=hash）
 ```
+
+> **重置数据**：浏览器控制台执行 `localStorage.clear()` 后刷新页面，种子数据将重新注入。
+>
+> 切换运行模式：修改 `vue/.env` 中 `VITE_PROVIDER_MODE=remote` 并配置后端地址。
 
 ## 📄 开源协议
 
@@ -141,5 +150,5 @@ npm run build      # 构建生产版本 → vue/dist/
 
 - **触发条件**：push 到 `master` 分支
 - **构建模式**：standalone（`VITE_PROVIDER_MODE=standalone`）
-- **SPA fallback**：自定义 `404.html` 处理客户端路由刷新
+- **路由模式**：Hash 模式（`VITE_ROUTER_MODE=hash`），URL 以 `#/` 分隔，无需服务端 SPA fallback
 - **站点地址**：`https://nianwu.github.io/nw_abp_vue/`

@@ -2,7 +2,18 @@
 
 基于 [ABP Framework](https://abp.io/) 标准模板的全栈项目，使用 Vue 3 实现 ABP 默认模板提供的**全部必要性功能**。
 
-## 🌐 在线演示
+## 目录
+
+- [在线演示](#在线演示)
+- [构建模式](#构建模式)
+- [技术栈](#技术栈)
+- [项目结构](#项目结构)
+- [本地运行](#本地运行)
+- [相关文档](#相关文档)
+- [开源协议](#开源协议)
+- [部署](#部署)
+
+## 在线演示
 
 **🔗 https://nianwu.github.io/nw_abp_vue/**
 
@@ -10,7 +21,7 @@
 
 **📦 仓库地址：https://github.com/nianwu/nw_abp_vue**
 
-## 🏗️ 构建模式
+## 构建模式
 
 项目支持两种运行模式，通过 `VITE_PROVIDER_MODE` 环境变量切换：
 
@@ -24,8 +35,6 @@
 VITE_PROVIDER_MODE=standalone
 ```
 
-### standalone 模式 vs remote 模式
-
 | 维度 | standalone | remote |
 |------|-----------|--------|
 | **接口依赖** | 全部由 HTTP 拦截器模拟，零网络请求 | 直连 ABP 后端 API |
@@ -33,67 +42,23 @@ VITE_PROVIDER_MODE=standalone
 | **数据存储** | localStorage 本地持久化 + 种子数据 | 后端数据库 |
 | **适用场景** | 快速开发迭代、前端独立演示 | 联调、生产部署 |
 
-- 🔓 **解耦接口依赖** — 不请求任何后端 API，无 OIDC 认证服务器，快速开发迭代
-- 💾 **localStorage 持久化** — 解耦后端依赖，所有数据（用户、角色、租户、设置、权限）存储在浏览器本地
+- 🔓 **解耦接口依赖** — 不请求任何后端 API，无 OIDC 认证服务器
+- 💾 **localStorage 持久化** — 所有数据（用户、角色、租户、设置、权限）存储在浏览器本地
 - 🌱 **种子数据** — 首次启动自动注入演示数据（admin 用户、默认角色、示例租户）
 - 🔐 **模拟认证** — 无需登录即可体验全部功能
 
-## ✨ 已实现功能
+## 技术栈
 
-### 认证模块
-- [x] 登录 / 注册 / 忘记密码 / 重置密码
-- [x] OAuth 2.0 + OpenID Connect（remote 模式，基于 `oidc-client-ts`）
-- [x] 静默 Token 刷新、Session 监控
-- [x] 个人资料管理
+| 类别 | 技术 | 类别 | 技术 |
+|------|------|------|------|
+| 框架 | Vue 3.5 | 语言 | TypeScript 5.9 |
+| 构建 | Vite 6 | UI 组件 | Element Plus 2 |
+| CSS | Tailwind CSS 3 + SCSS | 状态管理 | Pinia 3 |
+| 路由 | Vue Router 4 | 国际化 | Vue I18n 11 |
+| 表单验证 | Vee-Validate 4 + Zod | 认证 | OIDC Client TS |
+| 包管理 | npm | | |
 
-### 身份管理
-- [x] 用户 CRUD（列表、创建、编辑、删除、搜索、分页）
-- [x] 角色 CRUD（含权限分配）
-- [x] 权限弹窗（树形勾选，支持编辑/非编辑权限）
-
-### 多租户
-- [x] 租户 CRUD（列表、创建、编辑、删除）
-- [x] 默认/非默认连接字符串配置
-- [x] 租户功能开关管理
-
-### 设置管理
-- [x] 时区设置
-- [x] 密码复杂度策略
-- [x] 注册/登录行为配置
-- [x] 账户锁定策略
-- [x] 双因素认证设置
-
-### 功能管理
-- [x] 功能开关弹窗（多层级分组，支持编辑/非编辑功能）
-
-### 基础设施
-- [x] ABP Dynamic Form（动态表单渲染，支持多种字段类型）
-- [x] ABP Data Table（增强表格，排序/分页/搜索/批量操作）
-- [x] ABP Toast / ABP Modal / ABP Confirm Dialog
-- [x] 权限指令 `v-permission`（细粒度 UI 显示控制）
-- [x] 权限组合式函数 `usePermission`
-- [x] 路由守卫（认证 + 权限检查）
-- [x] 中文本地化（zh-Hans）
-- [x] 错误页面（403 / 404 / 500）
-- [x] 加载进度条（NProgress）
-
-## 🛠️ 技术栈
-
-| 类别 | 技术 |
-|------|------|
-| 框架 | Vue 3.5 |
-| 语言 | TypeScript 5.9 |
-| 构建 | Vite 6 |
-| UI 组件 | Element Plus 2 |
-| CSS | Tailwind CSS 3 + SCSS |
-| 状态管理 | Pinia 3 + `pinia-plugin-persistedstate` |
-| 路由 | Vue Router 4 |
-| 国际化 | Vue I18n 11 |
-| 表单验证 | Vee-Validate 4 + Zod |
-| 认证 | OIDC Client TS（remote 模式） |
-| 包管理 | npm |
-
-## 📂 项目结构
+## 项目结构
 
 ```
 nw_abp_vue/
@@ -116,7 +81,7 @@ nw_abp_vue/
 └── .github/workflows/    # CI/CD（自动部署到 GitHub Pages）
 ```
 
-## 🚀 本地运行
+## 本地运行
 
 ```bash
 cd vue
@@ -134,20 +99,16 @@ npx vite build --mode hash      # → hash 路由（VITE_ROUTER_MODE=hash）
 >
 > 切换运行模式：修改 `vue/.env` 中 `VITE_PROVIDER_MODE=remote` 并配置后端地址。
 
-## 🔮 后续规划
+## 相关文档
 
-以下架构演进方向已识别，待功能实现稳定后逐步推进：
+| 文档 | 说明 |
+|------|------|
+| [TODO.md](./TODO.md) | 已实现功能清单 + 后续规划 |
+| [S008-1 设计规范速查](./docs/S008-1-设计规范速查.md) | 操作列样式、命令式弹窗、时间渲染等主观设计约定 |
+| [S008 设计规范全览](./docs/S008-Vue端设计规范与个性化改动.md) | 14 大类完整设计规范与组件使用说明 |
+| [S006 功能需求清单](./docs/S006-Vue端功能需求清单.md) | Vue 端功能需求详细列表 |
 
-| 规划项 | 说明 |
-|--------|------|
-| **登录模块插件化** | 将 OIDC 认证逻辑抽离为独立插件，支持 `createApp().use(oidcPlugin, config)` 式声明，运行时切换认证方式 |
-| **数据提供层可插拔** | 抽象统一数据接口，remote / standalone 作为可选项引入，便于扩展 mock-provider、graphql-provider 等 |
-| **ABP 逻辑插件包化** | 将 ABP 耦合逻辑收敛为 `@nw/abp-vue` 可选插件包，非 ABP 项目可完全不引入 |
-| **DDD 模式抽象** | 以 Domain / Application / Infrastructure / Presentation 四层重构，核心逻辑与 UI 框架解耦 |
-| **i18n 可选项** | 国际化为可选插件，不引入时默认中文运行，按需加载语言包 |
-| **主题切换** | 亮色/暗色主题切换，基于 Element Plus CSS 变量 + Tailwind 暗色模式，用户偏好持久化 |
-
-## 📄 开源协议
+## 开源协议
 
 本项目采用 **GNU General Public License v3 (GPL v3)** — 传染式 copyleft 协议：
 
@@ -157,7 +118,7 @@ npx vite build --mode hash      # → hash 路由（VITE_ROUTER_MODE=hash）
 
 > 详见 [LICENSE](./LICENSE)
 
-## 📦 部署
+## 部署
 
 项目通过 GitHub Actions 自动构建并部署到 GitHub Pages：
 

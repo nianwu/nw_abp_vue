@@ -2,6 +2,8 @@
 
 基于 [ABP Framework](https://abp.io/) 标准模板的全栈项目，使用 Vue 3 实现 ABP 默认模板提供的**全部必要性功能**。
 
+> 本项目由 [Claude Code](https://claude.ai/code) + DeepSeek 构建，累计耗资约 ¥50+。
+
 ## 在线演示
 
 **🔗 https://nianwu.github.io/nw_abp_vue/**

@@ -44,6 +44,13 @@
                       >
                         {{ providerLabel(p.providerName) }}
                       </el-tag>
+                      <el-tooltip
+                        v-if="data.grantedProviders.some((p: ProviderInfoDto) => p.providerName === 'R')"
+                        content="已通过配置角色获取该权限"
+                        placement="top"
+                      >
+                        <el-icon class="grant-help-icon"><QuestionFilled /></el-icon>
+                      </el-tooltip>
                     </span>
                   </span>
                 </template>
@@ -757,6 +764,12 @@ defineExpose({
 
 .grant-tag {
   font-size: 11px;
+}
+
+.grant-help-icon {
+  font-size: 13px;
+  color: var(--el-text-color-secondary);
+  cursor: help;
 }
 
 .change-summary {

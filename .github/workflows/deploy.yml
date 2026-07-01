@@ -35,9 +35,15 @@ jobs:
         run: npm ci
         working-directory: vue
 
-      - name: Build
+      - name: Build (local mode)
         run: npx vite build
         working-directory: vue
+        env:
+          VITE_PROVIDER_MODE: local
+          VITE_API_BASE_URL: /api
+          VITE_OAUTH_AUTHORITY: https://localhost:44356
+          VITE_OAUTH_CLIENT_ID: TodoApp_App
+          VITE_APP_NAME: TodoApp
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

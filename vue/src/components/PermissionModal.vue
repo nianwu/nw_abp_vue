@@ -35,21 +35,20 @@
                   <span class="permission-node">
                     <span class="permission-label">{{ data.label }}</span>
                     <span v-if="data.grantedProviders && data.grantedProviders.length" class="grant-badges">
-                      <el-tag
+                      <el-tooltip
                         v-for="p in data.grantedProviders"
                         :key="`${p.providerName}-${p.providerKey}`"
-                        :type="badgeType(p.providerName)"
-                        size="small"
-                        class="grant-tag"
-                      >
-                        {{ providerLabel(p.providerName) }}
-                      </el-tag>
-                      <el-tooltip
-                        v-if="data.grantedProviders.some((p: ProviderInfoDto) => p.providerName === 'R')"
-                        content="已通过配置角色获取该权限"
+                        :content="p.providerName === 'R' ? '已通过配置角色获取该权限' : ''"
+                        :disabled="p.providerName !== 'R'"
                         placement="top"
                       >
-                        <el-icon class="grant-help-icon"><QuestionFilled /></el-icon>
+                        <el-tag
+                          :type="badgeType(p.providerName)"
+                          size="small"
+                          class="grant-tag"
+                        >
+                          {{ providerLabel(p.providerName) }}
+                        </el-tag>
                       </el-tooltip>
                     </span>
                   </span>
@@ -764,12 +763,6 @@ defineExpose({
 
 .grant-tag {
   font-size: 11px;
-}
-
-.grant-help-icon {
-  font-size: 13px;
-  color: var(--el-text-color-secondary);
-  cursor: help;
 }
 
 .change-summary {

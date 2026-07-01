@@ -27,6 +27,12 @@
       <el-descriptions-item label="开源协议">
         <el-tag type="danger" size="small">GPL v3</el-tag> 传染式 copyleft — 衍生作品须以相同协议开源
       </el-descriptions-item>
+      <el-descriptions-item label="remote 模式" :span="2">
+        <div class="flex items-center gap-2">
+          <el-tag type="success" size="small">默认</el-tag>
+          <span class="text-sm">直连 ABP 后端 API + IdentityServer；OAuth 2.0 / OIDC 完整认证流程；数据存储于后端数据库。适合联调测试、生产部署。</span>
+        </div>
+      </el-descriptions-item>
     </el-descriptions>
   </el-card>
 </template>

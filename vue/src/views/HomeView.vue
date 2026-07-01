@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2 class="flex items-center gap-2 text-xl font-bold text-gray-700 mb-6">
-      <el-icon><DataAnalysis /></el-icon>
+      <Icon icon="mdi:view-dashboard-outline" />
       概览
     </h2>
 
@@ -10,7 +10,7 @@
       <el-card v-if="hasPermission('AbpIdentity.Users')" shadow="hover" class="stat-card">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-blue-50 flex items-center justify-center">
-            <el-icon :size="24" color="#409EFF"><User /></el-icon>
+            <Icon icon="mdi:account-outline" width="24" color="#409EFF" />
           </div>
           <div>
             <p class="text-2xl font-bold text-gray-700">{{ stats.userCount }}</p>
@@ -21,7 +21,7 @@
       <el-card v-if="hasPermission('AbpIdentity.Roles')" shadow="hover" class="stat-card">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center">
-            <el-icon :size="24" color="#67C23A"><Avatar /></el-icon>
+            <Icon icon="mdi:account-group-outline" width="24" color="#67C23A" />
           </div>
           <div>
             <p class="text-2xl font-bold text-gray-700">{{ stats.roleCount }}</p>
@@ -32,7 +32,7 @@
       <el-card v-if="hasPermission('AbpTenantManagement.Tenants')" shadow="hover" class="stat-card">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center">
-            <el-icon :size="24" color="#E6A23C"><OfficeBuilding /></el-icon>
+            <Icon icon="mdi:domain" width="24" color="#E6A23C" />
           </div>
           <div>
             <p class="text-2xl font-bold text-gray-700">{{ stats.tenantCount }}</p>
@@ -43,7 +43,7 @@
       <el-card v-if="hasPermission('AbpAccount.SettingManagement')" shadow="hover" class="stat-card">
         <div class="flex items-center gap-4">
           <div class="w-12 h-12 rounded-lg bg-purple-50 flex items-center justify-center">
-            <el-icon :size="24" color="#9b59b6"><Setting /></el-icon>
+            <Icon icon="mdi:cog-outline" width="24" color="#9b59b6" />
           </div>
           <div>
             <p class="text-2xl font-bold text-gray-700">{{ stats.moduleCount }}</p>
@@ -57,7 +57,7 @@
     <el-card v-if="filteredQuickLinks.length > 0" shadow="never" class="mb-6">
       <template #header>
         <div class="flex items-center gap-2">
-          <el-icon><Link /></el-icon>
+          <Icon icon="mdi:link-variant" />
           <span class="font-medium">快捷入口</span>
         </div>
       </template>
@@ -65,10 +65,10 @@
         <el-button
           v-for="link in filteredQuickLinks"
           :key="link.path"
-          :icon="link.icon"
           class="quick-link-btn"
           @click="$router.push(link.path)"
         >
+          <template #icon><Icon :icon="link.icon" /></template>
           {{ link.label }}
         </el-button>
       </div>
@@ -81,7 +81,7 @@
     <el-card v-if="isStandalone" shadow="never">
       <template #header>
         <div class="flex items-center gap-2">
-          <el-icon><Setting /></el-icon>
+          <Icon icon="mdi:cog-outline" />
           <span class="font-medium">技术栈</span>
         </div>
       </template>
@@ -99,7 +99,7 @@
 
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
-import { User, Avatar, OfficeBuilding, Setting, DataAnalysis, Link } from '@element-plus/icons-vue'
+import { Icon } from '@iconify/vue'
 import { usePermission } from '@/composables/usePermission'
 import { APP_NAME } from '@/config/env'
 import AboutProject from '@/components/AboutProject.vue'
@@ -116,10 +116,10 @@ const stats = reactive({
 })
 
 const quickLinks = [
-  { path: '/identity/users', label: '用户管理', icon: User, policy: 'AbpIdentity.Users' },
-  { path: '/identity/roles', label: '角色管理', icon: Avatar, policy: 'AbpIdentity.Roles' },
-  { path: '/tenant-management/tenants', label: '租户管理', icon: OfficeBuilding, policy: 'AbpTenantManagement.Tenants' },
-  { path: '/setting-management', label: '系统设置', icon: Setting, policy: 'AbpAccount.SettingManagement' },
+  { path: '/identity/users', label: '用户管理', icon: 'mdi:account-outline', policy: 'AbpIdentity.Users' },
+  { path: '/identity/roles', label: '角色管理', icon: 'mdi:account-group-outline', policy: 'AbpIdentity.Roles' },
+  { path: '/tenant-management/tenants', label: '租户管理', icon: 'mdi:domain', policy: 'AbpTenantManagement.Tenants' },
+  { path: '/setting-management', label: '系统设置', icon: 'mdi:cog-outline', policy: 'AbpAccount.SettingManagement' },
 ]
 
 const filteredQuickLinks = computed(() => quickLinks.filter((l) => hasPermission(l.policy)))

@@ -6,7 +6,7 @@
     router
   >
     <el-menu-item index="/">
-      <el-icon><HomeFilled /></el-icon>
+      <el-icon><Icon icon="mdi:home-outline" /></el-icon>
       <span>首页</span>
     </el-menu-item>
     <template v-for="group in menuGroups" :key="group.title">
@@ -16,7 +16,7 @@
           <el-icon v-if="docUrl(group.title)" class="menu-help-icon" @click.stop="openDoc(group.title)"><QuestionFilled /></el-icon>
         </template>
         <el-menu-item v-for="item in group.items" :key="item.path" :index="item.path">
-          <el-icon v-if="iconFor(item.path)"><component :is="iconFor(item.path)" /></el-icon>
+          <el-icon v-if="iconFor(item.path)"><Icon :icon="iconFor(item.path)!" /></el-icon>
           <span>{{ item.meta?.title || item.name }}</span>
         </el-menu-item>
       </el-menu-item-group>
@@ -27,14 +27,16 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { HomeFilled, User, Avatar, OfficeBuilding, Setting, QuestionFilled } from '@element-plus/icons-vue'
+import { Icon } from '@iconify/vue'
+import { QuestionFilled } from '@element-plus/icons-vue'
 import { usePermission } from '@/composables/usePermission'
 
-const ICON_MAP: Record<string, any> = {
-  '/identity/users': User,
-  '/identity/roles': Avatar,
-  '/tenant-management/tenants': OfficeBuilding,
-  '/setting-management': Setting,
+/** 菜单路径 → Iconify 图标标识 */
+const ICON_MAP: Record<string, string> = {
+  '/identity/users': 'mdi:account-outline',
+  '/identity/roles': 'mdi:account-group-outline',
+  '/tenant-management/tenants': 'mdi:domain',
+  '/setting-management': 'mdi:cog-outline',
 }
 
 function iconFor(path: string) {

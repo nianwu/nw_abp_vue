@@ -6,7 +6,7 @@
 
 ## 在线演示
 
-**🔗 https://nianwu.github.io/nw_abp_vue/ **
+**🔗 https://nianwu.github.io/nw_abp_vue/**
 
 > 部署于 GitHub Pages，自动构建，每次 `master` push 即时更新。
 

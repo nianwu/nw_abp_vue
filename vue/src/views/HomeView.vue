@@ -77,8 +77,8 @@
     <!-- 项目说明 — 仅 standalone 模式显示 -->
     <AboutProject v-if="isStandalone" />
 
-    <!-- 系统信息 -->
-    <el-card shadow="never">
+    <!-- 技术栈 — 仅 standalone 模式显示 -->
+    <el-card v-if="isStandalone" shadow="never">
       <template #header>
         <div class="flex items-center gap-2">
           <el-icon><Setting /></el-icon>

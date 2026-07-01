@@ -94,8 +94,17 @@
             https://github.com/nianwu/nw_abp_vue
           </el-link>
         </el-descriptions-item>
-        <el-descriptions-item label="运行模式">
-          <el-tag type="success" size="small">standalone</el-tag> 默认模式 — 解耦接口依赖，快速开发迭代；数据以 <el-tag type="warning" size="small">localStorage</el-tag> 浏览器本地持久化 + 种子数据
+        <el-descriptions-item label="运行模式" :span="2">
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2">
+              <el-tag type="success" size="small">standalone</el-tag>
+              <span class="text-sm">默认模式 — 解耦接口依赖，HTTP 拦截器模拟 API 响应；数据以 localStorage 持久化 + 种子数据；跳过 OIDC 认证直接注入模拟 Token。适合快速开发迭代、前端独立演示。</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <el-tag type="info" size="small">remote</el-tag>
+              <span class="text-sm">联调模式 — 直连 ABP 后端 API + IdentityServer；OAuth 2.0 / OIDC 完整认证流程；数据存储于后端数据库。适合联调测试、生产部署。</span>
+            </div>
+          </div>
         </el-descriptions-item>
         <el-descriptions-item label="开源协议">
           <el-tag type="danger" size="small">GPL v3</el-tag> 传染式 copyleft — 衍生作品须以相同协议开源

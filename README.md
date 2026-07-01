@@ -38,14 +38,12 @@ VITE_PROVIDER_MODE=standalone
 
 ## 技术栈
 
-| 类别 | 技术 | 类别 | 技术 |
-|------|------|------|------|
-| 框架 | Vue 3.5 | 语言 | TypeScript 5.9 |
-| 构建 | Vite 6 | UI 组件 | Element Plus 2 |
-| CSS | Tailwind CSS 3 + SCSS | 状态管理 | Pinia 3 |
-| 路由 | Vue Router 4 | 国际化 | Vue I18n 11 |
-| 表单验证 | Vee-Validate 4 + Zod | 认证 | OIDC Client TS |
-| 包管理 | npm | | |
+| 类别 | 技术 | 类别 | 技术 | 类别 | 技术 |
+|-----:|:-----|-----:|:-----|-----:|:-----|
+| **框架** | Vue 3.5 | **语言** | TypeScript 5.9 | **构建** | Vite 6 |
+| **UI 组件** | Element Plus 2 | **CSS** | Tailwind CSS 3 + SCSS | **状态管理** | Pinia 3 |
+| **路由** | Vue Router 4 | **国际化** | Vue I18n 11 | **表单验证** | Vee-Validate 4 + Zod |
+| **认证** | OIDC Client TS | **包管理** | npm | | |
 
 ## 项目结构
 

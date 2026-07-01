@@ -51,3 +51,4 @@
 | **主题切换** | 亮色/暗色主题切换，基于 Element Plus CSS 变量 + Tailwind 暗色模式，用户偏好持久化 |
 | **全球头像支持** | 集成 Gravatar / DiceBear 等头像服务，用户无自定义头像时自动生成全球唯一默认头像 |
 | **超强 Icon 库支持** | 扩展图标选择器，引入 Iconify 等统一图标方案，支持数万图标即时检索与按需加载 |
+| **Element Plus 组件默认行为** | 统一组件交互体验：el-input 默认 clearable、el-switch 异步绑定 loading 态、el-table 列居中+可调宽+分页持久化 |

@@ -21,13 +21,6 @@ import { useAppConfigStore } from './stores/app-config'
 import { vPermission } from './directives/v-permission'
 import './styles/index.scss'
 
-// GitHub Pages SPA fallback: restore route after 404.html redirect
-const spaRedirect = sessionStorage.getItem('spa-redirect')
-if (spaRedirect) {
-  sessionStorage.removeItem('spa-redirect')
-  history.replaceState(null, '', spaRedirect)
-}
-
 async function bootstrap() {
   const app = createApp(App)
 

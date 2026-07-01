@@ -91,7 +91,7 @@
         </el-descriptions-item>
         <el-descriptions-item label="仓库">
           <el-link type="primary" href="https://github.com/nianwu/nw_abp_vue" target="_blank">
-            github.com/nianwu/nw_abp_vue
+            https://github.com/nianwu/nw_abp_vue
           </el-link>
         </el-descriptions-item>
         <el-descriptions-item label="运行模式">

@@ -30,7 +30,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { register } from '@/api/account'
 import { showSuccess, showError } from '@/components/AbpToast'
-import { APP_NAME } from '@/config/env'
+import { APP_NAME } from '@/slices/config'
 import type { FormInstance, FormRules } from 'element-plus'
 
 const router = useRouter()

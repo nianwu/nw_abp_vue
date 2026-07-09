@@ -1,7 +1,7 @@
 /**
  * 权限 composable — 从 app-config store 的 grantedPolicies 校验
  */
-import { useAppConfigStore } from '@/stores/app-config'
+import { useAppConfigStore } from '@/slices/config'
 
 export function usePermission() {
   const appConfig = useAppConfigStore()

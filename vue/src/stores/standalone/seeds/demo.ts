@@ -7,13 +7,13 @@
 
 import { seed, save } from '@/stores/standalone/storage'
 import { setUserSeq, setRoleSeq, setUserRolesSeed } from '@/stores/standalone/identity-store'
-import { setTenantSeq } from '@/stores/standalone/tenant-store'
-import { standaloneSetPermissions } from '@/stores/standalone/permission-store'
+import { setTenantSeq } from '@/slices/tenant'
+import { standaloneSetPermissions } from '@/slices/permission'
 import { standaloneSetFeatures } from '@/stores/standalone/feature-store'
 import { standaloneSetEmailSettings, standaloneSetTimezones, standaloneUpdatePasswordSettings } from '@/stores/standalone/settings-store'
 import type { IdentityUserDto, IdentityRoleDto } from '@/types/identity'
-import type { TenantDto } from '@/types/tenant'
-import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInfoDto } from '@/types/permission'
+import type { TenantDto } from '@/slices/tenant'
+import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInfoDto } from '@/slices/permission'
 import type { GetFeatureListResultDto, FeatureGroupDto, FeatureDto, IStringValueType } from '@/types/feature'
 import type { EmailSettingsDto } from '@/types/settings'
 

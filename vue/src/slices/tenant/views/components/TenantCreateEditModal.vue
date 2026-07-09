@@ -15,7 +15,7 @@ import { ref, computed, watch } from 'vue'
 import AbpModal from '@/components/AbpModal.vue'
 import AbpDynamicForm from '@/components/AbpDynamicForm.vue'
 import { showSuccess, showError } from '@/components/AbpToast'
-import * as tenantApi from '@/api/tenant'
+import * as tenantApi from '../../api/tenant'
 import { parseAbpError } from '@/utils/abp-error'
 import type { AbpFormItem } from '@/types/abp'
 

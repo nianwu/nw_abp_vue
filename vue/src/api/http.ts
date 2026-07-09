@@ -10,7 +10,7 @@
 
 import axios from 'axios'
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
-import { API_BASE_URL } from '@/config/env'
+import { API_BASE_URL } from '@/slices/config'
 import type { RemoteServiceErrorResponse } from '@/types/abp'
 
 // ============================================================

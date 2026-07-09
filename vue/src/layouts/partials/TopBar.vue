@@ -25,8 +25,8 @@
 
 <script setup lang="ts">
 import { Expand, Delete } from '@element-plus/icons-vue'
-import { APP_NAME } from '@/config/env'
-import TenantBox from './TenantBox.vue'
+import { APP_NAME } from '@/slices/config'
+import { TenantBox } from '@/slices/tenant'
 import LangSwitch from './LangSwitch.vue'
 import UserMenu from './UserMenu.vue'
 

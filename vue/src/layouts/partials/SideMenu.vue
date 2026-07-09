@@ -29,7 +29,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { QuestionFilled } from '@element-plus/icons-vue'
-import { usePermission } from '@/composables/usePermission'
+import { usePermission } from '@/slices/permission'
 
 /** 菜单路径 → Iconify 图标标识 */
 const ICON_MAP: Record<string, string> = {

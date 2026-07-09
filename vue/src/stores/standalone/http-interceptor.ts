@@ -14,8 +14,8 @@ import {
   standaloneGetTenants, standaloneGetTenant, standaloneCreateTenant, standaloneUpdateTenant, standaloneDeleteTenant,
   standaloneGetDefaultConnectionString, standaloneUpdateDefaultConnectionString, standaloneDeleteDefaultConnectionString,
   standaloneGetNamedConnectionStrings, standaloneSetNamedConnectionString, standaloneDeleteNamedConnectionString,
-} from '@/stores/standalone/tenant-store'
-import { standaloneGetPermissions, standaloneUpdatePermission } from '@/stores/standalone/permission-store'
+} from '@/slices/tenant'
+import { standaloneGetPermissions, standaloneUpdatePermission } from '@/slices/permission'
 import { standaloneGetFeatures, standaloneUpdateFeatureValue } from '@/stores/standalone/feature-store'
 import {
   standaloneGetEmailSettings, standaloneUpdateEmailSettings,

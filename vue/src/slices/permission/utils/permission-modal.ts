@@ -12,7 +12,7 @@
 
 import { createApp, type ComponentPublicInstance } from 'vue'
 import ElementPlus from 'element-plus'
-import PermissionModalVue from '@/components/PermissionModal.vue'
+import PermissionModalVue from '../components/PermissionModal.vue'
 import 'element-plus/dist/index.css'
 
 interface PermissionModalParams {

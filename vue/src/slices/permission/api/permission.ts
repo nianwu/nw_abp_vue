@@ -15,7 +15,7 @@ import type {
   SearchProviderKeyListResultDto,
   UpdatePermissionsDto,
   UpdateResourcePermissionsDto,
-} from '@/types/permission'
+} from '../types/permission'
 
 const BASE = '/api/permission-management/permissions'
 

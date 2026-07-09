@@ -4,7 +4,7 @@
  * 用法: <el-button v-permission="'AbpIdentity.Users.Create'">新建</el-button>
  */
 import type { Directive, DirectiveBinding } from 'vue'
-import { usePermission } from '@/composables/usePermission'
+import { usePermission } from '../composables/usePermission'
 
 export const vPermission: Directive<HTMLElement, string> = {
   mounted(el: HTMLElement, binding: DirectiveBinding<string>) {

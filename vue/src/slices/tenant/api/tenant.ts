@@ -11,7 +11,7 @@ import type {
   TenantCreateDto,
   TenantUpdateDto,
   FindTenantResultDto,
-} from '@/types/tenant'
+} from '../types/tenant'
 
 const BASE = '/api/multi-tenancy/tenants'
 

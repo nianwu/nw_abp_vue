@@ -31,7 +31,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuth } from '@/composables/useAuth'
-import { useAppConfigStore } from '@/stores/app-config'
+import { useAppConfigStore } from '@/slices/config'
 import { useAuthStore } from '@/stores/auth'
 import { showError } from '@/components/AbpToast'
 import { login as abpLogin } from '@/api/account'

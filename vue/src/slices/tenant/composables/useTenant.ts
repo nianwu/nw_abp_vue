@@ -2,7 +2,7 @@
  * 租户 composable — 租户切换
  */
 import { useSessionStore } from '@/stores/session'
-import { useAppConfigStore } from '@/stores/app-config'
+import { useAppConfigStore } from '@/slices/config'
 
 export function useTenant() {
   const session = useSessionStore()

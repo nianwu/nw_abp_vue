@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useAppConfigStore } from '@/stores/app-config'
+import { useAppConfigStore } from '@/slices/config'
 
 const appConfig = useAppConfigStore()
 const isMultiTenancyEnabled = computed(() => appConfig.config?.multiTenancy?.isEnabled || false)

@@ -100,8 +100,8 @@
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
 import { Icon } from '@iconify/vue'
-import { usePermission } from '@/composables/usePermission'
-import { APP_NAME } from '@/config/env'
+import { usePermission } from '@/slices/permission'
+import { APP_NAME } from '@/slices/config'
 import AboutProject from '@/components/AboutProject.vue'
 
 const isStandalone = import.meta.env.VITE_PROVIDER_MODE === 'standalone'

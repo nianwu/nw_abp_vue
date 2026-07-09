@@ -17,8 +17,8 @@ import 'element-plus/dist/index.css'
 import App from './App.vue'
 import router from './router'
 import { i18n, providers } from './providers'
-import { useAppConfigStore } from './stores/app-config'
-import { vPermission } from './directives/v-permission'
+import { useAppConfigStore } from './slices/config'
+import { vPermission } from './slices/permission'
 import './styles/index.scss'
 
 async function bootstrap() {

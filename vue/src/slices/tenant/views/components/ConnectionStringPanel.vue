@@ -64,7 +64,7 @@
 import { ref, watch } from 'vue'
 import AbpModal from '@/components/AbpModal.vue'
 import { showSuccess, showError } from '@/components/AbpToast'
-import * as tenantApi from '@/api/tenant'
+import * as tenantApi from '../../api/tenant'
 
 const props = defineProps<{
   visible: boolean

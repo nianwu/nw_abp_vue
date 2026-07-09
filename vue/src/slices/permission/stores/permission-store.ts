@@ -4,8 +4,8 @@
  * 数据存储于 localStorage，键：abp:local:permissions
  */
 
-import { load, save } from './storage'
-import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInfoDto } from '@/types/permission'
+import { load, save } from '@/stores/standalone/storage'
+import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInfoDto } from '../types/permission'
 
 const KEY = 'permissions'
 

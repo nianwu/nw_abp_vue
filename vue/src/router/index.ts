@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router
 import type { RouteRecordRaw } from 'vue-router'
 import { User, Avatar, OfficeBuilding, Setting } from '@element-plus/icons-vue'
 import { registerAuthGuard } from './guards/auth'
-import { registerPermissionGuard } from './guards/permission'
+import { registerPermissionGuard } from '@/slices/permission'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -23,7 +23,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/identity/users', name: 'Users', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Users', title: '用户管理', icon: User }, component: () => import('@/views/identity/UsersView.vue') },
   { path: '/identity/roles', name: 'Roles', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Roles', title: '角色管理', icon: Avatar }, component: () => import('@/views/identity/RolesView.vue') },
   // Tenant (ApplicationLayout)
-  { path: '/tenant-management/tenants', name: 'Tenants', meta: { layout: 'application', requiredPolicy: 'AbpTenantManagement.Tenants', title: '租户管理', icon: OfficeBuilding }, component: () => import('@/views/tenant/TenantsView.vue') },
+  { path: '/tenant-management/tenants', name: 'Tenants', meta: { layout: 'application', requiredPolicy: 'AbpTenantManagement.Tenants', title: '租户管理', icon: OfficeBuilding }, component: () => import('@/slices/tenant/views/TenantsView.vue') },
   // Settings (ApplicationLayout)
   { path: '/setting-management', name: 'Settings', meta: { layout: 'application', requiredPolicy: 'AbpAccount.SettingManagement', title: '设置管理', icon: Setting }, component: () => import('@/views/settings/SettingsView.vue') },
   // Docs — 独立页面，无菜单、无需权限

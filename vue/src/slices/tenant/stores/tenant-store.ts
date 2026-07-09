@@ -8,7 +8,7 @@
  */
 
 import { load, save } from '@/stores/standalone/storage'
-import type { TenantDto } from '../types/tenant'
+import type { TenantDto } from '@/types/tenant'
 import type { PagedResultDto } from '@/types/api'
 
 const TENANTS_KEY = 'tenants'

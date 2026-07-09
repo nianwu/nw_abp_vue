@@ -19,10 +19,10 @@ export { vPermission } from './directives/v-permission'
 // Guard — 路由守卫注册
 export { registerPermissionGuard } from './guards/permission'
 
-// API — HTTP 调用（remote 模式）
-export * from './api/permission'
+// API — 从生成层 re-export（abp generate-proxy 输出到 @/api/）
+export * from '@/api/permission'
 
-// Types — DTO 类型定义
+// Types — 从生成层 re-export（abp generate-proxy 输出到 @/types/）
 export type {
   GetPermissionListResultDto,
   PermissionGroupDto,
@@ -40,7 +40,7 @@ export type {
   ResourceProviderDto,
   ResourcePermissionDefinitionDto,
   SearchProviderKeyInfo,
-} from './types/permission'
+} from '@/types/permission'
 
 // Store — Standalone 模式数据存储
 export {

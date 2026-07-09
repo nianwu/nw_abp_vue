@@ -213,7 +213,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive, nextTick } from 'vue'
 import { QuestionFilled } from '@element-plus/icons-vue'
-import * as permissionsApi from '../api/permission'
+import * as permissionsApi from '@/api/permission'
 import type {
   PermissionGroupDto,
   PermissionGrantInfoDto,
@@ -223,7 +223,7 @@ import type {
   ResourceProviderDto,
   ResourcePermissionDefinitionDto,
   SearchProviderKeyInfo,
-} from '../types/permission'
+} from '@/types/permission'
 
 // ============================================================
 // Props / Emits

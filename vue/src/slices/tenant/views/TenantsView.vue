@@ -48,8 +48,8 @@ import ConnectionStringPanel from './components/ConnectionStringPanel.vue'
 import { showConfirm } from '@/components/AbpConfirmDialog'
 import { showSuccess, showError } from '@/components/AbpToast'
 import { openFeatureModal } from '@/utils/feature-modal'
-import * as tenantApi from '../api/tenant'
-import type { TenantDto } from '../types/tenant'
+import * as tenantApi from '@/api/tenant'
+import type { TenantDto } from '@/types/tenant'
 import type { PagedRequestDto } from '@/types/api'
 
 const tableRef = ref<InstanceType<typeof AbpDataTable>>()

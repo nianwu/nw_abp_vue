@@ -10,16 +10,16 @@
 // Composable — 租户状态查询与切换
 export { useTenant } from './composables/useTenant'
 
-// API — HTTP 调用（remote 模式）
-export * from './api/tenant'
+// API — 从生成层 re-export（abp generate-proxy 输出到 @/api/）
+export * from '@/api/tenant'
 
-// Types — DTO 类型定义
+// Types — 从生成层 re-export（abp generate-proxy 输出到 @/types/）
 export type {
   TenantDto,
   TenantCreateDto,
   TenantUpdateDto,
   FindTenantResultDto,
-} from './types/tenant'
+} from '@/types/tenant'
 
 // Store — Standalone 模式数据存储
 export {

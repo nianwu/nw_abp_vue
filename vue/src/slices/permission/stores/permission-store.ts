@@ -5,7 +5,7 @@
  */
 
 import { load, save } from '@/stores/standalone/storage'
-import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInfoDto } from '../types/permission'
+import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInfoDto } from '@/types/permission'
 
 const KEY = 'permissions'
 

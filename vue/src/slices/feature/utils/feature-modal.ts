@@ -12,7 +12,7 @@
 
 import { createApp, type ComponentPublicInstance } from 'vue'
 import ElementPlus from 'element-plus'
-import FeatureModalVue from '@/components/FeatureModal.vue'
+import FeatureModalVue from '../components/FeatureModal.vue'
 import 'element-plus/dist/index.css'
 
 interface FeatureModalParams {

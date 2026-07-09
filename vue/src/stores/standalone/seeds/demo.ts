@@ -6,11 +6,11 @@
  */
 
 import { seed, save } from '@/stores/standalone/storage'
-import { setUserSeq, setRoleSeq, setUserRolesSeed } from '@/stores/standalone/identity-store'
+import { setUserSeq, setRoleSeq, setUserRolesSeed } from '@/slices/identity'
 import { setTenantSeq } from '@/slices/tenant'
 import { standaloneSetPermissions } from '@/slices/permission'
-import { standaloneSetFeatures } from '@/stores/standalone/feature-store'
-import { standaloneSetEmailSettings, standaloneSetTimezones, standaloneUpdatePasswordSettings } from '@/stores/standalone/settings-store'
+import { standaloneSetFeatures } from '@/slices/feature'
+import { standaloneSetEmailSettings, standaloneSetTimezones, standaloneUpdatePasswordSettings } from '@/slices/settings'
 import type { IdentityUserDto, IdentityRoleDto } from '@/types/identity'
 import type { TenantDto } from '@/slices/tenant'
 import type { GetPermissionListResultDto, PermissionGroupDto, PermissionGrantInfoDto } from '@/slices/permission'

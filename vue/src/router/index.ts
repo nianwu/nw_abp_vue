@@ -20,12 +20,12 @@ const routes: RouteRecordRaw[] = [
   { path: '/account/reset-password', name: 'ResetPassword', meta: { layout: 'account' }, component: () => import('@/views/auth/ResetPasswordView.vue') },
   { path: '/account/manage-profile', name: 'ManageProfile', meta: { layout: 'application', requiredPolicy: 'AbpAccount.AccountManagement' }, component: () => import('@/views/auth/ManageProfileView.vue') },
   // Identity (ApplicationLayout)
-  { path: '/identity/users', name: 'Users', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Users', title: '用户管理', icon: User }, component: () => import('@/views/identity/UsersView.vue') },
-  { path: '/identity/roles', name: 'Roles', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Roles', title: '角色管理', icon: Avatar }, component: () => import('@/views/identity/RolesView.vue') },
+  { path: '/identity/users', name: 'Users', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Users', title: '用户管理', icon: User }, component: () => import('@/slices/identity/views/UsersView.vue') },
+  { path: '/identity/roles', name: 'Roles', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Roles', title: '角色管理', icon: Avatar }, component: () => import('@/slices/identity/views/RolesView.vue') },
   // Tenant (ApplicationLayout)
   { path: '/tenant-management/tenants', name: 'Tenants', meta: { layout: 'application', requiredPolicy: 'AbpTenantManagement.Tenants', title: '租户管理', icon: OfficeBuilding }, component: () => import('@/slices/tenant/views/TenantsView.vue') },
   // Settings (ApplicationLayout)
-  { path: '/setting-management', name: 'Settings', meta: { layout: 'application', requiredPolicy: 'AbpAccount.SettingManagement', title: '设置管理', icon: Setting }, component: () => import('@/views/settings/SettingsView.vue') },
+  { path: '/setting-management', name: 'Settings', meta: { layout: 'application', requiredPolicy: 'AbpAccount.SettingManagement', title: '设置管理', icon: Setting }, component: () => import('@/slices/settings/views/SettingsView.vue') },
   // Docs — 独立页面，无菜单、无需权限
   { path: '/docs/resource-permissions', name: 'ResourcePermissionDoc', meta: { layout: 'empty', title: '资源权限说明', public: true }, component: () => import('@/views/docs/ResourcePermissionDoc.vue') },
   { path: '/docs/resource-key', name: 'ResourceKeyDoc', meta: { layout: 'empty', title: '资源密钥说明', public: true }, component: () => import('@/views/docs/ResourceKeyDoc.vue') },

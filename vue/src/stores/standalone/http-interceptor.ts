@@ -9,18 +9,18 @@ import type { AxiosInstance } from 'axios'
 import {
   standaloneGetUsers, standaloneGetUser, standaloneCreateUser, standaloneUpdateUser, standaloneDeleteUser, standaloneGetUserRoles, standaloneUpdateUserRoles,
   standaloneGetRoles, standaloneGetAllRoles, standaloneGetRole, standaloneCreateRole, standaloneUpdateRole, standaloneDeleteRole,
-} from '@/stores/standalone/identity-store'
+} from '@/slices/identity'
 import {
   standaloneGetTenants, standaloneGetTenant, standaloneCreateTenant, standaloneUpdateTenant, standaloneDeleteTenant,
   standaloneGetDefaultConnectionString, standaloneUpdateDefaultConnectionString, standaloneDeleteDefaultConnectionString,
   standaloneGetNamedConnectionStrings, standaloneSetNamedConnectionString, standaloneDeleteNamedConnectionString,
 } from '@/slices/tenant'
 import { standaloneGetPermissions, standaloneUpdatePermission } from '@/slices/permission'
-import { standaloneGetFeatures, standaloneUpdateFeatureValue } from '@/stores/standalone/feature-store'
+import { standaloneGetFeatures, standaloneUpdateFeatureValue } from '@/slices/feature'
 import {
   standaloneGetEmailSettings, standaloneUpdateEmailSettings,
   standaloneGetTimezone, standaloneSetTimezone, standaloneGetTimezones,
-} from '@/stores/standalone/settings-store'
+} from '@/slices/settings'
 
 // 已匹配路由但无响应体的写操作，返回此标记
 const EMPTY_OK = {}

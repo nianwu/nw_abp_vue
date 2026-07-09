@@ -41,7 +41,7 @@ import { ref, reactive, onMounted } from 'vue'
 import {
   standaloneGetPasswordSettings,
   standaloneUpdatePasswordSettings,
-} from '@/stores/standalone/settings-store'
+} from '../../stores/settings-store'
 import type { IdentityPasswordSettingsDto } from '@/types/settings'
 import { showSuccess } from '@/components/AbpToast'
 

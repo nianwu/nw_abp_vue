@@ -4,7 +4,7 @@
  * 数据存储于 localStorage，键：abp:local:features
  */
 
-import { load, save } from './storage'
+import { load, save } from '@/stores/standalone/storage'
 import type { GetFeatureListResultDto } from '@/types/feature'
 
 const KEY = 'features'

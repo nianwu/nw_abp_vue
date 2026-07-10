@@ -4,7 +4,7 @@
  * 数据存储于 localStorage，键：abp:local:features
  */
 
-import { load, save } from '@/stores/standalone/storage'
+import { load, save } from '@/slices/core'
 import type { GetFeatureListResultDto } from '@/types/feature'
 
 const KEY = 'features'
@@ -20,8 +20,8 @@ export function standaloneSetFeatures(data: GetFeatureListResultDto): void {
 export function standaloneUpdateFeatureValue(featureName: string, value: string): void {
   const data = load<GetFeatureListResultDto>(KEY)
   if (!data) return
-  for (const group of data.groups) {
-    for (const feature of group.features) {
+  for (const group of data.groups ?? []) {
+    for (const feature of group.features ?? []) {
       if (feature.name === featureName) {
         feature.value = value
       }

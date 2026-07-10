@@ -2,7 +2,8 @@
   <el-dialog
     v-model="dialogVisible"
     title="功能管理"
-    width="800px"
+    :width="isMobile ? '100%' : '800px'"
+    :fullscreen="isMobile"
     :close-on-click-modal="false"
     :before-close="handleBeforeClose"
     @open="handleOpen"
@@ -14,8 +15,8 @@
       <el-tabs v-model="activeGroupName" v-else>
         <el-tab-pane
           v-for="group in featureGroups"
-          :key="group.name"
-          :label="group.displayName || group.name"
+          :key="group.name!"
+          :label="group.displayName || group.name!"
           :name="group.name!"
         >
           <!-- 扁平表单布局（替代 el-tree）—— 每条功能一行 -->
@@ -36,7 +37,7 @@
                 v-if="row._valueTypeName === 'ToggleStringValueType'"
                 :model-value="row._currentValue === 'true'"
                 :disabled="row._disabled"
-                @change="(v: boolean) => onToggleChange(row, v)"
+                @change="(v: any) => onToggleChange(row, !!v)"
               />
 
               <!-- Free text -->
@@ -92,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import * as featureApi from '@/api/feature'
 import type {
   FeatureGroupDto,
@@ -119,6 +120,10 @@ const emit = defineEmits<{
 // ============================================================
 
 const dialogVisible = ref(false)
+const isMobile = ref(window.innerWidth < 768)
+onMounted(() => window.addEventListener('resize', () => { isMobile.value = window.innerWidth < 768 }))
+onUnmounted(() => window.removeEventListener('resize', () => {}))
+
 const loading = ref(false)
 const saving = ref(false)
 const activeGroupName = ref('')

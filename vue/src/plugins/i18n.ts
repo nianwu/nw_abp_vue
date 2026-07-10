@@ -3,7 +3,7 @@
  */
 import { createI18n } from 'vue-i18n'
 import httpClient from '@/api/http'
-import { useSessionStore } from '@/stores/session'
+import { useSessionStore } from '@/slices/core'
 import type { ApplicationLocalizationDto } from '@/types/abp'
 
 export type MessageSchema = Record<string, Record<string, string>>

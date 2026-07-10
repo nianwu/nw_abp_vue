@@ -14,6 +14,7 @@
         size="small"
         type="danger"
         plain
+        class="hidden sm:flex"
         @click="handleReset">
         <el-icon><Delete /></el-icon>
         重置本地数据
@@ -36,8 +37,8 @@ const appName = APP_NAME
 const isStandalone = import.meta.env.VITE_PROVIDER_MODE === 'standalone'
 
 async function handleReset() {
-  const { resetAll } = await import('@/stores/standalone/storage')
-  const { seedDemoData } = await import('@/stores/standalone/seeds/demo')
+  const { resetAll } = await import('@/slices/core')
+  const { seedDemoData } = await import('@/slices/core')
   resetAll()
   seedDemoData()
   window.location.reload()

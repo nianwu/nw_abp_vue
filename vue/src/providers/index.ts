@@ -40,8 +40,8 @@ function createProviders(): { providers: AppProviders; i18n: any } {
       config: standaloneConfigProvider,
       auth: standaloneAuthProvider,
       setupInfrastructure: async () => {
-        const { seedDemoData } = await import('@/stores/standalone/seeds/demo')
-        const { registerStandaloneHttpInterceptor } = await import('@/stores/standalone/http-interceptor')
+        const { seedDemoData } = await import('@/slices/core')
+        const { registerStandaloneHttpInterceptor } = await import('@/slices/core')
         const { default: httpClient } = await import('@/api/http')
         seedDemoData()
         registerStandaloneHttpInterceptor(httpClient)

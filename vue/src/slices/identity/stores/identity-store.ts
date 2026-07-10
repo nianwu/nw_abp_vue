@@ -5,7 +5,7 @@
  * 首次访问时为空，需通过 seed 函数注入初始数据。
  */
 
-import { load, save } from '@/stores/standalone/storage'
+import { load, save } from '@/slices/core'
 import type { IdentityUserDto, IdentityRoleDto } from '@/types/identity'
 import type { PagedResultDto, ListResultDto } from '@/types/api'
 

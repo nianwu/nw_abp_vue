@@ -7,7 +7,7 @@
  *   namedConnStrings     — Record<string, Record<string, string>> (tenantId → { name → value })
  */
 
-import { load, save } from '@/stores/standalone/storage'
+import { load, save } from '@/slices/core'
 import type { TenantDto } from '@/types/tenant'
 import type { PagedResultDto } from '@/types/api'
 

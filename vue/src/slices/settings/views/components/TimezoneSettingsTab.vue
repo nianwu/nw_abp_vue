@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useSessionStore } from '@/stores/session'
+import { useSessionStore } from '@/slices/core'
 import { showSuccess, showError } from '@/components/AbpToast'
 import * as settingsApi from '@/api/settings'
 

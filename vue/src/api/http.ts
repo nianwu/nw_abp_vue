@@ -29,7 +29,7 @@ const httpClient = axios.create({
 
 async function getAccessToken(): Promise<string | null> {
   try {
-    const { useAuthStore } = await import('@/stores/auth')
+    const { useAuthStore } = await import('@/slices/core')
     return useAuthStore().accessToken || null
   } catch {
     return null
@@ -38,7 +38,7 @@ async function getAccessToken(): Promise<string | null> {
 
 async function getTenantId(): Promise<string | null> {
   try {
-    const { useSessionStore } = await import('@/stores/session')
+    const { useSessionStore } = await import('@/slices/core')
     return useSessionStore().tenantId || null
   } catch {
     return null
@@ -47,7 +47,7 @@ async function getTenantId(): Promise<string | null> {
 
 async function getLanguage(): Promise<string | null> {
   try {
-    const { useSessionStore } = await import('@/stores/session')
+    const { useSessionStore } = await import('@/slices/core')
     return useSessionStore().language || null
   } catch {
     return null
@@ -56,7 +56,7 @@ async function getLanguage(): Promise<string | null> {
 
 async function getTimezone(): Promise<string> {
   try {
-    const { useSessionStore } = await import('@/stores/session')
+    const { useSessionStore } = await import('@/slices/core')
     return useSessionStore().timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
   } catch {
     return Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -65,7 +65,7 @@ async function getTimezone(): Promise<string> {
 
 async function handle401() {
   try {
-    const { useAuthStore } = await import('@/stores/auth')
+    const { useAuthStore } = await import('@/slices/core')
     useAuthStore().$reset()
     // 登出重定向在 A4 的 useAuth 中实现
     window.dispatchEvent(new CustomEvent('abp:auth-expired'))

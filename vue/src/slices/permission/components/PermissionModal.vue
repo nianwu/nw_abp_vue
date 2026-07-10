@@ -2,7 +2,8 @@
   <el-dialog
     v-model="dialogVisible"
     title="权限管理"
-    width="900px"
+    :width="isMobile ? '100%' : '900px'"
+    :fullscreen="isMobile"
     :close-on-click-modal="false"
     :before-close="handleBeforeClose"
     @open="handleOpen"
@@ -80,7 +81,7 @@
                       v-for="p in resourceProviders"
                       :key="p.name"
                       :label="p.displayName || p.name"
-                      :value="p.name"
+                      :value="p.name!"
                     />
                   </el-select>
                 </el-form-item>
@@ -131,7 +132,7 @@
                       v-for="p in resourceProviders"
                       :key="p.name"
                       :label="p.displayName || p.name"
-                      :value="p.name"
+                      :value="p.name!"
                     />
                   </el-select>
                 </el-form-item>
@@ -145,7 +146,7 @@
                       v-for="k in rpSearchResults"
                       :key="k.providerKey"
                       :label="k.providerDisplayName || k.providerKey"
-                      :value="k.providerKey"
+                      :value="k.providerKey!"
                     />
                   </el-select>
                   <el-tooltip content="查看资源密钥说明" placement="top">
@@ -211,7 +212,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, nextTick } from 'vue'
+import { ref, computed, reactive, nextTick, onMounted, onUnmounted } from 'vue'
+import type { TreeNodeData } from 'element-plus/es/components/tree-v2/src/types'
 import { QuestionFilled } from '@element-plus/icons-vue'
 import * as permissionsApi from '@/api/permission'
 import type {
@@ -252,6 +254,10 @@ function openResourceKeyDoc() {
 // ============================================================
 
 const dialogVisible = ref(false)
+const isMobile = ref(window.innerWidth < 768)
+onMounted(() => window.addEventListener('resize', () => { isMobile.value = window.innerWidth < 768 }))
+onUnmounted(() => window.removeEventListener('resize', () => {}))
+
 const loading = ref(false)
 const saving = ref(false)
 const activeTab = ref('groups')
@@ -289,7 +295,7 @@ interface PermissionTreeNode {
 const treeProps = {
   children: 'children',
   label: 'label',
-  disabled: (data: PermissionTreeNode) => !data.isEditable,
+  disabled: (data: TreeNodeData) => !(data as PermissionTreeNode).isEditable,
 }
 
 function buildTree(permissions?: PermissionGrantInfoDto[]): PermissionTreeNode[] {
@@ -338,18 +344,6 @@ function buildTree(permissions?: PermissionGrantInfoDto[]): PermissionTreeNode[]
   return roots
 }
 
-function flattenTree(nodes: PermissionTreeNode[]): PermissionTreeNode[] {
-  const result: PermissionTreeNode[] = []
-  function walk(list: PermissionTreeNode[]) {
-    for (const n of list) {
-      result.push(n)
-      if (n.children) walk(n.children)
-    }
-  }
-  walk(nodes)
-  return result
-}
-
 function setTreeRef(name: string, el: any) {
   if (el) {
     treeRefMap.value[name] = el
@@ -375,9 +369,6 @@ function getAllCheckedKeys(): string[] {
 // ============================================================
 // Change summary (computed reactively via revCounter)
 // ============================================================
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _trigger = computed(() => revCounter.value)
 
 const grantCount = computed(() => {
   void revCounter.value // 依赖追踪

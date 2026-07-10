@@ -34,6 +34,18 @@ export default defineConfig(({ mode }) => {
                 },
             },
         },
+        test: {
+            environment: 'jsdom',
+            globals: true,
+            include: ['src/**/*.{test,spec}.ts'],
+            exclude: ['node_modules', 'dist'],
+            css: false,
+            server: {
+                deps: {
+                    inline: ['element-plus'],
+                },
+            },
+        },
         server: {
             port: 4200,
             // 仅联调模式启用后端代理，standalone 模式无需后端

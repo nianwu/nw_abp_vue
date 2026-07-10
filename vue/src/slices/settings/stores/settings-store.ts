@@ -4,7 +4,7 @@
  * 数据存储于 localStorage，键：abp:local:emailSettings / abp:local:timezone / abp:local:timezones
  */
 
-import { load, save } from '@/stores/standalone/storage'
+import { load, save } from '@/slices/core'
 import type { EmailSettingsDto, IdentityPasswordSettingsDto } from '@/types/settings'
 
 const EMAIL_KEY = 'emailSettings'

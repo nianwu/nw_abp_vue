@@ -18,7 +18,7 @@
           node-key="key"
           default-expand-all
           :props="{ label: 'label', children: 'children' }"
-          @check="onRoleCheck"
+          @check="(node: any, info: any) => onRoleCheck(node, info)"
         />
       </el-tab-pane>
     </el-tabs>

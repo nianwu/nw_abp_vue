@@ -9,16 +9,16 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'Home',
     meta: { layout: 'application' },
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/slices/home/views/HomeView.vue'),
   },
   // OIDC
-  { path: '/oidc-callback', name: 'OidcCallback', component: () => import('@/views/auth/OidcCallbackView.vue') },
+  { path: '/oidc-callback', name: 'OidcCallback', component: () => import('@/slices/account/views/OidcCallbackView.vue') },
   // Account (AccountLayout)
-  { path: '/account/login', name: 'Login', meta: { layout: 'account' }, component: () => import('@/views/auth/LoginView.vue') },
-  { path: '/account/register', name: 'Register', meta: { layout: 'account' }, component: () => import('@/views/auth/RegisterView.vue') },
-  { path: '/account/forgot-password', name: 'ForgotPassword', meta: { layout: 'account' }, component: () => import('@/views/auth/ForgotPasswordView.vue') },
-  { path: '/account/reset-password', name: 'ResetPassword', meta: { layout: 'account' }, component: () => import('@/views/auth/ResetPasswordView.vue') },
-  { path: '/account/manage-profile', name: 'ManageProfile', meta: { layout: 'application', requiredPolicy: 'AbpAccount.AccountManagement' }, component: () => import('@/views/auth/ManageProfileView.vue') },
+  { path: '/account/login', name: 'Login', meta: { layout: 'account' }, component: () => import('@/slices/account/views/LoginView.vue') },
+  { path: '/account/register', name: 'Register', meta: { layout: 'account' }, component: () => import('@/slices/account/views/RegisterView.vue') },
+  { path: '/account/forgot-password', name: 'ForgotPassword', meta: { layout: 'account' }, component: () => import('@/slices/account/views/ForgotPasswordView.vue') },
+  { path: '/account/reset-password', name: 'ResetPassword', meta: { layout: 'account' }, component: () => import('@/slices/account/views/ResetPasswordView.vue') },
+  { path: '/account/manage-profile', name: 'ManageProfile', meta: { layout: 'application', requiredPolicy: 'AbpAccount.AccountManagement' }, component: () => import('@/slices/account/views/ManageProfileView.vue') },
   // Identity (ApplicationLayout)
   { path: '/identity/users', name: 'Users', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Users', title: '用户管理', icon: User }, component: () => import('@/slices/identity/views/UsersView.vue') },
   { path: '/identity/roles', name: 'Roles', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Roles', title: '角色管理', icon: Avatar }, component: () => import('@/slices/identity/views/RolesView.vue') },

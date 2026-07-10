@@ -1,7 +1,8 @@
 <template>
   <el-dropdown trigger="click" @command="changeLanguage">
     <el-button link class="text-gray-600">
-      {{ currentLanguage }} <el-icon><ArrowDown /></el-icon>
+      <span class="hidden sm:inline">{{ currentLanguage }}</span>
+      <el-icon><ArrowDown /></el-icon>
     </el-button>
     <template #dropdown>
       <el-dropdown-menu>
@@ -19,7 +20,7 @@
 import { computed } from 'vue'
 import { ArrowDown } from '@element-plus/icons-vue'
 import { useAppConfigStore } from '@/slices/config'
-import { useLocalization } from '@/composables/useLocalization'
+import { useLocalization } from '@/slices/core'
 
 const appConfig = useAppConfigStore()
 const { changeLanguage, locale } = useLocalization()

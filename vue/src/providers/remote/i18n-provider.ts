@@ -5,8 +5,7 @@
  */
 import i18n from '@/plugins/i18n'
 import { loadLocaleMessages, switchLanguage } from '@/plugins/i18n'
-import { useSessionStore } from '@/stores/session'
-import { defaultLocalization } from '@/defaults/localization'
+import { useSessionStore, defaultLocalization } from '@/slices/core'
 import type { I18nProvider } from '@/providers/types'
 
 export const remoteI18nProvider: I18nProvider = {

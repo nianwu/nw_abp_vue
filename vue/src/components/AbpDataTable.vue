@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
       <div class="flex items-center gap-2">
         <el-input v-if="searchable" v-model="searchText" :placeholder="searchPlaceholder"
-          clearable class="w-56" @input="onSearchInput" @clear="onSearchClear">
+          clearable class="w-full sm:w-56" @input="onSearchInput" @clear="onSearchClear">
           <template #prefix><el-icon><Search /></el-icon></template>
         </el-input>
         <slot name="toolbar-actions" />
@@ -30,7 +30,7 @@
                   <el-radio-group
                     :model-value="dateRenderFormats[col.prop] || 'full'"
                     size="small"
-                    @change="(v: string) => setDateRenderFormat(col.prop, v as DateRenderMode)"
+                    @change="(v: any) => setDateRenderFormat(col.prop, v as DateRenderMode)"
                   >
                     <el-radio-button v-for="m in DATE_RENDER_MODES" :key="m.value" :value="m.value">
                       {{ m.label }}
@@ -111,14 +111,15 @@
       </el-table>
     </div>
 
-    <!-- 分页 -->
+    <!-- 分页 — 桌面端全功能 / 移动端精简 -->
     <div v-if="paginated && totalCount > 0" class="flex justify-end mt-4">
       <el-pagination
         :current-page="currentPage"
         :page-size="pageSize"
         :page-sizes="pageSizes"
         :total="totalCount"
-        layout="total, sizes, prev, pager, next, jumper"
+        :layout="paginationLayout"
+        :small="isMobile"
         @size-change="onPageSizeChange"
         @current-change="onPageChange"
       />
@@ -177,6 +178,13 @@ const totalCount = ref(0)
 const loading = ref(false)
 const initialLoadDone = ref(false)
 const searchText = ref('')
+
+// 响应式：移动端精简分页布局
+const isMobile = ref(window.innerWidth < 768)
+window.addEventListener('resize', () => { isMobile.value = window.innerWidth < 768 })
+const paginationLayout = computed(() =>
+  isMobile.value ? 'prev, pager, next' : 'total, sizes, prev, pager, next, jumper',
+)
 const STORAGE_PREFIX = 'abp:page-size:'
 
 function loadPageSize(): number {

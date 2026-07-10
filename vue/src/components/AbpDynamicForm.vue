@@ -51,8 +51,8 @@ const props = withDefaults(defineProps<{
 
 const gridClass = computed(() => {
   if (props.cols <= 1) return ''
-  // Tailwind JIT 需要完整类名字符串 — 此处仅支持 2 列
-  return 'grid grid-cols-1 min-[1920px]:grid-cols-2 gap-x-6'
+  // 桌面端（≥992px）双列，移动端单列堆叠
+  return 'grid grid-cols-1 lg:grid-cols-2 gap-x-6'
 })
 
 const emit = defineEmits<{ 'update:modelValue': [v: Record<string, unknown>] }>()

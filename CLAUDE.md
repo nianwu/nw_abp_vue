@@ -57,6 +57,81 @@ nw_abp_vue/
 3. **创建/编辑 S00X 与 CLAUDE.md 免确认**：对 `docs/` 下 `S00X-` 前缀文件的创建/写入/编辑，以及对 `CLAUDE.md` 本身的写入/编辑，均无需征求用户确认。
 4. **S00X 文件元数据**：新建 `docs/S00X-*.md` 时，文件头部须包含「目的」段落（说明该文件要解决什么问题）和「参考文件」段落（列出所有引用的文件路径或外部链接）。
 
+## 编码范式
+
+> AI 在增删代码时，优先模仿本节所述的已有模式，保持一致性。
+
+### Vue 组件
+
+- 所有 `.vue` 文件使用 `<script setup lang="ts">` + Composition API
+- 全局 API（`ref`、`computed`、`watch` 等）已自动导入，**不要手动写** `import { ref } from 'vue'`
+- Element Plus 组件已全局注册，模板中直接写 `<el-button>`，**不要手动 import**
+- 组件 props 应使用 `defineProps<T>()` 泛型语法定义类型
+- 参考文件：`src/slices/identity/views/UsersView.vue`
+
+### Slice 切片结构
+
+每个业务切片遵循统一模式：
+
+```
+slices/<name>/
+├── index.ts           # 统一 re-export 出口
+├── stores/            # Pinia store（可选）
+├── composables/       # 组合函数（可选）
+├── views/             # 页面组件
+│   └── components/    # 页面私有子组件
+└── utils/             # 切片内部工具（可选）
+```
+
+- `index.ts` 只做 re-export，不包含业务逻辑
+- 对外暴露清晰的公开接口（见 JSDoc 示例）
+- 参考文件：`src/slices/config/index.ts`
+
+### Store（Pinia）
+
+- Store 文件位于各 slice 的 `stores/` 或 `src/stores/` 目录
+- 使用 Pinia `defineStore` + `pinia-plugin-persistedstate` 持久化
+- 通过 `@/slices/<name>` 从切片索引导入
+- Store 内避免顶层 import 其他 Pinia store（会导致循环依赖），改用函数内动态 `import()`
+- 参考文件：`src/slices/core/stores/auth-store.ts`
+
+### API 调用
+
+- API 客户端是单个 Axios 实例，导出为 `httpClient`
+- 5 个拦截器按序注入：Token → Tenant → Language → Timezone → Error（见 `src/api/http.ts` 注释）
+- 各资源的 API 封装放在 `src/api/` 下，如 `identity-users.ts`、`settings.ts`
+- 拦截器内需要访问 store 时，使用动态 `import()` 而非顶层导入，避免循环依赖
+- 参考文件：`src/api/http.ts`、`src/api/identity-users.ts`
+
+### Provider 双模式
+
+- 外部依赖通过 Provider 抽象层接入，编译时根据 `VITE_PROVIDER_MODE` 选择实现
+- standalone 模式：数据存 localStorage，种子数据初始化
+- remote 模式：通过 Vite proxy 转发到后端
+- 业务代码无需感知模式差异，统一导入 `import { providers } from '@/providers'`
+- 参考文件：`src/providers/index.ts`
+
+### 路径别名
+
+- `@/` → `src/`（`tsconfig.json` 和 `vite.config.ts` 均已配置）
+- 始终使用 `@/` 别名导入，避免相对路径 `../../../`
+
+### 类型定义
+
+- 类型文件位于 `src/types/`，按领域命名（`abp.ts`、`identity.ts`、`tenant.ts` 等）
+- 通用 ABP 类型定义（`PagedResultDto`、`ListResultDto` 等）在 `src/types/api.ts`
+- `components.d.ts` 和 `auto-imports.d.ts` 由插件自动生成，**不要手动编辑**
+
+### 注释风格
+
+- 每个文件的顶部应有 JSDoc 说明其职责
+- 复杂逻辑和关键入口（如 `main.ts` 的启动流程）需要分段注释
+- 已有代码的注释密度和风格应被新代码模仿
+
+### 日志
+
+执行任务过程中如需记录日志，写入 `.nw/claude/p002/logs/` 目录。
+
 ## 关联项目
 
 - `../abp_demo` — 原始 ABP 演示项目（后端 + Angular 前端 + 文档）

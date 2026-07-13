@@ -2,7 +2,7 @@
  * 认证守卫 — 未登录时跳转 OIDC 登录
  */
 import type { Router } from 'vue-router'
-import { useAuthStore } from '@/slices/core'
+import { useAuthStore } from '@/stores/auth-store'
 
 export function registerAuthGuard(router: Router): void {
   router.beforeEach(async (to, _from, next) => {

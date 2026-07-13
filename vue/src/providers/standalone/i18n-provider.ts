@@ -2,7 +2,8 @@
  * StandaloneI18nProvider — 使用内置默认翻译，不发起 API 请求
  */
 import i18n from '@/plugins/i18n'
-import { useSessionStore, defaultLocalization } from '@/slices/core'
+import { useSessionStore } from '@/stores/session-store'
+import { defaultLocalization } from '@/core'
 import type { I18nProvider } from '@/providers/types'
 
 export const standaloneI18nProvider: I18nProvider = {

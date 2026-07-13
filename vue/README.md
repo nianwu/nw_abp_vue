@@ -36,22 +36,32 @@ npm run preview
 
 ## 架构概览
 
-### 切片架构
+### 目录结构
 
-项目按业务领域拆分为切片（slice），每个切片自包含 `stores`、`composables`、`views`、`utils`：
+Vue 社区标准分层，`src/` 下按类型组织：
 
 ```
-src/slices/
-├── config/       # 应用配置（环境变量、双模式 config provider）
-├── core/         # 核心功能（认证、会话、本地化、断点响应）
-├── identity/     # 用户/角色管理
-├── tenant/       # 多租户管理
-├── permission/   # 权限校验（v-permission 指令、usePermission、权限弹窗）
-├── settings/     # 设置管理
-├── feature/      # 功能管理
-├── offline/      # 离线检测
-├── account/      # 账户页面（注册、忘记密码、资料管理等）
-└── home/         # 首页
+src/
+├── api/            # API 代理（Axios 请求封装）
+├── components/     # 共享组件（AbpDataTable、AbpModal 等）
+├── composables/    # 组合函数（useAuth、usePermission 等）
+├── config/         # 应用配置（环境变量、双模式 provider）
+├── core/           # 核心基础设施（storage、种子数据、拦截器）
+├── directives/     # 自定义指令（v-permission）
+├── layouts/        # 布局组件
+├── plugins/        # Vue 插件（i18n、OIDC）
+├── providers/      # Provider 抽象层（双模式切换）
+├── router/         # 路由配置 + 守卫
+├── stores/         # Pinia store（认证、会话、用户、租户等）
+├── styles/         # 全局样式（SCSS + Tailwind）
+├── types/          # 类型定义
+├── utils/          # 工具函数
+└── views/          # 页面组件（按领域分文件夹）
+    ├── account/    # 登录、注册、密码重置、资料管理
+    ├── home/       # 首页
+    ├── identity/   # 用户/角色管理
+    ├── settings/   # 设置管理
+    └── tenant/     # 多租户管理
 ```
 
 ### 双模式 Provider 机制
@@ -64,23 +74,6 @@ src/slices/
 | remote | `VITE_PROVIDER_MODE=remote` | 后端 API + OIDC | 联调后端 |
 
 Provider 抽象层位于 `src/providers/`，编译时静态选择实现，无需运行时判断。
-
-### 关键目录
-
-```
-src/
-├── api/           # API 代理（Axios 请求封装）
-├── components/    # 共享组件（AbpDataTable、AbpModal 等）
-├── layouts/       # 布局组件
-├── plugins/       # Vue 插件（i18n、OIDC）
-├── providers/     # Provider 抽象层（双模式切换）
-├── router/        # 路由配置
-├── slices/        # 业务切片（核心架构）
-├── stores/        # 全局 Store 索引
-├── styles/        # 全局样式（SCSS + Tailwind）
-├── types/         # TypeScript 类型定义
-└── utils/         # 工具函数
-```
 
 ## 技术栈
 

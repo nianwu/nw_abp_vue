@@ -11,7 +11,7 @@ import {
   OAUTH_POST_LOGOUT_REDIRECT_URI,
   OAUTH_SILENT_REDIRECT_URI,
   OAUTH_SCOPE,
-} from '@/slices/config'
+} from '@/config'
 
 export const userManager = new UserManager({
   authority: OAUTH_AUTHORITY,

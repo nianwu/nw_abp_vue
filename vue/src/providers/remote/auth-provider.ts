@@ -1,7 +1,7 @@
 /**
  * RemoteAuthProvider — 使用 oidc-client-ts 进行 OIDC 认证
  */
-import { useAuthStore } from '@/slices/core'
+import { useAuthStore } from '@/stores/auth-store'
 import { userManager } from '@/plugins/oidc'
 import type { AuthProvider } from '@/providers/types'
 

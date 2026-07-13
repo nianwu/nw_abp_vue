@@ -2,30 +2,30 @@ import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router
 import type { RouteRecordRaw } from 'vue-router'
 import { User, Avatar, OfficeBuilding, Setting } from '@element-plus/icons-vue'
 import { registerAuthGuard } from './guards/auth'
-import { registerPermissionGuard } from '@/slices/permission'
+import { registerPermissionGuard } from '@/router/guards/permission'
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
     meta: { layout: 'application' },
-    component: () => import('@/slices/home/views/HomeView.vue'),
+    component: () => import('@/views/home/HomeView.vue'),
   },
   // OIDC
-  { path: '/oidc-callback', name: 'OidcCallback', component: () => import('@/slices/account/views/OidcCallbackView.vue') },
+  { path: '/oidc-callback', name: 'OidcCallback', component: () => import('@/views/account/OidcCallbackView.vue') },
   // Account (AccountLayout)
-  { path: '/account/login', name: 'Login', meta: { layout: 'account' }, component: () => import('@/slices/account/views/LoginView.vue') },
-  { path: '/account/register', name: 'Register', meta: { layout: 'account' }, component: () => import('@/slices/account/views/RegisterView.vue') },
-  { path: '/account/forgot-password', name: 'ForgotPassword', meta: { layout: 'account' }, component: () => import('@/slices/account/views/ForgotPasswordView.vue') },
-  { path: '/account/reset-password', name: 'ResetPassword', meta: { layout: 'account' }, component: () => import('@/slices/account/views/ResetPasswordView.vue') },
-  { path: '/account/manage-profile', name: 'ManageProfile', meta: { layout: 'application', requiredPolicy: 'AbpAccount.AccountManagement' }, component: () => import('@/slices/account/views/ManageProfileView.vue') },
+  { path: '/account/login', name: 'Login', meta: { layout: 'account' }, component: () => import('@/views/account/LoginView.vue') },
+  { path: '/account/register', name: 'Register', meta: { layout: 'account' }, component: () => import('@/views/account/RegisterView.vue') },
+  { path: '/account/forgot-password', name: 'ForgotPassword', meta: { layout: 'account' }, component: () => import('@/views/account/ForgotPasswordView.vue') },
+  { path: '/account/reset-password', name: 'ResetPassword', meta: { layout: 'account' }, component: () => import('@/views/account/ResetPasswordView.vue') },
+  { path: '/account/manage-profile', name: 'ManageProfile', meta: { layout: 'application', requiredPolicy: 'AbpAccount.AccountManagement' }, component: () => import('@/views/account/ManageProfileView.vue') },
   // Identity (ApplicationLayout)
-  { path: '/identity/users', name: 'Users', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Users', title: '用户管理', icon: User }, component: () => import('@/slices/identity/views/UsersView.vue') },
-  { path: '/identity/roles', name: 'Roles', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Roles', title: '角色管理', icon: Avatar }, component: () => import('@/slices/identity/views/RolesView.vue') },
+  { path: '/identity/users', name: 'Users', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Users', title: '用户管理', icon: User }, component: () => import('@/views/identity/UsersView.vue') },
+  { path: '/identity/roles', name: 'Roles', meta: { layout: 'application', requiredPolicy: 'AbpIdentity.Roles', title: '角色管理', icon: Avatar }, component: () => import('@/views/identity/RolesView.vue') },
   // Tenant (ApplicationLayout)
-  { path: '/tenant-management/tenants', name: 'Tenants', meta: { layout: 'application', requiredPolicy: 'AbpTenantManagement.Tenants', title: '租户管理', icon: OfficeBuilding }, component: () => import('@/slices/tenant/views/TenantsView.vue') },
+  { path: '/tenant-management/tenants', name: 'Tenants', meta: { layout: 'application', requiredPolicy: 'AbpTenantManagement.Tenants', title: '租户管理', icon: OfficeBuilding }, component: () => import('@/views/tenant/TenantsView.vue') },
   // Settings (ApplicationLayout)
-  { path: '/setting-management', name: 'Settings', meta: { layout: 'application', requiredPolicy: 'AbpAccount.SettingManagement', title: '设置管理', icon: Setting }, component: () => import('@/slices/settings/views/SettingsView.vue') },
+  { path: '/setting-management', name: 'Settings', meta: { layout: 'application', requiredPolicy: 'AbpAccount.SettingManagement', title: '设置管理', icon: Setting }, component: () => import('@/views/settings/SettingsView.vue') },
   // Docs — 独立页面，无菜单、无需权限
   { path: '/docs/resource-permissions', name: 'ResourcePermissionDoc', meta: { layout: 'empty', title: '资源权限说明', public: true }, component: () => import('@/views/docs/ResourcePermissionDoc.vue') },
   { path: '/docs/resource-key', name: 'ResourceKeyDoc', meta: { layout: 'empty', title: '资源密钥说明', public: true }, component: () => import('@/views/docs/ResourceKeyDoc.vue') },

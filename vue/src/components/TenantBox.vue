@@ -1,0 +1,14 @@
+<template>
+  <span v-if="isMultiTenancyEnabled" class="text-gray-600 text-sm mr-2">
+    {{ currentTenant }}
+  </span>
+</template>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useAppConfigStore } from '@/config'
+
+const appConfig = useAppConfigStore()
+const isMultiTenancyEnabled = computed(() => appConfig.config?.multiTenancy?.isEnabled || false)
+const currentTenant = computed(() => appConfig.config?.currentTenant?.name || 'Host')
+</script>

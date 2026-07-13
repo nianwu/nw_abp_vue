@@ -67,33 +67,43 @@ nw_abp_vue/
 - 全局 API（`ref`、`computed`、`watch` 等）已自动导入，**不要手动写** `import { ref } from 'vue'`
 - Element Plus 组件已全局注册，模板中直接写 `<el-button>`，**不要手动 import**
 - 组件 props 应使用 `defineProps<T>()` 泛型语法定义类型
-- 参考文件：`src/slices/identity/views/UsersView.vue`
+- 参考文件：`src/views/identity/UsersView.vue`
 
-### Slice 切片结构
+### 目录结构
 
-每个业务切片遵循统一模式：
+Vue 社区标准分层，`src/` 下按类型组织：
 
 ```
-slices/<name>/
-├── index.ts           # 统一 re-export 出口
-├── stores/            # Pinia store（可选）
-├── composables/       # 组合函数（可选）
-├── views/             # 页面组件
-│   └── components/    # 页面私有子组件
-└── utils/             # 切片内部工具（可选）
+src/
+├── api/            # API 代理（Axios 请求封装）
+├── components/     # 共享组件
+├── composables/    # 组合函数（Composition API hooks）
+├── config/         # 应用配置（环境变量、默认值、双模式 provider）
+├── core/           # 核心基础设施（storage、种子数据、HTTP 拦截器）
+├── directives/     # 自定义指令（v-permission）
+├── layouts/        # 布局组件
+├── plugins/        # Vue 插件（i18n、OIDC）
+├── providers/      # Provider 抽象层（双模式切换）
+├── router/         # 路由配置 + 守卫
+├── stores/         # Pinia store（全局状态管理）
+├── styles/         # 全局样式（SCSS + Tailwind）
+├── types/          # TypeScript 类型定义
+├── utils/          # 工具函数
+└── views/          # 页面组件（按领域分文件夹）
+    ├── account/    # 账户页面（登录、注册、密码重置等）
+    ├── home/       # 首页
+    ├── identity/   # 用户/角色管理
+    ├── settings/   # 设置管理
+    └── tenant/     # 多租户管理
 ```
-
-- `index.ts` 只做 re-export，不包含业务逻辑
-- 对外暴露清晰的公开接口（见 JSDoc 示例）
-- 参考文件：`src/slices/config/index.ts`
 
 ### Store（Pinia）
 
-- Store 文件位于各 slice 的 `stores/` 或 `src/stores/` 目录
+- Store 文件位于 `src/stores/` 目录
 - 使用 Pinia `defineStore` + `pinia-plugin-persistedstate` 持久化
-- 通过 `@/slices/<name>` 从切片索引导入
+- 从 `@/stores/<store-name>` 导入
 - Store 内避免顶层 import 其他 Pinia store（会导致循环依赖），改用函数内动态 `import()`
-- 参考文件：`src/slices/core/stores/auth-store.ts`
+- 参考文件：`src/stores/auth-store.ts`
 
 ### API 调用
 

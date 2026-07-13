@@ -26,8 +26,8 @@
 
 <script setup lang="ts">
 import { Expand, Delete } from '@element-plus/icons-vue'
-import { APP_NAME } from '@/slices/config'
-import { TenantBox } from '@/slices/tenant'
+import { APP_NAME } from '@/config'
+import TenantBox from '@/components/TenantBox.vue'
 import LangSwitch from './LangSwitch.vue'
 import UserMenu from './UserMenu.vue'
 
@@ -37,8 +37,8 @@ const appName = APP_NAME
 const isStandalone = import.meta.env.VITE_PROVIDER_MODE === 'standalone'
 
 async function handleReset() {
-  const { resetAll } = await import('@/slices/core')
-  const { seedDemoData } = await import('@/slices/core')
+  const { resetAll } = await import('@/core')
+  const { seedDemoData } = await import('@/core')
   resetAll()
   seedDemoData()
   window.location.reload()

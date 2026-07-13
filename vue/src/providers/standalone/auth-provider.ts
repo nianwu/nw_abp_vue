@@ -1,7 +1,7 @@
 /**
  * StandaloneAuthProvider — 注入模拟认证态，跳过 OIDC 交互
  */
-import { useAuthStore } from '@/slices/core'
+import { useAuthStore } from '@/stores/auth-store'
 import type { AuthProvider } from '@/providers/types'
 
 export const standaloneAuthProvider: AuthProvider = {

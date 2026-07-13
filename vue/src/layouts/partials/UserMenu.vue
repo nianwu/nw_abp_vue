@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useAppConfigStore } from '@/slices/config'
-import { useAuth } from '@/slices/core'
+import { useAppConfigStore } from '@/config'
+import { useAuth } from '@/composables/useAuth'
 
 const appConfig = useAppConfigStore()
 const { logout } = useAuth()

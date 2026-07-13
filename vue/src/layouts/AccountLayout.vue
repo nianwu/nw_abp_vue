@@ -12,6 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { APP_NAME } from '@/slices/config'
+import { APP_NAME } from '@/config'
 const appName = APP_NAME
 </script>

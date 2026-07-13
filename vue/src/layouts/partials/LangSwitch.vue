@@ -19,8 +19,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { ArrowDown } from '@element-plus/icons-vue'
-import { useAppConfigStore } from '@/slices/config'
-import { useLocalization } from '@/slices/core'
+import { useAppConfigStore } from '@/config'
+import { useLocalization } from '@/composables/useLocalization'
 
 const appConfig = useAppConfigStore()
 const { changeLanguage, locale } = useLocalization()

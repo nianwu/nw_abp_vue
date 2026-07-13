@@ -1,2 +1,3 @@
-export { useAppConfigStore } from '@/slices/config'
-export { useAuthStore, useSessionStore } from '@/slices/core'
+export { useAppConfigStore } from '@/stores/app-config.store'
+export { useAuthStore } from '@/stores/auth-store'
+export { useSessionStore } from '@/stores/session-store'

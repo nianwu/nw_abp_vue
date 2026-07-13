@@ -9,10 +9,10 @@
  */
 import type { AppProviders } from './types'
 import { standaloneI18nProvider, i18n as standaloneI18n } from './standalone/i18n-provider'
-import { standaloneConfigProvider } from '@/slices/config'
+import { standaloneConfigProvider } from '@/config'
 import { standaloneAuthProvider } from './standalone/auth-provider'
 import { remoteI18nProvider, i18n as remoteI18n } from './remote/i18n-provider'
-import { remoteConfigProvider } from '@/slices/config'
+import { remoteConfigProvider } from '@/config'
 import { remoteAuthProvider } from './remote/auth-provider'
 
 const MODE: 'standalone' | 'remote' =
@@ -40,8 +40,8 @@ function createProviders(): { providers: AppProviders; i18n: any } {
       config: standaloneConfigProvider,
       auth: standaloneAuthProvider,
       setupInfrastructure: async () => {
-        const { seedDemoData } = await import('@/slices/core')
-        const { registerStandaloneHttpInterceptor } = await import('@/slices/core')
+        const { seedDemoData } = await import('@/core')
+        const { registerStandaloneHttpInterceptor } = await import('@/core')
         const { default: httpClient } = await import('@/api/http')
         seedDemoData()
         registerStandaloneHttpInterceptor(httpClient)

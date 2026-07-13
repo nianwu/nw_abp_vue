@@ -12,7 +12,7 @@ export {
   APP_NAME,
 } from './env'
 export { defaultAppConfig } from './defaults'
-export { remoteConfigProvider } from './providers/remote-config-provider'
-export { standaloneConfigProvider } from './providers/standalone-config-provider'
+export { remoteConfigProvider } from '@/providers/remote/config-provider'
+export { standaloneConfigProvider } from '@/providers/standalone/config-provider'
 // Re-export from stores for backward compat
-export { useAppConfigStore } from '@/stores/app-config.store'
+export { useAppConfigStore } from '@/stores/app-config-store'

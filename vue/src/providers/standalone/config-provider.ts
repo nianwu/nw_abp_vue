@@ -4,7 +4,7 @@
  * 使用内置默认配置（全权限），仅 standalone 模式使用。
  * remote 模式不使用此数据，远程获取失败直接报错。
  */
-import { defaultAppConfig } from '../defaults'
+import { defaultAppConfig } from '@/config/defaults'
 import type { ApplicationConfigurationDto } from '@/types/abp'
 import type { ConfigProvider } from '@/providers/types'
 

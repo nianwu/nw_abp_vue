@@ -9,10 +9,10 @@
  */
 import type { AppProviders } from './types'
 import { standaloneI18nProvider, i18n as standaloneI18n } from './standalone/i18n-provider'
-import { standaloneConfigProvider } from '@/config'
+import { standaloneConfigProvider } from '@/providers/standalone/config-provider'
 import { standaloneAuthProvider } from './standalone/auth-provider'
 import { remoteI18nProvider, i18n as remoteI18n } from './remote/i18n-provider'
-import { remoteConfigProvider } from '@/config'
+import { remoteConfigProvider } from '@/providers/remote/config-provider'
 import { remoteAuthProvider } from './remote/auth-provider'
 
 const MODE: 'standalone' | 'remote' =

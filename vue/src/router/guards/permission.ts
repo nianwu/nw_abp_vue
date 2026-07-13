@@ -2,7 +2,7 @@
  * 权限守卫 — 路由 meta.requiredPolicy 不满足时跳转 403
  */
 import type { Router } from 'vue-router'
-import { usePermission } from '../composables/usePermission'
+import { usePermission } from '@/composables/usePermission'
 
 export function registerPermissionGuard(router: Router): void {
   router.beforeEach((to, _from, next) => {
